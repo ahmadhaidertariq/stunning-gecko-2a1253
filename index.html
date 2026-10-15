@@ -4,487 +4,624 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ahmad Haider · Amazon Wholesale Operator</title>
-<meta name="description" content="Ahmad Haider runs Amazon and Walmart wholesale for US sellers: brand approvals, sourcing, buy plans, prep, reimbursements and PPC. Real Seller Central proof inside.">
+<meta name="description" content="Ahmad Haider gets US Amazon and Walmart wholesale stores approved by brands: 70 brand approvals across 4 stores, real Seller Central proof, buy plans with every fee checked.">
 <meta property="og:title" content="Ahmad Haider · Amazon Wholesale Operator">
-<meta property="og:description" content="Brand approvals, sourcing and buy plans for Amazon and Walmart wholesale stores. Every number backed by a Seller Central screenshot.">
+<meta property="og:description" content="70 brand approvals across 4 US wholesale stores. Brand outreach, sourcing and buy plans, backed by real Seller Central screenshots.">
 <meta property="og:image" content="https://ahmadhaidertariq.github.io/stunning-gecko-2a1253/assets/og.jpg">
 <meta property="og:type" content="website">
-<link rel="icon" href="images/logo.png">
+<meta name="theme-color" content="#13263A">
+<link rel="icon" type="image/svg+xml" href="assets/brand/logo-mark.svg">
+<link rel="icon" type="image/png" href="assets/brand/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch.png">
 <link rel="preload" href="assets/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 @font-face{font-family:Archivo;src:url(assets/fonts/archivo.woff2) format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
 :root{
-  --ink:#172A3A;          /* print ink: text, rules, dark bands */
-  --ink-2:#4C5D6B;        /* secondary text */
-  --paper:#E9EDF1;        /* page: cool warehouse-floor grey */
-  --label:#FFFFFF;        /* label stock */
-  --kraft:#A8743F;        /* carton tape: used only for tape + the label's carton marks */
-  --ok:#1C7F4E;           /* approved / verified, only as status */
-  --line:#C9D2DA;
-  --wide:"wdth" 125;
-  --narrow:"wdth" 68;
+  --navy:#13263A;      /* brand ink */
+  --navy-2:#1B3350;    /* raised surfaces on navy */
+  --mist:#F3F6F9;      /* light page */
+  --white:#FFFFFF;
+  --green:#34D399;     /* approved: status + logo tick */
+  --green-ink:#127A52; /* green on light backgrounds */
+  --amber:#FFB547;     /* highlights on navy, sparingly */
+  --text:#13263A;
+  --text-2:#52657A;
+  --line:#DCE3EA;
+  --on-navy-2:#A9BBCC;
+  --narrow:"wdth" 70;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--paper);color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-size:17px;line-height:1.6;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+body{background:var(--mist);color:var(--text);font-family:Archivo,system-ui,sans-serif;font-size:17px;line-height:1.6;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
 a{color:inherit}
-:focus-visible{outline:3px solid var(--kraft);outline-offset:3px;border-radius:2px}
-.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
-.skip{position:absolute;left:-999px}.skip:focus{left:16px;top:16px;background:var(--label);padding:8px 12px;z-index:50}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:3px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.skip{position:absolute;left:-999px}.skip:focus{left:16px;top:16px;background:#fff;padding:8px 12px;z-index:60}
+h1,h2,h3{font-variation-settings:var(--narrow)}
 
-/* header */
-header{position:sticky;top:0;z-index:20;background:rgba(233,237,241,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;justify-content:space-between;height:64px}
-.brand{font-weight:800;font-variation-settings:var(--narrow);font-size:22px;text-decoration:none;letter-spacing:.01em}
-nav ul{display:flex;gap:26px;list-style:none;font-size:15px}
-nav a{text-decoration:none;color:var(--ink-2)}nav a:hover{color:var(--ink)}
-.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:700;font-size:15px;padding:12px 20px;border-radius:6px;text-decoration:none;border:2px solid var(--ink);cursor:pointer;background:transparent;color:var(--ink)}
-.btn.solid{background:var(--ink);color:var(--label)}
-.btn.solid:hover{background:#0f1e2a}
-.btn:hover{background:var(--label)}
-.btn.solid:hover{background:#0f1e2a}
-.menu-btn{display:none}
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:30;background:rgba(19,38,58,.94);backdrop-filter:blur(10px);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:70px;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{width:38px;height:38px}
+.brand b{font-variation-settings:var(--narrow);font-weight:800;font-size:22px;letter-spacing:.01em;line-height:1}
+.brand small{display:block;font-size:12.5px;color:var(--on-navy-2);font-weight:500;margin-top:2px}
+nav ul{display:flex;gap:28px;list-style:none;font-size:15px}
+nav a{text-decoration:none;color:#C9D6E2}nav a:hover{color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-weight:700;font-size:15.5px;padding:13px 22px;border-radius:999px;text-decoration:none;border:2px solid transparent;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.btn-green{background:var(--green);color:var(--navy)}
+.btn-green:hover{background:#5BE3AE}
+.btn-ghost{border-color:rgba(255,255,255,.35);color:#fff}
+.btn-ghost:hover{border-color:#fff}
+.btn-dark{background:var(--navy);color:#fff}
+.btn-dark:hover{background:#0C1B2B}
+.btn-line{border-color:var(--navy);color:var(--navy)}
+.btn-line:hover{background:var(--navy);color:#fff}
+.menu-btn{display:none;background:none;border:1px solid rgba(255,255,255,.35);color:#fff;font:inherit;font-weight:700;padding:8px 14px;border-radius:999px}
 
-/* hero */
-.hero{padding:72px 0 120px}
-.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
-h1{font-variation-settings:var(--narrow);font-weight:850;font-size:clamp(46px,6.6vw,88px);line-height:.94;letter-spacing:-.01em}
-.lede{margin-top:26px;font-size:20px;line-height:1.55;max-width:29em;color:var(--ink-2)}
-.lede strong{color:var(--ink);font-weight:650}
-.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
-.photo-stack{position:relative;justify-self:end;width:100%;max-width:440px}
-.photo{border-radius:4px;overflow:hidden;aspect-ratio:4/4.4;background:#cfd6dc}
-.photo img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+/* ---------- hero ---------- */
+.hero{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto -10% -40% 40%;height:80%;background:radial-gradient(closest-side,rgba(52,211,153,.16),transparent 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center;padding-top:84px;padding-bottom:96px;position:relative;z-index:1}
+.hero h1{font-weight:850;font-size:clamp(50px,7vw,96px);line-height:.92;letter-spacing:-.005em}
+.hero h1 .tick{color:var(--green)}
+.hero .lede{margin-top:28px;font-size:20px;line-height:1.55;color:#C9D6E2;max-width:30em}
+.hero .lede b{color:#fff;font-weight:650}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.hero .trust{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:40px;font-size:14.5px;color:var(--on-navy-2)}
+.hero .trust span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:9px;vertical-align:1px}
 
-/* the shipping label: the one bold element */
-.label{position:absolute;left:-44px;bottom:-84px;width:330px;background:var(--label);border:2px solid var(--ink);padding:16px 18px 12px;box-shadow:0 18px 40px rgba(23,42,58,.22);transform:rotate(-2.2deg)}
-.label::before,.label::after{content:"";position:absolute;width:86px;height:26px;background:rgba(168,116,63,.82);top:-14px}
-.label::before{left:18px;transform:rotate(-4deg)}
-.label::after{right:16px;transform:rotate(5deg)}
-.label .row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--ink-2);border-bottom:1px solid var(--ink);padding-bottom:8px;margin-bottom:8px}
-.label .row b{color:var(--ink);font-size:13px}
-.label dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13.5px;line-height:1.3}
-.label dt{font-weight:800;font-variation-settings:var(--narrow);font-size:22px;line-height:1}
-.label dd{color:var(--ink-2);align-self:center}
-.barcode{width:100%;height:42px;margin-top:12px;fill:var(--ink)}
-.label .code{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.12em;margin-top:2px}
-.stamp{position:absolute;right:-26px;top:-30px;width:104px;height:104px;border:3px solid var(--ok);border-radius:50%;color:var(--ok);display:grid;place-items:center;text-align:center;font-weight:850;font-variation-settings:var(--narrow);font-size:15px;line-height:1.05;transform:rotate(12deg);background:rgba(255,255,255,.7)}
+.portrait{position:relative;justify-self:end;width:100%;max-width:460px}
+.portrait .ph{border-radius:28px;overflow:hidden;aspect-ratio:1/1.08;background:#22405F;box-shadow:0 40px 80px rgba(0,0,0,.35)}
+.portrait .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.feed{position:absolute;left:-70px;bottom:-34px;width:300px;background:#fff;color:var(--navy);border-radius:18px;padding:16px 18px 10px;box-shadow:0 24px 50px rgba(0,0,0,.35)}
+.feed h2{font-size:15px;font-weight:800;font-variation-settings:normal;display:flex;justify-content:space-between;align-items:center}
+.feed h2 span{font-size:12px;font-weight:600;color:var(--green-ink);display:flex;align-items:center;gap:6px}
+.feed h2 span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(52,211,153,.25)}
+.feed ul{list-style:none;margin-top:8px}
+.feed li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.feed li i{width:22px;height:22px;border-radius:50%;background:#DDF7EC;display:grid;place-items:center}
+.feed li i svg{width:12px;height:12px}
+.feed li em{font-style:normal;color:var(--text-2);font-size:12.5px}
+.badge{position:absolute;right:-22px;top:28px;background:var(--amber);color:var(--navy);border-radius:16px;padding:12px 16px;box-shadow:0 18px 40px rgba(0,0,0,.3);font-size:13px;line-height:1.25;font-weight:600}
+.badge b{display:block;font-size:30px;font-weight:850;font-variation-settings:var(--narrow);line-height:1}
 @media (prefers-reduced-motion:no-preference){
-  .label{animation:land .7s cubic-bezier(.2,.8,.2,1) .25s both}
-  .stamp{animation:stamp .35s ease-out 1s both}
-  @keyframes land{from{opacity:0;transform:translateY(-28px) rotate(-6deg)}to{opacity:1;transform:rotate(-2.2deg)}}
-  @keyframes stamp{from{opacity:0;transform:scale(1.6) rotate(12deg)}to{opacity:1;transform:scale(1) rotate(12deg)}}
+  .feed{animation:rise .8s cubic-bezier(.2,.8,.2,1) .35s both}
+  .feed li{animation:fade .4s ease-out both}
+  .feed li:nth-child(1){animation-delay:.9s}.feed li:nth-child(2){animation-delay:1.05s}.feed li:nth-child(3){animation-delay:1.2s}.feed li:nth-child(4){animation-delay:1.35s}
+  .badge{animation:rise .8s cubic-bezier(.2,.8,.2,1) .6s both}
+  @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
 }
 
-/* sections */
-section{padding:96px 0}
-section.tight{padding:72px 0}
-h2{font-variation-settings:var(--narrow);font-weight:850;font-size:clamp(36px,4.6vw,58px);line-height:1;max-width:16em}
-.intro{margin-top:18px;max-width:40em;color:var(--ink-2);font-size:18px}
-.dark{background:var(--ink);color:#E7EDF2}
-.dark .intro,.dark .muted{color:#A9B8C4}
-.dark h2{color:#fff}
+/* ---------- numbers band ---------- */
+.numbers{background:#fff;border-bottom:1px solid var(--line)}
+.numbers ul{list-style:none;display:grid;grid-template-columns:repeat(5,1fr)}
+.numbers li{padding:34px 22px 30px;border-left:1px solid var(--line)}
+.numbers li:first-child{border-left:0;padding-left:0}
+.numbers b{display:block;font-variation-settings:var(--narrow);font-weight:850;font-size:clamp(34px,3.6vw,48px);line-height:1;color:var(--navy)}
+.numbers span{display:block;margin-top:10px;font-size:15px;color:var(--text-2);line-height:1.4}
 
-/* proof */
-.proof{display:grid;grid-template-columns:repeat(12,1fr);gap:28px;margin-top:52px}
-figure{background:var(--label);border:1px solid var(--line);border-radius:4px;overflow:hidden}
-figure button{all:unset;cursor:zoom-in;display:block;width:100%}
-figure button:focus-visible{outline:3px solid var(--kraft);outline-offset:-3px}
-figure img{width:100%;border-bottom:1px solid var(--line)}
-figcaption{padding:18px 20px 20px}
-figcaption h3{font-size:20px;font-weight:800;line-height:1.2}
-figcaption p{font-size:15px;color:var(--ink-2);margin-top:6px}
-.src{display:block;font-size:13px;color:var(--ink-2);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
-.src::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-right:8px;vertical-align:1px}
-.span-7{grid-column:span 7}.span-5{grid-column:span 5}.span-6{grid-column:span 6}.span-4{grid-column:span 4}.span-12{grid-column:span 12}
+/* ---------- sections ---------- */
+section{padding:104px 0}
+.head{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:end;margin-bottom:56px}
+h2{font-weight:850;font-size:clamp(38px,4.8vw,62px);line-height:.98;letter-spacing:-.005em}
+.head p{font-size:18px;color:var(--text-2);max-width:34em}
+.navy{background:var(--navy);color:#fff}
+.navy .head p,.navy .muted{color:var(--on-navy-2)}
 
-/* ppc comparison table */
-.compare{width:100%;border-collapse:collapse;font-size:15.5px;margin-top:6px}
-.compare th,.compare td{padding:9px 0;border-bottom:1px solid var(--line);text-align:right}
-.compare th:first-child,.compare td:first-child{text-align:left;color:var(--ink-2);font-weight:500}
-.compare thead th{font-size:13px;color:var(--ink-2);font-weight:600}
-.compare .good{color:var(--ok);font-weight:750}
-.pair{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line)}
-.pair button{position:relative}.pair button span{position:absolute;right:8px;bottom:6px;font-size:12px;font-weight:700;background:var(--ink);color:#fff;padding:2px 8px;border-radius:3px}
-.pair button{background:var(--label)}
+/* ---------- client references ---------- */
+.stores{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.store{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 24px 24px;display:flex;flex-direction:column}
+.store .tag{font-size:13px;font-weight:700;color:var(--text-2)}
+.store h3{font-size:24px;font-weight:800;margin-top:6px;line-height:1.1}
+.store .big{font-variation-settings:var(--narrow);font-weight:850;font-size:64px;line-height:1;margin-top:22px;color:var(--navy)}
+.store .big small{font-size:18px;font-weight:700;font-variation-settings:normal;color:var(--text-2);margin-left:6px}
+.meter{height:8px;border-radius:99px;background:#E7EDF3;margin-top:16px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--green);border-radius:99px}
+.store dl{margin-top:20px;display:grid;gap:10px;font-size:14.5px}
+.store dl div{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:10px}
+.store dt{color:var(--text-2)}
+.store dd{font-weight:700;text-align:right}
+.fineprint{margin-top:26px;font-size:14px;color:var(--text-2);max-width:60em}
 
-/* services */
-.services{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:52px;border-top:2px solid #E7EDF2}
-.svc{padding:30px 32px 8px 0}
-.svc+.svc{padding-left:32px;border-left:1px solid rgba(231,237,242,.2)}
-.svc h3{font-variation-settings:var(--narrow);font-weight:800;font-size:28px;line-height:1.05;color:#fff}
-.svc p{color:#A9B8C4;font-size:15.5px;margin-top:10px}
+/* funnel */
+.funnel{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;margin-top:22px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:30px}
+.panel h3{font-size:24px;font-weight:800}
+.panel p{color:var(--text-2);font-size:15.5px;margin-top:6px}
+.bars{margin-top:24px;display:grid;gap:14px}
+.bars div{display:grid;grid-template-columns:150px 1fr 90px;gap:16px;align-items:center;font-size:15px}
+.bars span{height:30px;border-radius:8px;background:var(--navy)}
+.bars div:nth-child(2) span{background:#3B6A96}
+.bars div:nth-child(3) span{background:var(--green)}
+.bars b{text-align:right;font-weight:800}
+.quote{background:var(--navy);color:#fff;border-radius:22px;padding:30px;display:flex;flex-direction:column;justify-content:space-between}
+.quote p{font-size:22px;line-height:1.35;font-weight:600;color:#fff}
+.quote span{color:var(--on-navy-2);font-size:14.5px;margin-top:20px}
+
+/* ---------- proof ---------- */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.tabs button{font:inherit;font-weight:700;font-size:15px;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer}
+.tabs button[aria-selected="true"]{background:#fff;color:var(--navy);border-color:#fff}
+.tabpanel{display:grid;grid-template-columns:1.25fr .75fr;gap:22px}
+.tabpanel[hidden]{display:none}
+.shot{background:#fff;border-radius:18px;overflow:hidden;color:var(--navy)}
+.shot button{all:unset;display:block;cursor:zoom-in;width:100%}
+.shot button:focus-visible{outline:3px solid var(--amber);outline-offset:-3px}
+.shot img{width:100%}
+.shot .cap{padding:16px 20px 18px;border-top:1px solid var(--line)}
+.shot .cap b{display:block;font-size:17px}
+.shot .cap span{display:block;font-size:13.5px;color:var(--text-2);margin-top:4px}
+.side{display:grid;gap:22px;align-content:start}
+.fact{background:var(--navy-2);border-radius:18px;padding:24px}
+.fact b{display:block;font-variation-settings:var(--narrow);font-weight:850;font-size:44px;line-height:1;color:var(--green)}
+.fact p{margin-top:10px;color:#D5E0EA;font-size:15.5px}
+.compare{width:100%;border-collapse:collapse;font-size:15px;margin-top:4px;color:#fff}
+.compare th,.compare td{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.12);text-align:right}
+.compare th:first-child,.compare td:first-child{text-align:left;color:var(--on-navy-2);font-weight:500}
+.compare thead th{font-size:13px;color:var(--on-navy-2);font-weight:600}
+.compare .up{color:var(--green);font-weight:800}
+
+/* ---------- services ---------- */
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.svc{background:#fff;border:1px solid var(--line);border-radius:22px;padding:30px 28px}
+.svc .ico{width:48px;height:48px;border-radius:14px;background:var(--navy);display:grid;place-items:center}
+.svc .ico svg{width:24px;height:24px}
+.svc h3{font-size:26px;font-weight:800;margin-top:20px;line-height:1.1}
+.svc p{color:var(--text-2);font-size:15.5px;margin-top:8px}
 .svc ul{list-style:none;margin-top:18px}
-.svc li{padding:9px 0;border-top:1px solid rgba(231,237,242,.14);font-size:15.5px}
+.svc li{padding:10px 0;border-top:1px solid var(--line);font-size:15.5px;display:flex;gap:10px}
+.svc li::before{content:"";flex:none;width:16px;height:16px;margin-top:4px;border-radius:50%;background:#DDF7EC url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23127A52' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
 
-/* steps */
-.steps{list-style:none;counter-reset:s;margin-top:52px;display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:2px solid var(--ink)}
-.steps li{counter-increment:s;padding:22px 22px 0 0}
-.steps li+li{padding-left:22px;border-left:1px solid var(--line)}
-.steps li::before{content:counter(s);display:block;font-variation-settings:var(--narrow);font-weight:850;font-size:44px;line-height:1;color:var(--kraft);margin-bottom:14px}
-.steps h3{font-size:18px;font-weight:800;line-height:1.25}
-.steps p{font-size:15px;color:var(--ink-2);margin-top:8px}
-.when{display:block;font-size:13px;color:var(--ink);font-weight:650;margin-top:10px}
+/* ---------- process ---------- */
+.steps{list-style:none;counter-reset:s;display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+.steps::before{content:"";position:absolute;left:0;right:0;top:27px;height:2px;background:var(--line)}
+.steps li{counter-increment:s;position:relative;padding-right:22px}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:var(--navy);color:#fff;font-variation-settings:var(--narrow);font-weight:850;font-size:24px;position:relative;border:6px solid var(--mist)}
+.steps li:last-child::before{background:var(--green);color:var(--navy)}
+.steps h3{font-size:19px;font-weight:800;margin-top:18px;line-height:1.2;font-variation-settings:normal}
+.steps p{font-size:15px;color:var(--text-2);margin-top:8px}
+.steps .when{display:inline-block;margin-top:12px;font-size:12.5px;font-weight:700;background:#E7EDF3;border-radius:99px;padding:4px 10px}
 
-/* work samples */
-.samples{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px}
-.sample{display:flex;flex-direction:column;background:var(--label);border:1px solid var(--line);border-radius:4px;text-decoration:none;overflow:hidden}
-.sample .thumb{aspect-ratio:4/3;overflow:hidden;background:#dfe5ea;border-bottom:1px solid var(--line)}
-.sample .thumb img{width:100%;height:100%;object-fit:cover;object-position:top}
-.sample div.t{padding:16px 18px 18px}
-.sample h3{font-size:17px;font-weight:800;line-height:1.25}
-.sample p{font-size:14.5px;color:var(--ink-2);margin-top:6px}
-.sample .open{margin-top:12px;font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
-.sample:hover h3{text-decoration:underline}
+/* ---------- samples + LOAs ---------- */
+.samples{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.sample{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;text-decoration:none}
+.sample .thumb{aspect-ratio:4/3;overflow:hidden;background:#E7EDF3}
+.sample .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .4s}
+.sample:hover .thumb img{transform:scale(1.04)}
+.sample .t{padding:18px 20px 20px}
+.sample h3{font-size:19px;font-weight:800;font-variation-settings:normal}
+.sample p{font-size:14.5px;color:var(--text-2);margin-top:6px}
+.sample .open{display:inline-block;margin-top:12px;font-size:14px;font-weight:700;color:var(--green-ink)}
+.loas{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:22px}
+.loa{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:120px 1fr;align-items:center}
+.loa button{all:unset;cursor:zoom-in;display:block;height:150px;overflow:hidden;border-right:1px solid var(--line)}
+.loa button:focus-visible{outline:3px solid var(--amber);outline-offset:-3px}
+.loa img{width:100%;height:100%;object-fit:cover;object-position:top}
+.loa div{padding:16px 18px}
+.loa b{display:block;font-size:16.5px}
+.loa span{display:block;font-size:13.5px;color:var(--text-2);margin-top:4px}
 
-/* LOAs */
-.loas{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px}
-.loas figure img{aspect-ratio:3/3.6;object-fit:cover;object-position:top}
-
-/* tools + about */
-.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
-.about p{margin-top:16px;max-width:36em}
-.facts{list-style:none;border-top:2px solid var(--ink)}
-.facts li{display:grid;grid-template-columns:170px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:16px}
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px;align-items:center}
+.about .ph{border-radius:28px;overflow:hidden;aspect-ratio:4/4.6}
+.about .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 15%}
+.about p{margin-top:18px;font-size:18px;max-width:36em}
+.facts{list-style:none;margin-top:30px;border-top:1px solid var(--line)}
+.facts li{display:grid;grid-template-columns:160px 1fr;gap:16px;padding:13px 0;border-bottom:1px solid var(--line);font-size:15.5px}
 .facts b{font-weight:750}
-.tools{margin-top:12px;color:var(--ink-2);font-size:16px;line-height:1.8}
+.facts span{color:var(--text-2)}
 
-/* contact */
-.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:48px}
-.ways{list-style:none;border-top:2px solid #E7EDF2}
-.ways a{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:18px 0;border-bottom:1px solid rgba(231,237,242,.18);text-decoration:none}
-.ways a span:first-child{color:#A9B8C4}
-.ways a span:last-child{font-weight:700;color:#fff}
-.ways a:hover span:last-child{text-decoration:underline}
-form{display:grid;gap:16px}
-label{display:grid;gap:6px;font-size:14px;color:#C6D2DB}
-input,textarea,select{font:inherit;font-size:16px;padding:12px 14px;border-radius:4px;border:1px solid #3B5164;background:#1F3446;color:#fff}
-input::placeholder,textarea::placeholder{color:#7F93A3}
-.dark .btn{border-color:#fff;color:#fff}
-.dark .btn.solid{background:#fff;color:var(--ink)}
-.dark .btn.solid:hover{background:#E7EDF2}
-.note{font-size:13.5px;color:#A9B8C4}
-footer{padding:28px 0 40px;font-size:14px;color:var(--ink-2)}
-footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.contact h2{color:#fff}
+.contact .muted{font-size:18px;margin-top:18px;max-width:30em}
+.ways{list-style:none;margin-top:34px}
+.ways a{display:flex;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid rgba(255,255,255,.14);text-decoration:none}
+.ways a span{color:var(--on-navy-2)}
+.ways a b{color:#fff}
+.ways a:hover b{text-decoration:underline;text-underline-offset:4px}
+form{background:var(--navy-2);border-radius:22px;padding:30px;display:grid;gap:16px}
+label{display:grid;gap:6px;font-size:14px;color:#C9D6E2}
+input,textarea,select{font:inherit;font-size:16px;padding:13px 14px;border-radius:12px;border:1px solid #39577A;background:#132A44;color:#fff}
+input::placeholder,textarea::placeholder{color:#7F96AD}
+.note{font-size:13.5px;color:var(--on-navy-2)}
+footer{background:var(--navy);color:var(--on-navy-2);font-size:14px;border-top:1px solid rgba(255,255,255,.1)}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:26px;padding-bottom:34px}
+footer .brand img{width:28px;height:28px}
 
-/* lightbox */
+/* ---------- lightbox ---------- */
 dialog{border:0;padding:0;background:transparent;max-width:min(1200px,94vw);max-height:92vh;margin:auto}
-dialog::backdrop{background:rgba(15,25,34,.86)}
-dialog img{max-height:84vh;width:auto;margin:0 auto;border-radius:4px;background:#fff}
+dialog::backdrop{background:rgba(8,16,26,.88)}
+dialog img{max-height:84vh;width:auto;margin:0 auto;border-radius:10px;background:#fff}
 dialog p{color:#fff;font-size:14px;margin-top:10px;text-align:center}
-dialog .close{position:fixed;top:16px;right:20px;font:inherit;font-weight:700;background:#fff;color:var(--ink);border:0;border-radius:4px;padding:8px 14px;cursor:pointer}
+dialog .close{position:fixed;top:16px;right:20px;font:inherit;font-weight:700;background:#fff;color:var(--navy);border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
 
-/* responsive */
-@media (max-width:1020px){
-  .hero-grid{grid-template-columns:1fr;gap:80px}
-  .photo-stack{justify-self:center;max-width:380px}
-  .label{left:-40px}
-  .span-7,.span-5,.span-6,.span-4{grid-column:span 12}
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .hero .hero-grid{grid-template-columns:1fr;gap:90px;padding-top:60px;padding-bottom:110px}
+  .portrait{justify-self:center;max-width:400px}
+  .feed{left:-30px}
+  .numbers ul{grid-template-columns:repeat(3,1fr)}
+  .numbers li:nth-child(4){border-left:0;padding-left:0}
+  .numbers li:nth-child(n+4){border-top:1px solid var(--line)}
+  .head{grid-template-columns:1fr;gap:18px}
+  .stores{grid-template-columns:1fr 1fr}
+  .funnel,.tabpanel,.about,.contact{grid-template-columns:1fr}
   .services{grid-template-columns:1fr}
-  .svc,.svc+.svc{padding:28px 0 8px;border-left:0;border-top:1px solid rgba(231,237,242,.2)}
-  .steps{grid-template-columns:1fr 1fr}
-  .steps li,.steps li+li{padding:22px 18px 18px 0;border-left:0;border-bottom:1px solid var(--line)}
+  .steps{grid-template-columns:1fr;gap:26px}
+  .steps::before{left:27px;right:auto;top:0;bottom:0;width:2px;height:auto}
+  .steps li{display:grid;grid-template-columns:56px 1fr;column-gap:20px;padding:0}
+  .steps li::before{grid-row:span 3}
+  .steps h3{margin-top:12px}
   .samples{grid-template-columns:1fr 1fr}
-  .about,.contact-grid{grid-template-columns:1fr;gap:40px}
+  .loas{grid-template-columns:1fr}
   nav ul{display:none}
-  nav.open ul{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--paper);padding:16px 28px 22px;gap:14px;border-bottom:1px solid var(--line)}
+  nav.open ul{display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--navy);padding:18px 32px 24px;gap:16px;border-bottom:1px solid rgba(255,255,255,.1)}
   .menu-btn{display:inline-flex}
-  .hide-sm{display:none}
+  .hide-md{display:none}
+  .about .ph{max-width:420px}
 }
-@media (max-width:600px){
+@media (max-width:620px){
   .wrap{padding:0 16px}
   body{font-size:16px}
-  .hero{padding:44px 0 96px}
-  .lede{font-size:18px}
-  .label{left:-8px;width:min(310px,88vw);bottom:-70px}
-  .stamp{right:-6px;width:88px;height:88px;font-size:13px}
-  section{padding:72px 0}
-  .steps,.samples,.loas{grid-template-columns:1fr}
+  section{padding:76px 0}
+  .hero .lede{font-size:18px}
+  .feed{position:relative;left:auto;bottom:auto;width:auto;margin:-48px 12px 0}
+  .hero .hero-grid{padding-top:44px;padding-bottom:64px;gap:56px}
+  .badge{right:-6px;top:16px}
+  .numbers ul{grid-template-columns:1fr 1fr}
+  .numbers li,.numbers li:nth-child(4){border-left:0;padding:24px 0;border-top:1px solid var(--line)}
+  .numbers li:nth-child(even){padding-left:18px;border-left:1px solid var(--line)}
+  .numbers li:first-child,.numbers li:nth-child(2){border-top:0}
+  .stores{grid-template-columns:1fr}
+  .samples{grid-template-columns:1fr 1fr;gap:14px}.sample .t{padding:14px}.sample h3{font-size:16px}.sample p{display:none}
+  .bars div{grid-template-columns:96px 1fr 70px;gap:10px;font-size:14px}
   .facts li{grid-template-columns:1fr;gap:2px}
-  .ways a{grid-template-columns:1fr;gap:2px}
-  .pair{grid-template-columns:1fr}
+  .loa{grid-template-columns:96px 1fr}
+  .brand small{display:none}
 }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
+
 <header>
   <div class="wrap bar">
-    <a class="brand" href="#top">Ahmad Haider</a>
+    <a class="brand" href="#top" aria-label="Ahmad Haider, home">
+      <img src="assets/brand/logo-mark-dark.svg" alt="" width="38" height="38">
+      <span><b>Ahmad Haider</b><small>Amazon &amp; Walmart wholesale</small></span>
+    </a>
     <nav id="nav" aria-label="Main">
       <ul>
+        <li><a href="#results">Results</a></li>
         <li><a href="#proof">Proof</a></li>
         <li><a href="#services">Services</a></li>
         <li><a href="#process">How it works</a></li>
-        <li><a href="#samples">Work samples</a></li>
         <li><a href="#about">About</a></li>
       </ul>
     </nav>
     <div style="display:flex;gap:10px;align-items:center">
-      <a class="btn solid hide-sm" href="#contact">Talk about your store</a>
-      <button class="btn menu-btn" aria-expanded="false" aria-controls="nav" onclick="toggleNav(this)">Menu</button>
+      <a class="btn btn-green hide-md" href="#contact">Talk about your store</a>
+      <button class="menu-btn" aria-expanded="false" aria-controls="nav" onclick="toggleNav(this)">Menu</button>
     </div>
   </div>
 </header>
 
 <main id="main">
-<section class="hero" id="top">
+<!-- HERO -->
+<section class="hero" id="top" style="padding:0">
   <div class="wrap hero-grid">
     <div>
-      <h1>Approved by brands. Profitable on every buy.</h1>
-      <p class="lede">I get US Amazon and Walmart wholesale stores approved by brands, then run the day-to-day: <strong>brand approvals, distributor accounts, buy plans, prep, reimbursements and PPC.</strong> 4.5+ years on Seller Central. Every number on this page comes from a real screenshot you can open below.</p>
+      <h1>Approved by brands. Profitable on every buy<span class="tick">.</span></h1>
+      <p class="lede">I run wholesale for US Amazon and Walmart sellers: <b>finding brands that approve resellers, getting your store approved, and checking every price list</b> so you only buy what makes money.</p>
       <div class="cta">
-        <a class="btn solid" href="#contact">Talk about your store</a>
-        <a class="btn" href="#proof">See the proof</a>
-        <a class="btn" href="pdfs/cv_2026.pdf" target="_blank" rel="noopener">Download CV</a>
+        <a class="btn btn-green" href="#contact">Talk about your store</a>
+        <a class="btn btn-ghost" href="#results">See client results</a>
+      </div>
+      <div class="trust">
+        <span>4 US wholesale stores</span>
+        <span>4.5+ years on Seller Central</span>
+        <span>Real screenshots, nothing mocked up</span>
       </div>
     </div>
-    <div class="photo-stack">
-      <div class="photo"><img src="assets/ahmad.webp" alt="Ahmad Haider" width="1024" height="916" fetchpriority="high"></div>
-      <div class="label" aria-label="Verified results">
-        <div class="row"><span>From <b>Ahmad Haider</b>, Lahore</span><span>To <b>your store</b></span></div>
-        <dl>
-          <dt>$1.5M</dt><dd>wholesale sales on one account, Dec 2022 to Nov 2024</dd>
-          <dt>50+</dt><dd>gated brands unlocked on Seller Central</dd>
-          <dt>−16%</dt><dd>ad spend in one month with ACOS down 52% to 47%</dd>
-        </dl>
-        <svg class="barcode" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true"><rect x="0" y="0" width="2" height="46"/><rect x="10" y="0" width="2" height="46"/><rect x="22" y="0" width="1" height="46"/><rect x="24" y="0" width="1" height="46"/><rect x="26" y="0" width="3" height="46"/><rect x="41" y="0" width="1" height="46"/><rect x="52" y="0" width="2" height="46"/><rect x="57" y="0" width="2" height="46"/><rect x="66" y="0" width="4" height="46"/><rect x="77" y="0" width="2" height="46"/><rect x="81" y="0" width="3" height="46"/><rect x="90" y="0" width="1" height="46"/><rect x="94" y="0" width="1" height="46"/><rect x="96" y="0" width="3" height="46"/><rect x="101" y="0" width="2" height="46"/><rect x="106" y="0" width="3" height="46"/><rect x="110" y="0" width="1" height="46"/><rect x="114" y="0" width="4" height="46"/><rect x="119" y="0" width="4" height="46"/><rect x="126" y="0" width="2" height="46"/><rect x="130" y="0" width="1" height="46"/><rect x="133" y="0" width="1" height="46"/><rect x="140" y="0" width="1" height="46"/><rect x="144" y="0" width="2" height="46"/><rect x="158" y="0" width="2" height="46"/><rect x="168" y="0" width="4" height="46"/><rect x="177" y="0" width="1" height="46"/><rect x="179" y="0" width="2" height="46"/><rect x="187" y="0" width="2" height="46"/><rect x="191" y="0" width="1" height="46"/><rect x="193" y="0" width="2" height="46"/><rect x="201" y="0" width="2" height="46"/><rect x="219" y="0" width="2" height="46"/><rect x="222" y="0" width="1" height="46"/><rect x="235" y="0" width="1" height="46"/><rect x="239" y="0" width="2" height="46"/><rect x="256" y="0" width="1" height="46"/><rect x="262" y="0" width="4" height="46"/><rect x="271" y="0" width="3" height="46"/><rect x="282" y="0" width="1" height="46"/><rect x="285" y="0" width="1" height="46"/><rect x="293" y="0" width="2" height="46"/><rect x="297" y="0" width="4" height="46"/></svg>
-        <div class="code"><span>AMZ · WALMART</span><span>WHOLESALE</span></div>
+    <div class="portrait">
+      <div class="ph"><img src="assets/ahmad.webp" alt="Ahmad Haider" width="1024" height="916" fetchpriority="high"></div>
+      <div class="badge"><b>70</b>brand approvals<br>in 2026</div>
+      <div class="feed" aria-label="Recent approvals across client stores">
+        <h2>Brand approvals <span>Live tracker</span></h2>
+        <ul>
+          <li><i><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.2 2.2L9.5 3.8" fill="none" stroke="#127A52" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Store A · brand 40<em>Sep 2026</em></li>
+          <li><i><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.2 2.2L9.5 3.8" fill="none" stroke="#127A52" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Store B · brand 22<em>Sep 2026</em></li>
+          <li><i><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.2 2.2L9.5 3.8" fill="none" stroke="#127A52" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Store C · brand 7<em>Sep 2026</em></li>
+          <li><i><svg viewBox="0 0 12 12"><path d="M2.5 6.5l2.2 2.2L9.5 3.8" fill="none" stroke="#127A52" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Store D · first brand<em>Week 1</em></li>
+        </ul>
       </div>
-      <div class="stamp" aria-hidden="true">Brand<br>approved</div>
     </div>
   </div>
 </section>
 
-<section id="proof" class="tight">
+<!-- NUMBERS -->
+<div class="numbers">
   <div class="wrap">
-    <h2>Proof from real accounts, not mockups</h2>
-    <p class="intro">Screenshots from Seller Central, Amazon Ads and my own working sheets. Brand names, IDs and client details are hidden. Click any image to see it full size.</p>
+    <ul>
+      <li><b>70</b><span>brand approvals won for 4 client stores in 2026</span></li>
+      <li><b>10,000+</b><span>brands researched and logged on Keepa data</span></li>
+      <li><b>1,900+</b><span>brands applied to by email or wholesale form</span></li>
+      <li><b>$1.5M</b><span>wholesale sales on one FBA account I managed</span></li>
+      <li><b>50+</b><span>gated brands unlocked on Seller Central</span></li>
+    </ul>
+  </div>
+</div>
 
-    <div class="proof">
-      <figure class="span-7">
-        <button type="button" data-full="assets/wholesale-sales.webp" aria-label="Open wholesale sales screenshot"><img src="assets/wholesale-sales.webp" alt="Seller Central sales dashboard showing $1,499,808.40 ordered product sales" loading="lazy" width="1024" height="310"></button>
-        <figcaption>
-          <h3>$1,499,808 in wholesale sales on one FBA account</h3>
-          <p>25,052 orders and 26,913 units, built from approved brands and distributor buys I sourced and managed.</p>
-          <span class="src">Seller Central sales dashboard, Dec 1 2022 to Nov 22 2024, fulfilled by Amazon</span>
-        </figcaption>
-      </figure>
+<!-- RESULTS -->
+<section id="results">
+  <div class="wrap">
+    <div class="head">
+      <h2>Client results, store by store</h2>
+      <p>Four US wholesale companies I run brand outreach and sourcing for. Client names, brands and products stay private. Every number comes from the tracking sheets I keep for them.</p>
+    </div>
 
-      <figure class="span-5">
-        <div class="pair">
-          <button type="button" data-full="assets/ppc-jul.webp" aria-label="Open July ads screenshot"><span>July 2025</span><img src="assets/ppc-jul-top.webp" alt="Amazon Ads July 2025: spend $52,577, ACOS 51.99%" loading="lazy"></button>
-          <button type="button" data-full="assets/ppc-aug.webp" aria-label="Open August ads screenshot"><span>Aug 2025</span><img src="assets/ppc-aug-top.webp" alt="Amazon Ads August 2025: spend $44,239, ACOS 47.46%" loading="lazy"></button>
+    <div class="stores">
+      <article class="store">
+        <span class="tag">Store A · since Feb 2026</span>
+        <h3>Established wholesale account</h3>
+        <div class="big">40<small>brands approved</small></div>
+        <div class="meter"><i style="width:100%"></i></div>
+        <dl>
+          <div><dt>Profitable products found</dt><dd>26</dd></div>
+          <div><dt>Avg profit per unit</dt><dd>$4.79</dd></div>
+          <div><dt>Latest purchase order</dt><dd>488 units</dd></div>
+        </dl>
+      </article>
+      <article class="store">
+        <span class="tag">Store B · since Jul 2026</span>
+        <h3>Scaling a new catalog</h3>
+        <div class="big">22<small>in 9 weeks</small></div>
+        <div class="meter"><i style="width:55%"></i></div>
+        <dl>
+          <div><dt>Profitable products found</dt><dd>10</dd></div>
+          <div><dt>Avg profit per unit</dt><dd>$10.86</dd></div>
+          <div><dt>Brands applied to</dt><dd>790+</dd></div>
+        </dl>
+      </article>
+      <article class="store">
+        <span class="tag">Store C · since Sep 2026</span>
+        <h3>New client, first weeks</h3>
+        <div class="big">7<small>in 2 weeks</small></div>
+        <div class="meter"><i style="width:17.5%"></i></div>
+        <dl>
+          <div><dt>Profitable products found</dt><dd>6</dd></div>
+          <div><dt>Avg profit per unit</dt><dd>$7.48</dd></div>
+          <div><dt>Brands applied to</dt><dd>380+</dd></div>
+        </dl>
+      </article>
+      <article class="store">
+        <span class="tag">Store D · since late Sep 2026</span>
+        <h3>Just started</h3>
+        <div class="big">1<small>in week 1</small></div>
+        <div class="meter"><i style="width:2.5%"></i></div>
+        <dl>
+          <div><dt>Profitable products found</dt><dd>3</dd></div>
+          <div><dt>Avg profit per unit</dt><dd>$4.27</dd></div>
+          <div><dt>Brands applied to</dt><dd>80+</dd></div>
+        </dl>
+      </article>
+    </div>
+
+    <div class="funnel">
+      <div class="panel">
+        <h3>Why volume and follow-ups matter</h3>
+        <p>Most brands never answer the first email. Across the four stores, this is what it took to get 70 approvals.</p>
+        <div class="bars" role="img" aria-label="10,111 brands researched, 1,915 applied to, 70 approved">
+          <div><span style="background:none;height:auto">Researched</span><span style="width:100%"></span><b>10,111</b></div>
+          <div><span style="background:none;height:auto">Applied to</span><span style="width:19%"></span><b>1,915</b></div>
+          <div><span style="background:none;height:auto">Approved</span><span style="width:3%;min-width:10px"></span><b>70</b></div>
         </div>
-        <figcaption>
-          <h3>$8,338 less ad spend in one month, sales held</h3>
+      </div>
+      <div class="quote">
+        <p>In my outreach data, about 1 in 27 brands applied to said yes. Sellers who stop after one email never see those approvals, so I keep following up until each brand answers.</p>
+        <span>From the outreach sheets for Stores A to D, Feb to Oct 2026</span>
+      </div>
+    </div>
+    <p class="fineprint">Profitable means it passed every rule before going on the buy list: 200+ sales a month, 3+ FBA sellers, Amazon holding under half the Buy Box, and profit after referral, FBA, prep and shipping fees.</p>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section id="proof" class="navy">
+  <div class="wrap">
+    <div class="head">
+      <h2>Proof from Seller Central</h2>
+      <p>Screenshots from Seller Central, Amazon Ads, Amazon support and my working sheets. IDs, brands and client details are hidden. Click any image to open it full size.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Proof">
+      <button role="tab" aria-selected="true" aria-controls="p-sales" id="t-sales">Sales</button>
+      <button role="tab" aria-selected="false" aria-controls="p-ads" id="t-ads">Ad spend</button>
+      <button role="tab" aria-selected="false" aria-controls="p-buy" id="t-buy">Buy plans</button>
+      <button role="tab" aria-selected="false" aria-controls="p-amazon" id="t-amazon">Approvals &amp; refunds</button>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" id="p-sales" aria-labelledby="t-sales">
+      <figure class="shot"><button type="button" data-full="assets/wholesale-sales.webp"><img src="assets/wholesale-sales.webp" alt="Seller Central sales dashboard: $1,499,808.40 ordered product sales" loading="lazy" width="1024" height="310"></button>
+        <figcaption class="cap"><b>$1,499,808 in wholesale sales on one FBA account</b><span>Seller Central, Dec 1 2022 to Nov 22 2024, fulfilled by Amazon</span></figcaption></figure>
+      <div class="side">
+        <div class="fact"><b>26,913</b><p>units sold across 25,052 order items, from approved brands and distributor buys I sourced and managed.</p></div>
+        <div class="fact"><b>$59.87</b><p>average sale per order item, in the $10 to $150 price range I target.</p></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" role="tabpanel" id="p-ads" aria-labelledby="t-ads" hidden>
+      <figure class="shot"><button type="button" data-full="assets/ppc-aug.webp"><img src="assets/ppc-aug.webp" alt="Amazon Ads August 2025: spend $44,239, ACOS 47.46%" loading="lazy"></button>
+        <figcaption class="cap"><b>August 2025 ad spend after the rebuild</b><span>Amazon Ads campaign manager. July screenshot: <a href="assets/ppc-jul.webp" target="_blank" rel="noopener">open</a></span></figcaption></figure>
+      <div class="side">
+        <div class="fact"><b>−$8,338</b><p>ad spend in one month, with total sales staying about the same.</p>
           <table class="compare">
-            <thead><tr><th></th><th>July 2025</th><th>Aug 2025</th></tr></thead>
+            <thead><tr><th></th><th>Jul 2025</th><th>Aug 2025</th></tr></thead>
             <tbody>
-              <tr><td>Ad spend</td><td>$52,577</td><td class="good">$44,239</td></tr>
-              <tr><td>ACOS</td><td>51.99%</td><td class="good">47.46%</td></tr>
+              <tr><td>Ad spend</td><td>$52,577</td><td class="up">$44,239</td></tr>
+              <tr><td>ACOS</td><td>51.99%</td><td class="up">47.46%</td></tr>
               <tr><td>Total sales</td><td>$250,867</td><td>$236,555</td></tr>
-              <tr><td>Ad cost of total sales</td><td>20.96%</td><td class="good">18.70%</td></tr>
+              <tr><td>Ads as % of sales</td><td>20.96%</td><td class="up">18.70%</td></tr>
             </tbody>
           </table>
-          <span class="src">Amazon Ads campaign manager and Seller Central, same account</span>
-        </figcaption>
-      </figure>
+        </div>
+      </div>
+    </div>
 
-      <figure class="span-6">
-        <button type="button" data-full="assets/buy-plan.webp" aria-label="Open buy plan sheet"><img src="assets/buy-plan.webp" alt="Wholesale buy plan sheet: 2,158 units, $296,700 buying cost, $86,043 estimated profit, 29% ROI" loading="lazy"></button>
-        <figcaption>
-          <h3>A buy plan: 2,158 units, $296,700, 29% average ROI</h3>
-          <p>Every row has the reference ASIN, sales per month, FBA sellers, my share of sales, every fee and profit per unit, so the client approves the order with real numbers. Estimated profit: $86,043.</p>
-          <span class="src">My product sheet for a wholesale client, item names hidden</span>
-        </figcaption>
-      </figure>
+    <div class="tabpanel" role="tabpanel" id="p-buy" aria-labelledby="t-buy" hidden>
+      <figure class="shot"><button type="button" data-full="assets/buy-plan.webp"><img src="assets/buy-plan.webp" alt="Wholesale buy plan: 2,158 units, $296,700 buying cost, $86,043 estimated profit, 29% ROI" loading="lazy"></button>
+        <figcaption class="cap"><b>A buy plan the client approved line by line</b><span>My product sheet for a wholesale client, item names hidden</span></figcaption></figure>
+      <div class="side">
+        <div class="fact"><b>29%</b><p>average ROI across 2,158 units and $296,700 of stock, with $86,043 estimated profit.</p></div>
+        <figure class="shot"><button type="button" data-full="assets/profit-sheet.webp"><img src="assets/profit-sheet.webp" alt="Profit tracking sheet with $19,981.29 total profit" loading="lazy"></button>
+          <figcaption class="cap"><b>$19,981 profit tracked after the stock sold</b><span>Units, reimbursements, prep, shipping and net proceeds per SKU</span></figcaption></figure>
+      </div>
+    </div>
 
-      <figure class="span-6">
-        <button type="button" data-full="assets/profit-sheet.webp" aria-label="Open profit tracking sheet"><img src="assets/profit-sheet.webp" alt="Profit tracking sheet with $19,981.29 total profit" loading="lazy"></button>
-        <figcaption>
-          <h3>$19,981 profit tracked SKU by SKU, after it sold</h3>
-          <p>Units bought and sold, reimbursements, prep and shipping, total cost and net proceeds, so you see what each buy really made.</p>
-          <span class="src">My profit tracking sheet for a wholesale account</span>
-        </figcaption>
-      </figure>
-
-      <figure class="span-4">
-        <button type="button" data-full="assets/outreach-tracker.webp" aria-label="Open brand outreach tracker"><img src="assets/outreach-tracker.webp" alt="Brand outreach tracker with approved, pending and distributor statuses" loading="lazy"></button>
-        <figcaption>
-          <h3>Brand outreach, tracked to the reply</h3>
-          <p>Every brand, ASIN, contact route and status: approved, pending, distributor only or not Amazon.</p>
-          <span class="src">Outreach tracker, contacts blurred</span>
-        </figcaption>
-      </figure>
-
-      <figure class="span-4">
-        <button type="button" data-full="assets/approval-email.webp" aria-label="Open approval email"><img src="assets/approval-email.webp" alt="Amazon Selling Partner Support email approving a brand request" loading="lazy"></button>
-        <figcaption>
-          <h3>Gated brands unlocked on Seller Central</h3>
-          <p>50+ brand approvals won with the right invoices and LOAs.</p>
-          <span class="src">Amazon Selling Partner Support email, brand hidden</span>
-        </figcaption>
-      </figure>
-
-      <figure class="span-4">
-        <button type="button" data-full="assets/reimbursement.webp" aria-label="Open reimbursement email"><img src="assets/reimbursement.webp" alt="Amazon email confirming a shipment discrepancy reimbursement" loading="lazy"></button>
-        <figcaption>
-          <h3>Lost and damaged stock paid back</h3>
-          <p>Shipment discrepancies investigated and reimbursed by Amazon.</p>
-          <span class="src">Amazon Selling Partner Support email, IDs hidden</span>
-        </figcaption>
-      </figure>
+    <div class="tabpanel" role="tabpanel" id="p-amazon" aria-labelledby="t-amazon" hidden>
+      <figure class="shot"><button type="button" data-full="assets/outreach-tracker.webp"><img src="assets/outreach-tracker.webp" alt="Brand outreach tracker with approved, pending and distributor statuses" loading="lazy"></button>
+        <figcaption class="cap"><b>Every brand tracked to its reply</b><span>Outreach tracker, contacts blurred</span></figcaption></figure>
+      <div class="side">
+        <figure class="shot"><button type="button" data-full="assets/approval-email.webp"><img src="assets/approval-email.webp" alt="Amazon Selling Partner Support email approving a brand request" loading="lazy"></button>
+          <figcaption class="cap"><b>Gated brand unlocked by Amazon</b><span>Selling Partner Support email, brand hidden</span></figcaption></figure>
+        <figure class="shot"><button type="button" data-full="assets/reimbursement.webp"><img src="assets/reimbursement.webp" alt="Amazon email confirming a shipment discrepancy reimbursement" loading="lazy"></button>
+          <figcaption class="cap"><b>Lost stock paid back by Amazon</b><span>Shipment discrepancy reimbursement, IDs hidden</span></figcaption></figure>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="services" class="dark">
+<!-- SERVICES -->
+<section id="services">
   <div class="wrap">
-    <h2>What I run for your store</h2>
-    <p class="intro">Hire me for one part or the whole wholesale operation. You keep full ownership of the account, approve every purchase and pay suppliers yourself.</p>
+    <div class="head">
+      <h2>What I run for your store</h2>
+      <p>Hire me for one part or the whole operation. You keep full ownership of the account, approve every purchase and pay suppliers yourself.</p>
+    </div>
     <div class="services">
       <div class="svc">
-        <h3>Wholesale growth</h3>
-        <p>Getting brands to say yes, then buying only what sells.</p>
-        <ul>
-          <li>Brand hunting with Keepa data</li>
-          <li>Approval outreach and follow-ups</li>
-          <li>Distributor and supplier accounts</li>
-          <li>Price list checks and buy plans</li>
-          <li>MOQs, discounts and purchase orders</li>
-        </ul>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
+        <h3>Brand approvals</h3>
+        <p>Getting brands to approve your store.</p>
+        <ul><li>Brand hunting with Keepa data</li><li>Applications from your business email</li><li>Follow-ups every 14 days until they reply</li><li>Wholesale forms and brand questions</li><li>Distributor accounts when brands say no</li></ul>
       </div>
       <div class="svc">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg></div>
+        <h3>Sourcing and buy plans</h3>
+        <p>Buying only what makes money.</p>
+        <ul><li>Price lists matched to the exact ASIN</li><li>Every fee filled: referral, FBA, prep, shipping</li><li>Profit, ROI and your share of sales</li><li>MOQ, case packs and discount requests</li><li>Purchase orders ready for your OK</li></ul>
+      </div>
+      <div class="svc">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg></div>
         <h3>Account operations</h3>
-        <p>The work that keeps stock moving and money coming back.</p>
-        <ul>
-          <li>Brand and category ungating</li>
-          <li>Prep center coordination and FNSKU labels</li>
-          <li>Shipment plans, box weights and labels</li>
-          <li>FBA reimbursements and discrepancy cases</li>
-          <li>Walmart Marketplace wholesale</li>
-        </ul>
-      </div>
-      <div class="svc">
-        <h3>Listings and ads</h3>
-        <p>Turning traffic into orders without wasting ad spend.</p>
-        <ul>
-          <li>Listing audits and rewrites</li>
-          <li>Keyword research and backend terms</li>
-          <li>Sponsored Products, Brands and Display</li>
-          <li>ACOS and ad-spend control</li>
-          <li>Private label launch support</li>
-        </ul>
+        <p>Keeping stock moving and money coming back.</p>
+        <ul><li>Category and brand ungating</li><li>Prep center, FNSKU labels, shipment plans</li><li>Reimbursements and discrepancy cases</li><li>Listing fixes and PPC control</li><li>Walmart Marketplace wholesale</li></ul>
       </div>
     </div>
   </div>
 </section>
 
-<section id="process">
+<!-- PROCESS -->
+<section id="process" style="padding-top:0">
   <div class="wrap">
-    <h2>How a wholesale month runs with me</h2>
-    <p class="intro">The same process I use for every store, so you always know what happens next.</p>
+    <div class="head">
+      <h2>How a month runs with me</h2>
+      <p>The same process for every store, so you always know what happens next and see it in your sheet.</p>
+    </div>
     <ol class="steps">
-      <li><h3>Account and budget check</h3><p>Your categories, stock budget, documents and the brands you already sell.</p><span class="when">Days 1 to 3</span></li>
+      <li><h3>Store and budget check</h3><p>Your categories, stock budget, documents and the brands you already sell.</p><span class="when">Days 1 to 3</span></li>
       <li><h3>Brand list</h3><p>Brands with 200+ sales a month, 3+ FBA sellers and Amazon under half the Buy Box.</p><span class="when">Every week</span></li>
-      <li><h3>Outreach and follow-ups</h3><p>Applications from your business email, follow-ups every 14 days, every reply logged.</p><span class="when">Every day</span></li>
-      <li><h3>Price lists checked</h3><p>Every item matched to its ASIN, all fees filled, profit and ROI worked out.</p><span class="when">Same day a list arrives</span></li>
-      <li><h3>Buy plan for your OK</h3><p>You approve the products and quantities. I request the invoice, you pay the supplier.</p><span class="when">Weekly report</span></li>
+      <li><h3>Outreach</h3><p>Applications from your email, follow-ups every 14 days, every reply logged.</p><span class="when">Every day</span></li>
+      <li><h3>Price lists checked</h3><p>Every item matched to its ASIN with all fees, profit and ROI worked out.</p><span class="when">Same day</span></li>
+      <li><h3>Your buy plan</h3><p>You approve products and quantities. I request the invoice, you pay the supplier.</p><span class="when">Weekly report</span></li>
     </ol>
   </div>
 </section>
 
-<section id="samples" class="tight" style="background:#DFE5EA">
+<!-- SAMPLES + LOAs -->
+<section id="samples" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
-    <h2>Work samples you can open</h2>
+    <div class="head">
+      <h2>Work you can open</h2>
+      <p>Real deliverables I've made for clients, plus authorization letters I secured for them. Company names and signatures are hidden.</p>
+    </div>
     <div class="samples">
-      <a class="sample" href="pdfs/wholesale-portfolio.pdf" target="_blank" rel="noopener">
-        <span class="thumb"><img src="assets/sample-wholesale.webp" alt="" loading="lazy"></span>
-        <div class="t"><h3>Wholesale case study</h3><p>Approvals, product hunting, prep, shipments, reimbursements and results.</p><span class="open">Open PDF, 5.9 MB</span></div>
-      </a>
-      <a class="sample" href="pdfs/brand-audit.pdf" target="_blank" rel="noopener">
-        <span class="thumb"><img src="assets/sample-audit.webp" alt="" loading="lazy"></span>
-        <div class="t"><h3>Brand audit report</h3><p>Listing, keyword, image and PPC review with clear fixes.</p><span class="open">Open PDF, 2.7 MB</span></div>
-      </a>
-      <a class="sample" href="pdfs/listing-optimization.pdf" target="_blank" rel="noopener">
-        <span class="thumb"><img src="assets/sample-listing.webp" alt="" loading="lazy"></span>
-        <div class="t"><h3>Listing rewrite</h3><p>Title, bullets, description and backend keywords for a mop bundle.</p><span class="open">Open PDF, 0.3 MB</span></div>
-      </a>
-      <a class="sample" href="pdfs/listing-images.pdf" target="_blank" rel="noopener">
-        <span class="thumb"><img src="assets/sample-images.webp" alt="" loading="lazy"></span>
-        <div class="t"><h3>Listing image set</h3><p>Infographics, lifestyle and feature images for Amazon.</p><span class="open">Open PDF, 69 MB</span></div>
-      </a>
+      <a class="sample" href="pdfs/wholesale-portfolio.pdf" target="_blank" rel="noopener"><span class="thumb"><img src="assets/sample-wholesale.webp" alt="" loading="lazy"></span><div class="t"><h3>Wholesale case study</h3><p>Approvals, product hunting, prep, shipments and results.</p><span class="open">Open PDF, 5.9 MB</span></div></a>
+      <a class="sample" href="pdfs/brand-audit.pdf" target="_blank" rel="noopener"><span class="thumb"><img src="assets/sample-audit.webp" alt="" loading="lazy"></span><div class="t"><h3>Brand audit report</h3><p>Listing, keyword, image and PPC review with fixes.</p><span class="open">Open PDF, 2.7 MB</span></div></a>
+      <a class="sample" href="pdfs/listing-optimization.pdf" target="_blank" rel="noopener"><span class="thumb"><img src="assets/sample-listing.webp" alt="" loading="lazy"></span><div class="t"><h3>Listing rewrite</h3><p>Title, bullets, description and backend keywords.</p><span class="open">Open PDF, 0.3 MB</span></div></a>
+      <a class="sample" href="pdfs/listing-images.pdf" target="_blank" rel="noopener"><span class="thumb"><img src="assets/sample-images.webp" alt="" loading="lazy"></span><div class="t"><h3>Listing image set</h3><p>Infographics, lifestyle and feature images.</p><span class="open">Open PDF, 69 MB</span></div></a>
     </div>
-  </div>
-</section>
-
-<section id="loas" class="tight">
-  <div class="wrap">
-    <h2>Authorization letters secured</h2>
-    <p class="intro">Letters from a manufacturer, a brand's exclusive supplier and Lenovo's reseller program, used to get clients approved. Company names and signatures are hidden.</p>
     <div class="loas">
-      <figure><button type="button" data-full="assets/loa-manufacturer.webp" aria-label="Open manufacturer letter"><img src="assets/loa-manufacturer.webp" alt="Manufacturer authorization letter, details hidden" loading="lazy"></button><figcaption><h3>Manufacturer authorization</h3><span class="src">Brand owner letter, Aug 2025</span></figcaption></figure>
-      <figure><button type="button" data-full="assets/loa-brand.webp" aria-label="Open brand supplier letter"><img src="assets/loa-brand.webp" alt="Exclusive supplier authorization letter, details hidden" loading="lazy"></button><figcaption><h3>Exclusive supplier letter</h3><span class="src">Brand Registry holder, Sept 2025</span></figcaption></figure>
-      <figure><button type="button" data-full="assets/loa-lenovo.webp" aria-label="Open Lenovo letter"><img src="assets/loa-lenovo.webp" alt="Lenovo 360 authorized reseller letter, details hidden" loading="lazy"></button><figcaption><h3>Lenovo 360 authorized reseller</h3><span class="src">Lenovo North America, Oct 2025</span></figcaption></figure>
+      <div class="loa"><button type="button" data-full="assets/loa-manufacturer.webp" aria-label="Open manufacturer letter"><img src="assets/loa-manufacturer.webp" alt="Manufacturer authorization letter, details hidden" loading="lazy"></button><div><b>Manufacturer authorization</b><span>Brand owner letter, Aug 2025</span></div></div>
+      <div class="loa"><button type="button" data-full="assets/loa-brand.webp" aria-label="Open supplier letter"><img src="assets/loa-brand.webp" alt="Exclusive supplier letter, details hidden" loading="lazy"></button><div><b>Exclusive supplier letter</b><span>Brand Registry holder, Sept 2025</span></div></div>
+      <div class="loa"><button type="button" data-full="assets/loa-lenovo.webp" aria-label="Open Lenovo letter"><img src="assets/loa-lenovo.webp" alt="Lenovo 360 authorized reseller letter, details hidden" loading="lazy"></button><div><b>Lenovo 360 authorized reseller</b><span>Lenovo North America, Oct 2025</span></div></div>
     </div>
   </div>
 </section>
 
-<section id="about" style="padding-top:24px">
+<!-- ABOUT -->
+<section id="about">
   <div class="wrap about">
+    <div class="ph"><img src="images/ahmad-photo.png" alt="Ahmad Haider" loading="lazy" width="683" height="1024"></div>
     <div>
-      <h2>About me</h2>
-      <p>I'm Ahmad Haider, based in Lahore, Pakistan. For 4.5+ years I've worked only on Amazon: wholesale first, then managing brand accounts, with US sellers as my clients.</p>
-      <p>I treat a client's stock budget like my own money. Nothing gets bought without the numbers, and nothing happens on the account without a record you can see.</p>
-    </div>
-    <div>
+      <h2>Hi, I'm Ahmad</h2>
+      <p>I'm based in Lahore, Pakistan, and I've worked only on Amazon for 4.5+ years: wholesale first, then managing brand accounts. Today I run brand outreach and sourcing for US wholesale stores on Amazon and Walmart.</p>
+      <p>I treat your stock budget like my own money. Nothing gets bought without the numbers, and everything I do is in a sheet you can open any time.</p>
       <ul class="facts">
         <li><b>Marketplaces</b><span>Amazon US, Walmart Marketplace</span></li>
-        <li><b>Models</b><span>FBA wholesale, online arbitrage, private label support</span></li>
-        <li><b>Working hours</b><span>Overlap with US mornings and evenings, replies within a few hours</span></li>
+        <li><b>Working hours</b><span>Overlap with US mornings and evenings</span></li>
         <li><b>Reporting</b><span>Live Google Sheet plus a weekly summary</span></li>
-        <li><b>Tools</b><span class="tools">Keepa, Helium 10, Jungle Scout, SellerAmp, ScanUnlimited, AZInsight, InventoryLab, Data Dive, Seller Central, Amazon Ads, Google Sheets</span></li>
+        <li><b>Tools</b><span>Keepa, Helium 10, Jungle Scout, SellerAmp, ScanUnlimited, AZInsight, InventoryLab, Seller Central, Amazon Ads</span></li>
       </ul>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:30px">
+        <a class="btn btn-dark" href="#contact">Talk about your store</a>
+        <a class="btn btn-line" href="pdfs/cv_2026.pdf" target="_blank" rel="noopener">Download CV</a>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="contact" class="dark">
-  <div class="wrap">
-    <h2>Tell me about your store</h2>
-    <p class="intro">Send your store type, categories and stock budget. I'll reply with an honest view of whether wholesale fits, and where I'd start.</p>
-    <div class="contact-grid">
+<!-- CONTACT -->
+<section id="contact" class="navy">
+  <div class="wrap contact">
+    <div>
+      <h2>Tell me about your store</h2>
+      <p class="muted">Send your store type, categories and stock budget. I'll reply with an honest view of whether wholesale fits and where I'd start.</p>
       <ul class="ways">
-        <li><a href="mailto:ahmadhaidertariq@gmail.com"><span>Email</span><span>ahmadhaidertariq@gmail.com</span></a></li>
-        <li><a href="https://wa.me/923144166070" target="_blank" rel="noopener"><span>WhatsApp</span><span>+92 314 4166070</span></a></li>
-        <li><a href="https://www.upwork.com/freelancers/~01f9b961e841e5f942" target="_blank" rel="noopener"><span>Upwork</span><span>Hire me on Upwork</span></a></li>
-        <li><a href="https://www.linkedin.com/in/ahmadhaidertariq" target="_blank" rel="noopener"><span>LinkedIn</span><span>linkedin.com/in/ahmadhaidertariq</span></a></li>
+        <li><a href="mailto:ahmadhaidertariq@gmail.com"><span>Email</span><b>ahmadhaidertariq@gmail.com</b></a></li>
+        <li><a href="https://wa.me/923144166070" target="_blank" rel="noopener"><span>WhatsApp</span><b>+92 314 4166070</b></a></li>
+        <li><a href="https://www.upwork.com/freelancers/~01f9b961e841e5f942" target="_blank" rel="noopener"><span>Upwork</span><b>Hire me on Upwork</b></a></li>
+        <li><a href="https://www.linkedin.com/in/ahmadhaidertariq" target="_blank" rel="noopener"><span>LinkedIn</span><b>/in/ahmadhaidertariq</b></a></li>
       </ul>
-      <form id="mailform">
-        <label>Your name<input name="name" required autocomplete="name"></label>
-        <label>Your email<input name="email" type="email" required autocomplete="email"></label>
-        <label>What do you need?
-          <select name="need">
-            <option>Brand approvals and outreach</option>
-            <option>Profitable wholesale products</option>
-            <option>Full wholesale account management</option>
-            <option>Walmart wholesale</option>
-            <option>Listings, PPC or reimbursements</option>
-          </select>
-        </label>
-        <label>Store type, categories and budget<textarea name="msg" rows="4" placeholder="Existing FBA wholesale store, home and kitchen, $5k a month stock budget"></textarea></label>
-        <div><button class="btn solid" type="submit">Write the email</button></div>
-        <p class="note">This opens your email app with the message filled in, ready to send.</p>
-      </form>
     </div>
+    <form id="mailform">
+      <label>Your name<input name="name" required autocomplete="name"></label>
+      <label>Your email<input name="email" type="email" required autocomplete="email"></label>
+      <label>What do you need?
+        <select name="need">
+          <option>Brand approvals and outreach</option>
+          <option>Profitable wholesale products</option>
+          <option>Full wholesale account management</option>
+          <option>Walmart wholesale</option>
+          <option>Listings, PPC or reimbursements</option>
+        </select>
+      </label>
+      <label>Store type, categories and budget<textarea name="msg" rows="4" placeholder="Existing FBA wholesale store, home and kitchen, $5k a month stock budget"></textarea></label>
+      <div><button class="btn btn-green" type="submit">Write the email</button></div>
+      <p class="note">This opens your email app with your message filled in, ready to send.</p>
+    </form>
   </div>
 </section>
 </main>
 
 <footer>
-  <div class="wrap"><span>© 2026 Ahmad Haider</span><span>Lahore, Pakistan. Working with US Amazon and Walmart sellers.</span></div>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/brand/logo-mark-dark.svg" alt="" width="28" height="28"><span style="color:#fff;font-weight:700">Ahmad Haider</span></a>
+    <span>© 2026 · Lahore, Pakistan · Working with US Amazon and Walmart sellers</span>
+  </div>
 </footer>
 
 <dialog id="lb" aria-label="Full size image">
@@ -500,7 +637,14 @@ document.querySelectorAll('[data-full]').forEach(b=>b.addEventListener('click',(
 }));
 lb.addEventListener('click',e=>{if(e.target===lb)lb.close()});
 function toggleNav(btn){const n=document.getElementById('nav');const o=n.classList.toggle('open');btn.setAttribute('aria-expanded',o)}
-document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('nav').classList.remove('open')}));
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.getElementById('nav').classList.remove('open')));
+// tabs
+const tabs=[...document.querySelectorAll('[role=tab]')];
+tabs.forEach(t=>{
+  t.addEventListener('click',()=>select(t));
+  t.addEventListener('keydown',e=>{const i=tabs.indexOf(t);if(e.key==='ArrowRight'){select(tabs[(i+1)%tabs.length]);tabs[(i+1)%tabs.length].focus()}if(e.key==='ArrowLeft'){const j=(i-1+tabs.length)%tabs.length;select(tabs[j]);tabs[j].focus()}});
+});
+function select(t){tabs.forEach(x=>{x.setAttribute('aria-selected',x===t);document.getElementById(x.getAttribute('aria-controls')).hidden=x!==t})}
 document.getElementById('mailform').addEventListener('submit',e=>{
   e.preventDefault();const f=e.target;
   const subject='Wholesale help: '+f.need.value;

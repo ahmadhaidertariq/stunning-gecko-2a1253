@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Ahmad Haider logo">
+  <rect x="4" y="4" width="112" height="112" rx="26" fill="#13263A"/>
+  <path fill-rule="evenodd" fill="#FFFFFF" d="M15 88 L32 32 H44 L61 88 H50 L46.8 76.5 H29.2 L26 88 Z M32 67.5 H44 L38 46 Z"/>
+  <rect x="65" y="32" width="10" height="56" rx="1.5" fill="#FFFFFF"/>
+  <rect x="92" y="32" width="10" height="56" rx="1.5" fill="#FFFFFF"/>
+  <rect x="65" y="56" width="37" height="9" fill="#FFFFFF"/>
+  <path d="M88 26 L96 34 L111 15" fill="none" stroke="#34D399" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
