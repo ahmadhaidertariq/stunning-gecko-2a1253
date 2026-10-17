@@ -1,0 +1,1501 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><div id="pf-bar" style="position:sticky;top:0;z-index:9999;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+padding:9px 18px;background:#123C69;color:#FBF6F3;font:600 13.5px/1.3 system-ui,-apple-system,Segoe UI,sans-serif">
+<a href="../work.html" style="color:#FBF6F3;text-decoration:none">&larr; All audits &amp; reports</a>
+<span style="font-weight:500;opacity:.9">Portfolio Health, my own build · sample data, brands invented</span>
+<a href="../contact.html" style="color:#EDC7B7;text-decoration:none">Hire me</a></div>
+<title>Portfolio Health</title>
+<style>
+  :root{
+    --bg:#f6f4ef;
+    --surface:#ffffff;
+    --surface-2:#efece3;
+    --border:#ddd7c8;
+    --text:#1c1a15;
+    --text-dim:#6b6455;
+    --accent:#b3792f;
+    --accent-soft:#f1e2c8;
+    --good:#3f7d5c;
+    --good-soft:#e1efe6;
+    --warn:#b3792f;
+    --warn-soft:#f6ecda;
+    --bad:#a8402f;
+    --bad-soft:#f6e2dd;
+    --track:#e8e3d4;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17140f; --surface:#211d16; --surface-2:#2a251c; --border:#3a3427;
+      --text:#f1ede2; --text-dim:#a89e89; --accent:#e0a856; --accent-soft:#3a2f1c;
+      --good:#6fbf94; --good-soft:#1e2f26; --warn:#e0a856; --warn-soft:#3a2f1c;
+      --bad:#e08170; --bad-soft:#3a231e; --track:#332d21;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17140f; --surface:#211d16; --surface-2:#2a251c; --border:#3a3427;
+    --text:#f1ede2; --text-dim:#a89e89; --accent:#e0a856; --accent-soft:#3a2f1c;
+    --good:#6fbf94; --good-soft:#1e2f26; --warn:#e0a856; --warn-soft:#3a2f1c;
+    --bad:#e08170; --bad-soft:#3a231e; --track:#332d21;
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:"IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    padding-inline:16px; padding-block:28px 60px;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+  h1,h2,h3{font-family:"Fraunces", Georgia, serif; margin:0; text-wrap:balance;}
+
+  header.top{display:flex; flex-wrap:wrap; gap:16px 24px; align-items:flex-end; justify-content:space-between; margin-bottom:18px;}
+  .brand-mark{display:flex; flex-direction:column; gap:4px;}
+  .brand-mark .eyebrow{font-family:"IBM Plex Mono", monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim);}
+  .brand-mark h1{font-size:30px; font-weight:600;}
+  .brand-mark .date{font-size:13px; color:var(--text-dim); font-family:"IBM Plex Mono",monospace;}
+
+  .refresh-box{display:flex; align-items:center; gap:10px;}
+  button.refresh{
+    font-family:"IBM Plex Sans",sans-serif; font-size:13px; font-weight:600;
+    background:var(--accent); color:#fff; border:none; border-radius:8px;
+    padding:9px 16px; cursor:pointer; display:flex; align-items:center; gap:8px;
+  }
+  button.refresh:disabled{opacity:.55; cursor:default;}
+  button.refresh svg{width:14px;height:14px;}
+  .spin{animation:spin 1s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .updated{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--text-dim);}
+
+  .status-banner{display:none; border:1px solid var(--border); background:var(--surface-2); border-radius:10px; padding:12px 16px; margin-bottom:18px; font-size:13.5px; color:var(--text-dim);}
+  .status-banner.show{display:block;}
+  .status-banner.err{border-color:var(--bad); background:var(--bad-soft); color:var(--bad);}
+
+  .summary-row{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px;}
+  @media (max-width:640px){ .summary-row{grid-template-columns:repeat(2,1fr);} }
+  .stat{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px;}
+  .stat .num{font-family:"IBM Plex Mono",monospace; font-size:26px; font-weight:600; font-variant-numeric:tabular-nums;}
+  .stat .lbl{font-size:12px; color:var(--text-dim); margin-top:2px;}
+  .stat.bad .num{color:var(--bad);}
+  .stat.warn .num{color:var(--warn);}
+  .stat .trend{font-family:"IBM Plex Mono",monospace; font-size:11px; margin-top:3px;}
+  .stat .trend.up{color:var(--good);} .stat .trend.down{color:var(--bad);}
+
+  /* controls */
+  .controls{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px;}
+  .search{
+    flex:1 1 200px; font-family:"IBM Plex Sans",sans-serif; font-size:13px;
+    padding:8px 12px; border-radius:8px; border:1px solid var(--border);
+    background:var(--surface); color:var(--text);
+  }
+  .search:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  .filter-chip{
+    font-family:"IBM Plex Mono",monospace; font-size:11.5px; padding:6px 12px;
+    border-radius:20px; border:1px solid var(--border); background:var(--surface);
+    color:var(--text-dim); cursor:pointer; white-space:nowrap;
+  }
+  .filter-chip.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .filter-chip .n{opacity:.75; margin-left:3px;}
+
+  .legend{display:flex; flex-wrap:wrap; gap:14px; margin-bottom:14px; font-size:12px; color:var(--text-dim); font-family:"IBM Plex Mono",monospace;}
+  .legend span{display:inline-flex; align-items:center; gap:6px;}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+
+  .rows{display:flex; flex-direction:column; gap:8px;}
+  .row{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 16px; cursor:pointer;}
+  .row.noproj{opacity:.6; cursor:default;}
+  .row.hidden{display:none;}
+  .row-top{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .row-name{font-weight:600; font-size:14.5px; min-width:150px; flex:1 1 150px;}
+  .row-pct{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:14px; width:52px; text-align:right; font-variant-numeric:tabular-nums;}
+  .row-pct.bad{color:var(--bad);} .row-pct.warn{color:var(--warn);} .row-pct.good{color:var(--good);}
+  .track{flex:2 1 200px; height:8px; border-radius:5px; background:var(--track); overflow:hidden; min-width:100px;}
+  .fill{height:100%; border-radius:5px;}
+  .fill.bad{background:var(--bad);} .fill.warn{background:var(--warn);} .fill.good{background:var(--good);}
+  .chips{display:flex; gap:6px; flex-wrap:wrap;}
+  .chip{font-family:"IBM Plex Mono",monospace; font-size:11px; padding:3px 8px; border-radius:20px; white-space:nowrap; font-variant-numeric:tabular-nums;}
+  .chip.neutral{background:var(--surface-2); color:var(--text-dim);}
+  .chip.warn{background:var(--warn-soft); color:var(--warn);}
+  .chip.bad{background:var(--bad-soft); color:var(--bad);}
+  .chip.none{background:var(--good-soft); color:var(--good);}
+
+  .detail{display:none; margin-top:12px; padding-top:12px; border-top:1px dashed var(--border); font-size:12.5px; color:var(--text-dim);}
+  .detail.open{display:block;}
+  .detail-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px 20px;}
+  @media (max-width:520px){ .detail-grid{grid-template-columns:1fr;} }
+  .detail h4{font-family:"IBM Plex Sans",sans-serif; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text); margin:0 0 5px;}
+  .detail ul{margin:0; padding-left:16px;}
+  .detail li{margin-bottom:3px; word-break:break-word;}
+  .detail a{color:var(--accent);}
+  .detail .empty{color:var(--text-dim); font-style:italic;}
+
+  /* timeline */
+  .timeline{margin-bottom:14px;}
+  .timeline-bar{display:flex; height:22px; border-radius:6px; overflow:hidden; border:1px solid var(--border);}
+  .timeline-seg{display:flex; align-items:center; justify-content:center; font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:#fff; min-width:0;}
+  .timeline-seg.overdue{background:var(--bad);}
+  .timeline-seg.thisweek{background:var(--warn);}
+  .timeline-seg.nextweek{background:#c9ab6a;}
+  .timeline-seg.later{background:var(--good);}
+  .timeline-seg.nodue{background:var(--track); color:var(--text-dim);}
+  .timeline-labels{display:flex; justify-content:space-between; font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--text-dim); margin-top:4px;}
+  .timeline-list{margin-top:8px;}
+  .timeline-list h5{font-family:"IBM Plex Sans",sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.05em; margin:0 0 4px; color:var(--text);}
+
+  .noproj-label{font-size:13px; color:var(--text-dim); font-style:italic;}
+
+  /* unsolved tasks */
+  .unsolved{margin-bottom:18px;}
+  .unsolved h3{font-size:14px; margin-bottom:2px;}
+  .unsolved .sub{font-weight:400; color:var(--text-dim); font-size:12px; font-family:"IBM Plex Sans",sans-serif;}
+  .unsolved-list{margin-top:8px;}
+  .unsolved-item{display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:var(--surface); margin-bottom:6px; flex-wrap:wrap;}
+  .unsolved-item a{color:var(--accent);}
+  .unsolved-more{font-size:12px; color:var(--text-dim); margin-top:4px;}
+
+  footer.note{margin-top:26px; font-size:11.5px; color:var(--text-dim); line-height:1.6; border-top:1px solid var(--border); padding-top:14px;}
+
+  /* slack daily update */
+  .slack-section{margin-bottom:26px; border:1px solid var(--border); border-radius:12px; background:var(--surface); padding:16px 18px;}
+  .slack-head{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px;}
+  .slack-head h3{font-size:15px;}
+  .slack-head .sub{font-weight:400; color:var(--text-dim); font-size:12px; font-family:"IBM Plex Sans",sans-serif; display:block; margin-top:2px;}
+  button.slack-btn{
+    font-family:"IBM Plex Sans",sans-serif; font-size:13px; font-weight:600;
+    background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:8px;
+    padding:8px 14px; cursor:pointer;
+  }
+  button.slack-btn:disabled{opacity:.55; cursor:default;}
+  .slack-updated{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--text-dim); margin-top:4px;}
+  .slack-empty{font-size:12.5px; color:var(--text-dim); font-style:italic;}
+
+  .date-tabs{display:flex; flex-wrap:wrap; gap:6px; margin:12px 0 4px;}
+  .date-tab{
+    font-family:"IBM Plex Mono",monospace; font-size:12px; padding:6px 12px; border-radius:20px;
+    border:1px solid var(--border); background:var(--surface-2); color:var(--text-dim); cursor:pointer; white-space:nowrap;
+  }
+  .date-tab.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .date-headline{font-size:12.5px; color:var(--text-dim); font-style:italic; margin:6px 0 4px;}
+
+  .canvas-view{margin-top:12px;}
+  .canvas-view h1{font-size:18px; margin:14px 0 8px;}
+  .canvas-view h2{font-size:14px; margin:16px 0 6px; padding-top:10px; border-top:1px solid var(--border);}
+  .canvas-view h2:first-child{border-top:none; padding-top:0;}
+  .canvas-view table{width:100%; border-collapse:collapse; margin-bottom:6px; font-size:12.5px;}
+  .canvas-view th{text-align:left; font-family:"IBM Plex Sans",sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-dim); border-bottom:1px solid var(--border); padding:6px 8px;}
+  .canvas-view td{border-bottom:1px solid var(--border); padding:7px 8px; vertical-align:top; line-height:1.45;}
+  .canvas-view tr:last-child td{border-bottom:none;}
+  .canvas-view ul, .canvas-view ol{margin:0 0 10px; padding-left:20px;}
+  .canvas-view li{margin-bottom:5px; font-size:13px; line-height:1.5;}
+  .canvas-view .note{font-size:11.5px; color:var(--text-dim); font-style:italic; margin-top:10px;}
+
+  /* main section tabs */
+  .main-tabs{display:flex; gap:6px; margin-bottom:18px; border-bottom:1px solid var(--border); flex-wrap:wrap;}
+  .main-tab{
+    font-family:"IBM Plex Sans",sans-serif; font-size:13.5px; font-weight:600; color:var(--text-dim);
+    background:transparent; border:none; border-bottom:2px solid transparent; padding:10px 4px; margin-right:18px; cursor:pointer;
+  }
+  .main-tab.active{color:var(--accent); border-bottom-color:var(--accent);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  /* Amazon Ads / PL overview (manual entry) */
+  .ads-section{margin-bottom:28px; border:1px solid var(--border); border-radius:12px; background:var(--surface); padding:18px 20px;}
+  .ads-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:14px;}
+  .ads-head h2{font-size:17px;}
+  .ads-head .sub{font-weight:400; color:var(--text-dim); font-size:12px; font-family:"IBM Plex Sans",sans-serif; display:block; margin-top:3px;}
+  .ads-period{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--text-dim); margin-top:2px;}
+  .ads-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  button.ads-btn{
+    font-family:"IBM Plex Sans",sans-serif; font-size:12.5px; font-weight:600;
+    background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:8px;
+    padding:7px 13px; cursor:pointer;
+  }
+  button.ads-btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .ads-example-flag{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--warn); background:var(--warn-soft); padding:2px 8px; border-radius:20px; margin-left:8px;}
+
+  .ads-kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px;}
+  @media (max-width:760px){ .ads-kpi-grid{grid-template-columns:repeat(2,1fr);} }
+  .ads-kpi{background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:12px 14px;}
+  .ads-kpi .lbl{font-family:"IBM Plex Sans",sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-dim); margin-bottom:5px;}
+  .ads-kpi .val{font-family:"IBM Plex Mono",monospace; font-size:19px; font-weight:600; font-variant-numeric:tabular-nums;}
+  .ads-kpi .chg{font-family:"IBM Plex Mono",monospace; font-size:11px; margin-top:4px;}
+  .ads-kpi .chg.up{color:var(--good);} .ads-kpi .chg.down{color:var(--bad);}
+  .ads-kpi input{width:100%; font-family:"IBM Plex Mono",monospace; font-size:13px; padding:5px 6px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-top:3px;}
+  .ads-kpi .inp-row{display:flex; gap:5px; margin-top:3px;}
+  .ads-kpi .inp-row input{width:33%;}
+
+  .ads-block{margin-top:18px;}
+  .ads-block h3{font-size:13px; margin-bottom:8px;}
+  .ads-cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px;}
+  .ads-card{border:1px solid var(--border); border-left:4px solid var(--border); border-radius:8px; padding:10px 12px; background:var(--surface-2);}
+  .ads-card.critical{border-left-color:var(--bad);}
+  .ads-card.high{border-left-color:var(--warn);}
+  .ads-card.medium{border-left-color:#c9ab6a;}
+  .ads-card.low{border-left-color:var(--good);}
+  .ads-card .brand{font-weight:600; font-size:13.5px; margin-bottom:3px;}
+  .ads-card .issue{font-size:12.5px; color:var(--text-dim); margin-bottom:3px;}
+  .ads-card .meta{font-size:11px; color:var(--text-dim);}
+  .ads-card input, .ads-card select{width:100%; font-size:12.5px; padding:4px 6px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:4px;}
+
+  .ads-table-wrap{overflow-x:auto;}
+  table.ads-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  table.ads-table th{text-align:left; font-family:"IBM Plex Sans",sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-dim); border-bottom:1px solid var(--border); padding:7px 8px; white-space:nowrap;}
+  table.ads-table td{border-bottom:1px solid var(--border); padding:8px; vertical-align:middle;}
+  table.ads-table tr:last-child td{border-bottom:none;}
+  table.ads-table input, table.ads-table select{width:100%; font-size:12px; padding:4px 5px; border-radius:5px; border:1px solid var(--border); background:var(--surface); color:var(--text);}
+  .ads-badge{display:inline-block; padding:3px 8px; border-radius:20px; font-family:"IBM Plex Mono",monospace; font-size:10.5px; white-space:nowrap;}
+  .ads-badge.critical, .ads-badge.open{background:var(--bad-soft); color:var(--bad);}
+  .ads-badge.high, .ads-badge.investigating{background:var(--warn-soft); color:var(--warn);}
+  .ads-badge.medium, .ads-badge.monitoring{background:var(--accent-soft); color:var(--accent);}
+  .ads-badge.low, .ads-badge.resolved, .ads-badge.action{background:var(--good-soft); color:var(--good);}
+
+  .ads-priorities{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px;}
+  .ads-priority{background:var(--surface-2); border-left:4px solid var(--accent); border-radius:8px; padding:10px 12px;}
+  .ads-priority .num{font-family:"IBM Plex Mono",monospace; font-weight:700; color:var(--accent); font-size:16px; margin-bottom:4px;}
+  .ads-priority .brand{font-weight:600; font-size:13px; margin-bottom:2px;}
+  .ads-priority .issue{font-size:12px; color:var(--text-dim); margin-bottom:3px;}
+  .ads-priority .meta{font-size:11px; color:var(--text-dim);}
+  .ads-priority input, .ads-priority select{width:100%; font-size:12px; padding:4px 6px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); margin-bottom:4px;}
+
+  .ads-row-actions{display:flex; gap:4px;}
+  button.ads-mini{font-size:11px; padding:3px 7px; border-radius:5px; border:1px solid var(--border); background:var(--surface); color:var(--text-dim); cursor:pointer;}
+  .ads-updated{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--text-dim); margin-top:10px;}
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand-mark">
+      <span class="eyebrow">Amazon Agency Ops</span>
+      <h1>Portfolio Health</h1>
+      <span class="date" id="reportDate">—</span>
+    </div>
+    <div class="refresh-box">
+      <span class="updated" id="updatedAt">not loaded yet</span>
+      <button class="refresh" id="refreshBtn" type="button">
+        <svg id="refreshIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+        <span id="refreshLabel">Load Live Now</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="main-tabs" id="mainTabs">
+    <button class="main-tab active" data-tab="asana" type="button">📊 Asana Portfolio Health</button>
+    <button class="main-tab" data-tab="slack" type="button">📋 Slack Daily Update</button>
+  </div>
+  <!-- Amazon Ads/PL diagnosis tab parked for later — markup kept below but not linked from the tab bar -->
+
+  <div class="tab-panel" id="tabPanel-ads" style="display:none">
+    <div class="ads-section" id="adsSection">
+      <div class="ads-head">
+        <div>
+          <h2>💰 Amazon Ads / PL Overview<span class="ads-example-flag" id="adsExampleFlag" style="display:none">example data</span></h2>
+          <span class="sub">Manual entry until an Amazon Ads / Seller Central connector is added — saved here, not on Asana or Slack.</span>
+          <div class="ads-period" id="adsPeriodDisplay"></div>
+        </div>
+        <div class="ads-actions">
+          <button class="ads-btn" id="adsEditBtn" type="button">Edit</button>
+          <button class="ads-btn primary" id="adsSaveBtn" type="button" style="display:none">Save</button>
+          <button class="ads-btn" id="adsCancelBtn" type="button" style="display:none">Cancel</button>
+        </div>
+      </div>
+      <div id="adsBody"></div>
+      <div class="ads-updated" id="adsUpdated"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel active" id="tabPanel-asana">
+    <div class="status-banner" id="statusBanner"></div>
+
+    <div class="date-tabs" id="asanaDateTabs"></div>
+    <div class="date-headline" id="asanaDateNote"></div>
+
+    <div class="summary-row" id="summaryRow" style="display:none">
+      <div class="stat"><div class="num" id="sumBrands">–</div><div class="lbl">brands tracked</div><div class="trend" id="trendBrands"></div></div>
+      <div class="stat bad"><div class="num" id="sumWorst">–</div><div class="lbl">worst completion</div><div class="trend" id="trendWorst"></div></div>
+      <div class="stat warn"><div class="num" id="sumPoa">–</div><div class="lbl">POA violations</div><div class="trend" id="trendPoa"></div></div>
+      <div class="stat warn"><div class="num" id="sumStale">–</div><div class="lbl">stale tasks (7d+)</div><div class="trend" id="trendStale"></div></div>
+    </div>
+
+    <div class="unsolved" id="unsolvedSection" style="display:none">
+      <h3>🔴 Unsolved Tasks <span class="sub">— flagged issues still open, oldest first</span></h3>
+      <div class="unsolved-list" id="unsolvedList"></div>
+    </div>
+
+    <div class="controls">
+      <input type="text" class="search" id="searchBox" placeholder="Search brand or task name…">
+      <button class="filter-chip active" data-filter="all" type="button">All<span class="n" id="cntAll"></span></button>
+      <button class="filter-chip" data-filter="poa" type="button">POA issues<span class="n" id="cntPoa"></span></button>
+      <button class="filter-chip" data-filter="dup" type="button">Duplicates<span class="n" id="cntDup"></span></button>
+      <button class="filter-chip" data-filter="stale" type="button">Stale<span class="n" id="cntStale"></span></button>
+      <button class="filter-chip" data-filter="overdue" type="button">Overdue tasks<span class="n" id="cntOverdue"></span></button>
+    </div>
+
+    <div class="legend">
+      <span><i class="dot" style="background:var(--bad)"></i>&lt; 50%</span>
+      <span><i class="dot" style="background:var(--warn)"></i>50–85%</span>
+      <span><i class="dot" style="background:var(--good)"></i>85%+</span>
+      <span>Tap a row for details</span>
+    </div>
+
+    <div class="rows" id="rows"></div>
+    <div class="ads-table-wrap" id="historyTableWrap" style="display:none;">
+      <table class="ads-table">
+        <thead><tr><th>Brand</th><th>Completion</th><th>Duplicates</th><th>POA violations</th><th>Stale (7d+)</th></tr></thead>
+        <tbody id="historyTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tabPanel-slack">
+    <div class="slack-section">
+      <div class="slack-head">
+        <div>
+          <h3>📋 Daily Update <span class="sub">— the same Portfolio Update Canvas posted to your Slack self-DM, read live, by date</span></h3>
+        </div>
+        <button class="slack-btn" id="slackBtn" type="button">Load Daily Updates</button>
+      </div>
+      <div class="slack-updated" id="slackUpdated"></div>
+      <div class="date-tabs" id="dateTabs"></div>
+      <div class="date-headline" id="dateHeadline"></div>
+      <div id="slackBody"></div>
+    </div>
+  </div>
+
+  <footer class="note">
+    Asana Portfolio Health now keeps a date history: the tabs above the summary numbers show every day a snapshot has been saved (including ones saved automatically in the background — see below), and clicking one shows that day's completion/duplicates/POA/stale numbers without needing a live Asana call. "Load Live Now" pulls fresh data, gives you the full expandable per-brand detail for today, and saves that day's snapshot at the same time. A background weekly job also saves a snapshot on its own schedule even if you never open this page, so the history keeps building either way.<br><br>
+    Daily Update reads your real "Portfolio Update" Slack Canvases live — the same Canvas your scheduled daily task already posts to your self-DM (Portfolio Snapshot, Action Tracker, Today's Key Changes, My Actions, Blockers, Tomorrow's Focus) — via the persistent "Portfolio Update — Index" canvas, which lists every day it has run so far with a one-line headline. Click Load Daily Updates, then switch between dates along the top; nothing is regenerated or reworded here, it's the exact content already posted to Slack. New days appear automatically once that scheduled task posts them and adds a row to the index — this section doesn't create or edit anything, it only reads.<br><br>
+    POA = task name contains "POA". Violation = completed after the 3rd of its due month, or still open past the 3rd (current month used when no due date). Stale = open, no update in 7+ days. Duplicates = 2+ open tasks in the same project sharing an exact name. Timeline buckets open tasks with due dates into overdue / this week / next week / later; tasks with no due date are counted separately. Unsolved Tasks combines every currently-flagged POA/duplicate/stale/overdue item across all brands and keeps it highlighted, showing how many days it's stayed unresolved, using a daily saved record — matched by task name, so a renamed task resets its day-count. Data pulled live from Asana via your connected account each time you refresh. A snapshot of each day's totals is saved so trend arrows and unsolved-task ages can appear once a few days of history build up.
+  </footer>
+</div>
+
+<script>
+(function(){
+  var BRANDS = [{name:"Northfield",gid:"1"},{name:"Lumen & Oak",gid:"2"},{name:"Brightpaw",gid:"3"},{name:"Calder Home",gid:"4"},{name:"Ridgeway Pet",gid:"5"},{name:"Hollis Kitchen",gid:"6"},{name:"Verdant Labs",gid:"7"}];
+
+  var rowsEl = document.getElementById('rows');
+  var refreshBtn = document.getElementById('refreshBtn');
+  var refreshIcon = document.getElementById('refreshIcon');
+  var refreshLabel = document.getElementById('refreshLabel');
+  var updatedAt = document.getElementById('updatedAt');
+  var statusBanner = document.getElementById('statusBanner');
+  var summaryRow = document.getElementById('summaryRow');
+  var reportDate = document.getElementById('reportDate');
+  var searchBox = document.getElementById('searchBox');
+  var filterChips = document.querySelectorAll('.filter-chip');
+
+  var currentFilter = 'all';
+  var currentSearch = '';
+  var lastItems = [];
+
+  reportDate.textContent = new Date().toLocaleDateString(undefined, {weekday:'long', month:'long', day:'numeric'});
+
+  document.querySelectorAll('.main-tab').forEach(function(tabBtn){
+    tabBtn.addEventListener('click', function(){
+      document.querySelectorAll('.main-tab').forEach(function(b){b.classList.remove('active');});
+      document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+      tabBtn.classList.add('active');
+      document.getElementById('tabPanel-' + tabBtn.dataset.tab).classList.add('active');
+    });
+  });
+
+  function setStatus(msg, isErr){
+    if(!msg){ statusBanner.className = 'status-banner'; statusBanner.innerHTML=''; return; }
+    statusBanner.className = 'status-banner show' + (isErr ? ' err' : '');
+    statusBanner.innerHTML = msg;
+  }
+
+  function pctClass(pct){
+    if(pct === null) return 'neutral';
+    if(pct < 50) return 'bad';
+    if(pct < 85) return 'warn';
+    return 'good';
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function thirdOfMonth(d){
+    return new Date(d.getFullYear(), d.getMonth(), 3, 23, 59, 59);
+  }
+  function parseDate(s){ return s ? new Date(s) : null; }
+  function startOfDay(d){ var x=new Date(d); x.setHours(0,0,0,0); return x; }
+  function daysBetween(a,b){ return Math.round((startOfDay(b)-startOfDay(a))/86400000); }
+
+  function computeBrand(tasks){
+    var total = tasks.length;
+    var done = tasks.filter(function(t){return t.completed;}).length;
+    var pct = total ? Math.round((done/total)*1000)/10 : null;
+    var now = new Date();
+
+    var nameCounts = {};
+    tasks.forEach(function(t){
+      if(!t.completed){
+        var n = (t.name||'').trim();
+        nameCounts[n] = (nameCounts[n]||0) + 1;
+      }
+    });
+    var dupNames = Object.keys(nameCounts).filter(function(n){return nameCounts[n] >= 2 && n;});
+
+    var poaViolations = [];
+    tasks.forEach(function(t){
+      if(!/\bpoa\b/i.test(t.name||'')) return;
+      var due = t.due_on ? new Date(t.due_on + 'T00:00:00') : null;
+      if(t.completed){
+        if(!due) return;
+        var comp = parseDate(t.completed_at);
+        if(comp > thirdOfMonth(due)){
+          poaViolations.push({name:t.name, reason:'completed late', url:t.permalink_url});
+        }
+      } else {
+        var ref = due || now;
+        if(now > thirdOfMonth(ref)){
+          poaViolations.push({name:t.name, reason:'open past the 3rd', url:t.permalink_url});
+        }
+      }
+    });
+
+    var stale = [];
+    tasks.forEach(function(t){
+      if(t.completed) return;
+      var mod = parseDate(t.modified_at);
+      if(!mod) return;
+      var days = (now - mod) / 86400000;
+      if(days >= 7){
+        stale.push({name:t.name, days: Math.floor(days), url:t.permalink_url});
+      }
+    });
+    stale.sort(function(a,b){return b.days - a.days;});
+
+    // timeline buckets for OPEN tasks
+    var buckets = {overdue:[], thisweek:[], nextweek:[], later:[], nodue:[]};
+    var todayStart = startOfDay(now);
+    tasks.forEach(function(t){
+      if(t.completed) return;
+      if(!t.due_on){ buckets.nodue.push(t); return; }
+      var due = new Date(t.due_on + 'T00:00:00');
+      var diff = daysBetween(todayStart, due);
+      if(diff < 0) buckets.overdue.push({t:t, diff:diff});
+      else if(diff <= 6) buckets.thisweek.push({t:t, diff:diff});
+      else if(diff <= 13) buckets.nextweek.push({t:t, diff:diff});
+      else buckets.later.push({t:t, diff:diff});
+    });
+    buckets.overdue.sort(function(a,b){return a.diff-b.diff;});
+
+    var allNames = tasks.map(function(t){return t.name||'';}).join(' | ').toLowerCase();
+
+    var openTasks = tasks.filter(function(t){return !t.completed;}).map(function(t){
+      var mod = parseDate(t.modified_at);
+      var staleDays = mod ? Math.floor((now-mod)/86400000) : null;
+      return {name:t.name, due:t.due_on, url:t.permalink_url, staleDays: staleDays, isDup: dupNames.indexOf((t.name||'').trim())!==-1};
+    }).sort(function(a,b){
+      if(a.due && b.due) return a.due < b.due ? -1 : (a.due > b.due ? 1 : 0);
+      if(a.due) return -1;
+      if(b.due) return 1;
+      return 0;
+    });
+
+    var completedTasks = tasks.filter(function(t){return t.completed;}).map(function(t){
+      return {name:t.name, completedAt:t.completed_at, due:t.due_on, url:t.permalink_url};
+    }).sort(function(a,b){
+      return (b.completedAt||'') < (a.completedAt||'') ? -1 : ((b.completedAt||'') > (a.completedAt||'') ? 1 : 0);
+    });
+
+    return {total:total, done:done, pct:pct, dupNames:dupNames, poaViolations:poaViolations, stale:stale, buckets:buckets, allNames:allNames, openTasks:openTasks, completedTasks:completedTasks};
+  }
+
+  function fetchAllTasks(mcpServer, projectGid){
+    var opt = "name,completed,completed_at,due_on,modified_at,permalink_url";
+    function page(offset){
+      var input = {project: projectGid, limit: 100, opt_fields: opt};
+      if(offset) input.offset = offset;
+      return mcpServer.get_tasks(input).then(function(res){
+        var data = (res && res.data) ? res.data : (res && res.payload && res.payload.data) || [];
+        var next = (res && res.next_page) || (res && res.payload && res.payload.next_page);
+        if(next && next.offset){
+          return page(next.offset).then(function(rest){ return data.concat(rest); });
+        }
+        return data;
+      });
+    }
+    return page(null);
+  }
+
+  function renderTimeline(buckets){
+    var counts = {
+      overdue: buckets.overdue.length,
+      thisweek: buckets.thisweek.length,
+      nextweek: buckets.nextweek.length,
+      later: buckets.later.length,
+      nodue: buckets.nodue.length
+    };
+    var openTotal = counts.overdue+counts.thisweek+counts.nextweek+counts.later+counts.nodue;
+    if(openTotal === 0) return '<div class="timeline"><div class="empty" style="color:var(--text-dim);font-style:italic;font-size:12.5px;">no open tasks</div></div>';
+
+    function seg(key,label){
+      if(!counts[key]) return '';
+      var pct = Math.max((counts[key]/openTotal)*100, 6);
+      return '<div class="timeline-seg '+key+'" style="flex:'+counts[key]+' 1 0;" title="'+label+': '+counts[key]+'">'+counts[key]+'</div>';
+    }
+
+    var listHtml = '';
+    if(counts.overdue){
+      listHtml += '<div class="timeline-list"><h5>Overdue (' + counts.overdue + ')</h5><ul>' +
+        buckets.overdue.map(function(o){
+          return '<li><a href="'+o.t.permalink_url+'" target="_blank" rel="noopener">'+escapeHtml(o.t.name)+'</a> — '+Math.abs(o.diff)+'d overdue</li>';
+        }).join('') +
+        '</ul></div>';
+    }
+
+    return '<div class="timeline">' +
+      '<div class="timeline-bar">' +
+        seg('overdue','Overdue') + seg('thisweek','This week') + seg('nextweek','Next week') + seg('later','Later') + seg('nodue','No due date') +
+      '</div>' +
+      '<div class="timeline-labels"><span>Overdue: '+counts.overdue+'</span><span>This wk: '+counts.thisweek+'</span><span>Next wk: '+counts.nextweek+'</span><span>Later: '+counts.later+'</span><span>No date: '+counts.nodue+'</span></div>' +
+      listHtml +
+    '</div>';
+  }
+
+  function renderRow(brand, result, err){
+    var row = document.createElement('div');
+    row.className = 'row';
+    row.dataset.brand = brand.name.toLowerCase();
+
+    if(err){
+      row.innerHTML =
+        '<div class="row-top">' +
+          '<div class="row-name">' + escapeHtml(brand.name) + '</div>' +
+          '<div class="chip bad">error: ' + escapeHtml(err) + '</div>' +
+        '</div>';
+      row.dataset.hasPoa = '0'; row.dataset.hasDup='0'; row.dataset.hasStale='0'; row.dataset.hasOverdue='0';
+      return row;
+    }
+
+    if(result.total === 0){
+      row.className = 'row noproj';
+      row.innerHTML =
+        '<div class="row-top">' +
+          '<div class="row-name">' + escapeHtml(brand.name) + '</div>' +
+          '<div class="noproj-label">no Asana project yet</div>' +
+        '</div>';
+      row.dataset.hasPoa = '0'; row.dataset.hasDup='0'; row.dataset.hasStale='0'; row.dataset.hasOverdue='0';
+      return row;
+    }
+
+    var pctClz = pctClass(result.pct);
+    var dupChip = result.dupNames.length ? '<span class="chip warn">dup: ' + result.dupNames.length + '</span>' : '<span class="chip none">dup: 0</span>';
+    var poaChip = result.poaViolations.length ? '<span class="chip bad">POA: ' + result.poaViolations.length + '</span>' : '<span class="chip none">POA: 0</span>';
+    var staleChip = result.stale.length ? '<span class="chip warn">stale: ' + result.stale.length + '</span>' : '<span class="chip none">stale: 0</span>';
+    var overdueChip = result.buckets.overdue.length ? '<span class="chip bad">overdue: ' + result.buckets.overdue.length + '</span>' : '';
+
+    row.dataset.hasPoa = result.poaViolations.length ? '1':'0';
+    row.dataset.hasDup = result.dupNames.length ? '1':'0';
+    row.dataset.hasStale = result.stale.length ? '1':'0';
+    row.dataset.hasOverdue = result.buckets.overdue.length ? '1':'0';
+    row.dataset.searchText = (brand.name + ' ' + result.allNames).toLowerCase();
+
+    row.innerHTML =
+      '<div class="row-top">' +
+        '<div class="row-name">' + escapeHtml(brand.name) + '</div>' +
+        '<div class="track"><div class="fill ' + pctClz + '" style="width:' + result.pct + '%"></div></div>' +
+        '<div class="row-pct ' + pctClz + '">' + result.pct + '%</div>' +
+        '<div class="chips">' + overdueChip + dupChip + poaChip + staleChip + '</div>' +
+      '</div>' +
+      '<div class="detail">' +
+        '<div style="margin-bottom:10px; font-family:\'IBM Plex Mono\',monospace; font-size:12px;">' + result.done + ' / ' + result.total + ' tasks complete</div>' +
+        renderTimeline(result.buckets) +
+        '<div class="detail-grid" style="margin-top:10px;">' +
+          '<div><h4>Duplicate task names (' + result.dupNames.length + ')</h4>' + (result.dupNames.length ? '<ul>' + result.dupNames.map(function(n){return '<li>'+escapeHtml(n)+'</li>';}).join('') + '</ul>' : '<div class="empty">none</div>') + '</div>' +
+          '<div><h4>POA violations (' + result.poaViolations.length + ')</h4>' + (result.poaViolations.length ? '<ul>' + result.poaViolations.map(function(v){return '<li><a href="'+v.url+'" target="_blank" rel="noopener">'+escapeHtml(v.name)+'</a> — '+v.reason+'</li>';}).join('') + '</ul>' : '<div class="empty">none</div>') + '</div>' +
+          '<div><h4>Stale tasks, 7d+ (' + result.stale.length + ')</h4>' + (result.stale.length ? '<ul>' + result.stale.map(function(s){return '<li><a href="'+s.url+'" target="_blank" rel="noopener">'+escapeHtml(s.name)+'</a> — '+s.days+'d</li>';}).join('') + '</ul>' : '<div class="empty">none</div>') + '</div>' +
+        '</div>' +
+        '<div style="margin-top:14px;">' +
+          '<h4>All open tasks (' + result.openTasks.length + ')</h4>' +
+          (result.openTasks.length ? '<ul style="max-height:320px;overflow-y:auto;">' + result.openTasks.map(function(t){
+            var flags = [];
+            if(t.isDup) flags.push('dup');
+            if(t.staleDays!=null && t.staleDays>=7) flags.push(t.staleDays+'d stale');
+            var dueLabel = t.due ? t.due : 'no due date';
+            return '<li><a href="'+t.url+'" target="_blank" rel="noopener">'+escapeHtml(t.name)+'</a> — due '+escapeHtml(dueLabel)+(flags.length ? ' — '+flags.join(', ') : '')+'</li>';
+          }).join('') + '</ul>' : '<div class="empty">none</div>') +
+        '</div>' +
+        '<div style="margin-top:14px;">' +
+          '<h4>Completed tasks (' + result.completedTasks.length + ')</h4>' +
+          (result.completedTasks.length ? '<ul style="max-height:220px;overflow-y:auto;">' + result.completedTasks.map(function(t){
+            return '<li><a href="'+t.url+'" target="_blank" rel="noopener">'+escapeHtml(t.name)+'</a> — completed '+escapeHtml(t.completedAt ? t.completedAt.slice(0,10) : 'unknown date')+'</li>';
+          }).join('') + '</ul>' : '<div class="empty">none</div>') +
+        '</div>' +
+      '</div>';
+
+    row.addEventListener('click', function(e){
+      row.querySelector('.detail').classList.toggle('open');
+    });
+
+    return row;
+  }
+
+  function collectIssues(brand, result){
+    var out = [];
+    result.poaViolations.forEach(function(v){
+      out.push({id: brand.gid+'|poa|'+v.name, type:'poa', label:'POA', brand:brand.name, name:v.name, url:v.url, detail:v.reason});
+    });
+    result.dupNames.forEach(function(n){
+      out.push({id: brand.gid+'|dup|'+n, type:'dup', label:'Duplicate', brand:brand.name, name:n, url:null, detail:'duplicate name'});
+    });
+    result.stale.forEach(function(s){
+      out.push({id: brand.gid+'|stale|'+s.name, type:'stale', label:'Stale', brand:brand.name, name:s.name, url:s.url, detail: s.days+'d no update'});
+    });
+    result.buckets.overdue.forEach(function(o){
+      out.push({id: brand.gid+'|overdue|'+o.t.name, type:'overdue', label:'Overdue', brand:brand.name, name:o.t.name, url:o.t.permalink_url, detail: Math.abs(o.diff)+'d overdue'});
+    });
+    return out;
+  }
+
+  function renderUnsolved(issues, ageMap){
+    var section = document.getElementById('unsolvedSection');
+    var list = document.getElementById('unsolvedList');
+    if(!issues || !issues.length){ section.style.display='none'; list.innerHTML=''; return; }
+    section.style.display='block';
+    var withAge = issues.map(function(i){
+      var age = (ageMap && ageMap[i.id] != null) ? ageMap[i.id] : 0;
+      var copy = {}; for(var k in i){ copy[k]=i[k]; } copy.age = age; return copy;
+    });
+    withAge.sort(function(a,b){ return b.age - a.age; });
+    var shown = withAge.slice(0,25);
+    list.innerHTML = shown.map(function(i){
+      var ageClz = i.age >= 7 ? 'bad' : (i.age >= 3 ? 'warn' : 'neutral');
+      var ageLabel = i.age <= 0 ? 'new today' : (i.age + 'd open');
+      var typeClz = (i.type === 'poa' || i.type === 'overdue') ? 'bad' : 'warn';
+      var nameHtml = i.url ? '<a href="'+i.url+'" target="_blank" rel="noopener">'+escapeHtml(i.name)+'</a>' : escapeHtml(i.name);
+      return '<div class="unsolved-item">' +
+        '<span class="chip neutral" style="min-width:70px;text-align:center;">'+escapeHtml(i.brand)+'</span>' +
+        '<span class="chip '+typeClz+'" style="min-width:64px;text-align:center;">'+i.label+'</span>' +
+        '<span style="flex:1 1 200px;font-size:13px;">' + nameHtml + '<span style="color:var(--text-dim);font-size:11.5px;"> — '+escapeHtml(i.detail)+'</span></span>' +
+        '<span class="chip '+ageClz+'">'+ageLabel+'</span>' +
+      '</div>';
+    }).join('') + (withAge.length > 25 ? '<div class="unsolved-more">+'+(withAge.length-25)+' more unsolved</div>' : '');
+  }
+
+  function applyFilters(){
+    var rows = rowsEl.querySelectorAll('.row');
+    rows.forEach(function(row){
+      var matchesFilter = true;
+      if(currentFilter === 'poa') matchesFilter = row.dataset.hasPoa === '1';
+      else if(currentFilter === 'dup') matchesFilter = row.dataset.hasDup === '1';
+      else if(currentFilter === 'stale') matchesFilter = row.dataset.hasStale === '1';
+      else if(currentFilter === 'overdue') matchesFilter = row.dataset.hasOverdue === '1';
+
+      var matchesSearch = true;
+      if(currentSearch){
+        var hay = row.dataset.searchText || row.dataset.brand || '';
+        matchesSearch = hay.indexOf(currentSearch) !== -1;
+      }
+      row.classList.toggle('hidden', !(matchesFilter && matchesSearch));
+    });
+  }
+
+  filterChips.forEach(function(chip){
+    chip.addEventListener('click', function(){
+      filterChips.forEach(function(c){c.classList.remove('active');});
+      chip.classList.add('active');
+      currentFilter = chip.dataset.filter;
+      applyFilters();
+    });
+  });
+  searchBox.addEventListener('input', function(){
+    currentSearch = searchBox.value.trim().toLowerCase();
+    applyFilters();
+  });
+
+  function updateFilterCounts(items){
+    var withProj = items.filter(function(i){ return !i.err && i.result.total > 0; });
+    document.getElementById('cntAll').textContent = ' ' + withProj.length;
+    document.getElementById('cntPoa').textContent = ' ' + withProj.filter(function(i){return i.result.poaViolations.length;}).length;
+    document.getElementById('cntDup').textContent = ' ' + withProj.filter(function(i){return i.result.dupNames.length;}).length;
+    document.getElementById('cntStale').textContent = ' ' + withProj.filter(function(i){return i.result.stale.length;}).length;
+    document.getElementById('cntOverdue').textContent = ' ' + withProj.filter(function(i){return i.result.buckets.overdue.length;}).length;
+  }
+
+  function renderAll(items){
+    rowsEl.innerHTML = '';
+    lastItems = items;
+    var withProj = items.filter(function(i){ return !i.err && i.result.total > 0; });
+    var noProj = items.filter(function(i){ return !i.err && i.result.total === 0; });
+    var errored = items.filter(function(i){ return i.err; });
+
+    withProj.sort(function(a,b){ return a.result.pct - b.result.pct; });
+
+    withProj.concat(errored).concat(noProj).forEach(function(item){
+      rowsEl.appendChild(renderRow(item.brand, item.result, item.err));
+    });
+
+    updateFilterCounts(items);
+    applyFilters();
+
+    var allIssues = [];
+    withProj.forEach(function(item){
+      allIssues = allIssues.concat(collectIssues(item.brand, item.result));
+    });
+
+    var perBrand = items.map(function(item){
+      if(item.err) return {name:item.brand.name, err:item.err};
+      if(item.result.total === 0) return {name:item.brand.name, noProject:true};
+      return {
+        name:item.brand.name, pct:item.result.pct, done:item.result.done, total:item.result.total,
+        dup:item.result.dupNames.length, poa:item.result.poaViolations.length, stale:item.result.stale.length,
+        overdue:item.result.buckets.overdue.length
+      };
+    });
+
+    if(withProj.length){
+      var worst = withProj[0];
+      var totalPoa = withProj.reduce(function(a,i){return a+i.result.poaViolations.length;},0);
+      var totalStale = withProj.reduce(function(a,i){return a+i.result.stale.length;},0);
+      document.getElementById('sumBrands').textContent = items.length;
+      document.getElementById('sumWorst').textContent = worst.result.pct + '%';
+      document.getElementById('sumPoa').textContent = totalPoa;
+      document.getElementById('sumStale').textContent = totalStale;
+      summaryRow.style.display = 'grid';
+      return {brands: items.length, worst: worst.result.pct, poa: totalPoa, stale: totalStale, issues: allIssues, perBrand: perBrand};
+    }
+    document.getElementById('unsolvedSection').style.display = 'none';
+    return null;
+  }
+
+  function setLoading(isLoading){
+    refreshBtn.disabled = isLoading;
+    refreshIcon.classList.toggle('spin', isLoading);
+    refreshLabel.textContent = isLoading ? 'Loading…' : 'Load Live Now';
+  }
+
+  var EXAMPLE = [
+    {name:"Hollis Kitchen", pct:12.5, done:1, total:8, poa:1, stale:4, dup:0},
+    {name:"Ridgeway Pet", pct:38.9, done:7, total:18, poa:1, stale:6, dup:2},
+    {name:"Lumen & Oak", pct:57.1, done:12, total:21, poa:2, stale:5, dup:0},
+    {name:"Brightpaw", pct:71.4, done:25, total:35, poa:1, stale:3, dup:1},
+    {name:"Calder Home", pct:86.2, done:56, total:65, poa:0, stale:2, dup:0},
+    {name:"Verdant Labs", pct:92.3, done:96, total:104, poa:3, stale:2, dup:0},
+    {name:"Northfield", pct:97.6, done:164, total:168, poa:1, stale:1, dup:0}
+  ];
+
+  function renderExample(){
+    rowsEl.innerHTML = '';
+    EXAMPLE.forEach(function(b){
+      var row = document.createElement('div');
+      row.className = 'row';
+      var clz = pctClass(b.pct);
+      row.innerHTML =
+        '<div class="row-top">' +
+          '<div class="row-name">' + b.name + '</div>' +
+          '<div class="track"><div class="fill ' + clz + '" style="width:' + b.pct + '%"></div></div>' +
+          '<div class="row-pct ' + clz + '">' + b.pct + '%</div>' +
+          '<div class="chips">' +
+            '<span class="chip ' + (b.dup? 'warn':'none') + '">dup: ' + b.dup + '</span>' +
+            '<span class="chip ' + (b.poa? 'bad':'none') + '">POA: ' + b.poa + '</span>' +
+            '<span class="chip ' + (b.stale? 'warn':'none') + '">stale: ' + b.stale + '</span>' +
+          '</div>' +
+        '</div>';
+      rowsEl.appendChild(row);
+    });
+    updatedAt.textContent = 'sample data · brands invented';
+  }
+
+  renderExample();
+
+  // ---------- Asana date-wise history (saved snapshots, browsable without a live pull) ----------
+  var asanaHistoryDays = []; // [{date, brands}], newest first
+  var asanaDateTabsEl = document.getElementById('asanaDateTabs');
+  var asanaDateNoteEl = document.getElementById('asanaDateNote');
+  var historyTableWrap = document.getElementById('historyTableWrap');
+  var historyTableBody = document.getElementById('historyTableBody');
+  var liveControlsEls = [document.querySelector('#tabPanel-asana .controls'), document.querySelector('#tabPanel-asana .legend')];
+
+  function toggleLiveControls(show){
+    liveControlsEls.forEach(function(el){ if(el) el.style.display = show ? '' : 'none'; });
+    if(!show) document.getElementById('unsolvedSection').style.display = 'none';
+  }
+
+  function renderHistoryTable(brands){
+    var withPct = brands.filter(function(b){ return typeof b.pct === 'number'; }).sort(function(a,b){return a.pct-b.pct;});
+    var noProj = brands.filter(function(b){ return b.noProject; });
+    var errored = brands.filter(function(b){ return b.err; });
+    var ordered = withPct.concat(errored).concat(noProj);
+    historyTableBody.innerHTML = ordered.map(function(b){
+      if(b.noProject){
+        return '<tr><td class="bold">'+escapeHtml(b.name)+'</td><td colspan="4" style="color:var(--text-dim);font-style:italic;">no Asana project yet</td></tr>';
+      }
+      if(b.err){
+        return '<tr><td class="bold">'+escapeHtml(b.name)+'</td><td colspan="4" style="color:var(--bad);">error: '+escapeHtml(b.err)+'</td></tr>';
+      }
+      var clz = pctClass(b.pct);
+      return '<tr>' +
+        '<td class="bold">'+escapeHtml(b.name)+'</td>' +
+        '<td><span class="ads-badge '+(clz==='bad'?'critical':clz==='warn'?'high':'low')+'">'+b.pct+'% ('+b.done+'/'+b.total+')</span></td>' +
+        '<td>'+b.dup+'</td>' +
+        '<td>'+(b.poa ? '<span class="ads-badge critical">'+b.poa+'</span>' : '0')+'</td>' +
+        '<td>'+(b.stale ? '<span class="ads-badge high">'+b.stale+'</span>' : '0')+'</td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  function renderAsanaDateTabs(activeKey){
+    var tabs = asanaHistoryDays.map(function(d){ return {key:d.date, label:d.date}; });
+    if(hasLoadedLive) tabs.unshift({key:'live', label:'Live (today)'});
+    asanaDateTabsEl.innerHTML = tabs.map(function(t){
+      return '<button class="date-tab' + (t.key===activeKey?' active':'') + '" data-key="'+escapeHtml(t.key)+'" type="button">'+escapeHtml(t.label)+'</button>';
+    }).join('');
+    asanaDateTabsEl.querySelectorAll('.date-tab').forEach(function(btn){
+      btn.addEventListener('click', function(){ showAsanaDate(btn.dataset.key); });
+    });
+  }
+
+  var hasLoadedLive = false;
+
+  function showAsanaDate(key){
+    if(key === 'live'){
+      toggleLiveControls(true);
+      historyTableWrap.style.display = 'none';
+      rowsEl.style.display = '';
+      summaryRow.style.display = lastItems.length ? 'grid' : 'none';
+      asanaDateNoteEl.textContent = '';
+      renderAsanaDateTabs('live');
+      return;
+    }
+    var day = asanaHistoryDays.filter(function(d){return d.date===key;})[0];
+    if(!day) return;
+    toggleLiveControls(false);
+    rowsEl.style.display = 'none';
+    summaryRow.style.display = 'none';
+    historyTableWrap.style.display = 'block';
+    var savedNote = day.savedAt ? (' — saved ' + new Date(day.savedAt).toLocaleString()) : '';
+    var sourceNote = day.source === 'auto-weekly' ? ' (auto weekly job, locked for this date)' : (day.savedAt ? ' (from a manual Load Live Now)' : '');
+    asanaDateNoteEl.textContent = 'Snapshot for ' + key + savedNote + sourceNote + ' — click Load Live Now for full detail and today\'s data';
+    renderHistoryTable(day.brands);
+    renderAsanaDateTabs(key);
+  }
+
+  function loadAsanaHistory(){
+    if(!window.claude || !window.claude.use) return;
+    window.claude.use('db').then(function(db){
+      if(!db) return;
+      db.collection('asanaBrandSnapshots').orderBy('date','desc').limit(30).get().then(function(qs){
+        asanaHistoryDays = qs.docs.map(function(d){return d.data();});
+        if(asanaHistoryDays.length && !hasLoadedLive){
+          showAsanaDate(asanaHistoryDays[0].date);
+        } else {
+          renderAsanaDateTabs(hasLoadedLive ? 'live' : null);
+        }
+      }).catch(function(){});
+    }).catch(function(){});
+  }
+
+  loadAsanaHistory();
+
+  function todayKey(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function saveSnapshotAndShowTrend(summary){
+    var issues = summary.issues || [];
+    if(!window.claude || !window.claude.use){ renderUnsolved(issues, {}); return; }
+    window.claude.use('db').then(function(db){
+      if(!db){ renderUnsolved(issues, {}); return; }
+      var today = todayKey();
+
+      db.doc('snapshots/' + today).set({
+        date: today,
+        brands: summary.brands,
+        worst: summary.worst,
+        poa: summary.poa,
+        stale: summary.stale,
+        savedAt: new Date().toISOString()
+      }).catch(function(){ /* best effort */ });
+
+      db.doc('flagged/' + today).set({
+        date: today,
+        issues: issues.map(function(i){ return {id:i.id, type:i.type}; })
+      }).catch(function(){ /* best effort */ });
+
+      if(summary.perBrand){
+        db.doc('asanaBrandSnapshots/' + today).set({
+          date: today,
+          brands: summary.perBrand,
+          source: 'manual',
+          savedAt: new Date().toISOString()
+        }).catch(function(){ /* best effort */ });
+      }
+
+      db.collection('snapshots').orderBy('date','desc').limit(8).get().then(function(qs){
+        var docs = qs.docs.map(function(d){return d.data();}).filter(function(d){return d.date !== today;});
+        if(!docs.length) return;
+        var prev = docs[0];
+        function trend(el, curr, prevVal, lowerIsBetter){
+          var diff = curr - prevVal;
+          if(diff === 0){ el.textContent = ''; return; }
+          var improved = lowerIsBetter ? diff < 0 : diff > 0;
+          el.className = 'trend ' + (improved ? 'up' : 'down');
+          var arrow = diff > 0 ? '▲' : '▼';
+          el.textContent = arrow + ' ' + Math.abs(Math.round(diff*10)/10) + ' vs ' + prev.date;
+        }
+        trend(document.getElementById('trendWorst'), summary.worst, prev.worst, false);
+        trend(document.getElementById('trendPoa'), summary.poa, prev.poa, true);
+        trend(document.getElementById('trendStale'), summary.stale, prev.stale, true);
+      }).catch(function(){ /* best effort */ });
+
+      db.collection('flagged').orderBy('date','desc').limit(30).get().then(function(qs){
+        var todayStart = startOfDay(new Date());
+        var idFirstSeen = {};
+        qs.docs.map(function(d){return d.data();}).forEach(function(doc){
+          (doc.issues||[]).forEach(function(it){
+            if(!idFirstSeen[it.id] || doc.date < idFirstSeen[it.id]) idFirstSeen[it.id] = doc.date;
+          });
+        });
+        var ageMap = {};
+        issues.forEach(function(i){
+          var first = idFirstSeen[i.id];
+          ageMap[i.id] = first ? daysBetween(new Date(first + 'T00:00:00'), todayStart) : 0;
+        });
+        renderUnsolved(issues, ageMap);
+      }).catch(function(){ renderUnsolved(issues, {}); });
+    }).catch(function(){ renderUnsolved(issues, {}); });
+  }
+
+  function loadAll(){
+    setLoading(true);
+    setStatus('');
+
+    if(!window.claude || !window.claude.use){
+      setLoading(false);
+      setStatus('This page needs to be opened on claude.ai to pull live Asana data. Showing example data below.');
+      return;
+    }
+
+    window.claude.use('mcp').then(function(mcp){
+      if(!mcp){
+        setLoading(false);
+        setStatus('MCP access is not available in this view. Showing example data below.');
+        return;
+      }
+      mcp.server('Asana').then(function(asana){
+        var results = [];
+        var promises = BRANDS.map(function(brand){
+          return fetchAllTasks(asana, brand.gid).then(function(tasks){
+            results.push({brand:brand, result: computeBrand(tasks)});
+          }).catch(function(e){
+            var code = (e && e.code) || 'unknown_error';
+            results.push({brand:brand, err: code});
+          });
+        });
+        Promise.all(promises).then(function(){
+          setLoading(false);
+          hasLoadedLive = true;
+          toggleLiveControls(true);
+          historyTableWrap.style.display = 'none';
+          rowsEl.style.display = '';
+          var summary = renderAll(results);
+          updatedAt.textContent = 'updated ' + new Date().toLocaleTimeString();
+          asanaDateNoteEl.textContent = '';
+          renderAsanaDateTabs('live');
+          var anyErr = results.some(function(r){return r.err;});
+          if(anyErr){
+            setStatus('Some brands failed to load — see their rows below. Common fixes: reconnect Asana in claude.ai Settings → Connectors, or refresh again.', true);
+          }
+          if(summary) saveSnapshotAndShowTrend(summary);
+          loadAsanaHistory();
+        });
+      }).catch(function(e){
+        setLoading(false);
+        var code = (e && e.code) || 'unknown_error';
+        if(code === 'server_not_connected'){
+          setStatus('Asana isn\'t connected for your account. Add it in claude.ai Settings → Connectors, then refresh. Showing example data below.', true);
+        } else if(code === 'needs_reauth'){
+          setStatus('Your Asana connection needs to be reauthorized in claude.ai Settings → Connectors. Showing example data below.', true);
+        } else {
+          setStatus('Could not reach Asana (' + code + '). Showing example data below.', true);
+        }
+      });
+    }).catch(function(){
+      setLoading(false);
+      setStatus('Could not initialize connector access. Showing example data below.', true);
+    });
+  }
+
+  refreshBtn.addEventListener('click', loadAll);
+
+  // ---------- Daily Update (real Slack Canvas, read live, by date) ----------
+  var INDEX_CANVAS_ID = "F0C16E4HVP0"; // "Portfolio Update — Index" — persistent, maintained by the daily scheduled task
+
+  var slackBtn = document.getElementById('slackBtn');
+  var slackUpdated = document.getElementById('slackUpdated');
+  var slackBody = document.getElementById('slackBody');
+  var dateTabs = document.getElementById('dateTabs');
+  var dateHeadline = document.getElementById('dateHeadline');
+  var slackDays = []; // {date, fileId, headline}
+  var slackServerRef = null;
+
+  function setSlackLoading(isLoading, label){
+    slackBtn.disabled = isLoading;
+    slackBtn.textContent = isLoading ? (label || 'Loading…') : 'Reload';
+  }
+
+  function fileIdFromCanvasLink(url){
+    var m = /\/docs\/[^/]+\/([A-Za-z0-9]+)/.exec(url || '');
+    return m ? m[1] : null;
+  }
+
+  function parseIndexCanvas(markdown){
+    var days = [];
+    var lines = (markdown || '').split('\n');
+    lines.forEach(function(line){
+      if(line.indexOf('|') !== 0) return;
+      var cells = line.split('|').map(function(c){return c.trim();}).filter(function(c,i,arr){ return !(i===0 && c==='') && !(i===arr.length-1 && c===''); });
+      if(cells.length < 3) return;
+      if(/^-+$/.test(cells[0].replace(/\s/g,''))) return; // separator row
+      if(cells[0].toLowerCase() === 'date') return; // header row
+      var linkMatch = /\[([^\]]+)\]\(([^)]+)\)/.exec(cells[1]);
+      var fileId = linkMatch ? fileIdFromCanvasLink(linkMatch[2]) : null;
+      if(!fileId) return;
+      days.push({date: cells[0], fileId: fileId, headline: cells[2] || ''});
+    });
+    return days;
+  }
+
+  // very small markdown-table/list renderer, scoped to the Portfolio Update canvas format
+  function renderCanvasMarkdown(markdown){
+    var lines = (markdown || '').split('\n');
+    var html = '';
+    var i = 0;
+    function isTableRow(l){ return l.trim().indexOf('|') === 0 || (l.indexOf('|') !== -1 && l.trim().length && l.trim()[0] !== '#' && l.trim()[0] !== '*' ); }
+    while(i < lines.length){
+      var line = lines[i];
+      var trimmed = line.trim();
+      if(!trimmed){ i++; continue; }
+
+      if(trimmed.indexOf('## ') === 0){
+        html += '<h2>' + escapeHtml(trimmed.slice(3)) + '</h2>';
+        i++; continue;
+      }
+      if(trimmed.indexOf('# ') === 0){
+        html += '<h1>' + escapeHtml(trimmed.slice(2)) + '</h1>';
+        i++; continue;
+      }
+      if(trimmed === '---'){ i++; continue; }
+
+      if(trimmed.indexOf('|') === 0){
+        var tableLines = [];
+        while(i < lines.length && lines[i].trim().indexOf('|') === 0){
+          tableLines.push(lines[i].trim());
+          i++;
+        }
+        if(tableLines.length >= 2){
+          var headerCells = tableLines[0].split('|').map(function(c){return c.trim();}).filter(function(c,idx,arr){return !(idx===0&&c==='')&&!(idx===arr.length-1&&c==='');});
+          var bodyRows = tableLines.slice(2); // skip separator row
+          html += '<table><thead><tr>' + headerCells.map(function(h){return '<th>'+escapeHtml(h)+'</th>';}).join('') + '</tr></thead><tbody>';
+          bodyRows.forEach(function(r){
+            var cells = r.split('|').map(function(c){return c.trim();}).filter(function(c,idx,arr){return !(idx===0&&c==='')&&!(idx===arr.length-1&&c==='');});
+            if(!cells.length) return;
+            html += '<tr>' + cells.map(function(c){return '<td>'+escapeHtml(c)+'</td>';}).join('') + '</tr>';
+          });
+          html += '</tbody></table>';
+        }
+        continue;
+      }
+
+      if(/^[*-]\s/.test(trimmed)){
+        var ulItems = [];
+        while(i < lines.length && /^[*-]\s/.test(lines[i].trim())){
+          ulItems.push(lines[i].trim().replace(/^[*-]\s/, ''));
+          i++;
+        }
+        html += '<ul>' + ulItems.map(function(t){return '<li>'+escapeHtml(t)+'</li>';}).join('') + '</ul>';
+        continue;
+      }
+
+      if(/^\d+\.\s/.test(trimmed)){
+        var olItems = [];
+        while(i < lines.length && /^\d+\.\s/.test(lines[i].trim())){
+          olItems.push(lines[i].trim().replace(/^\d+\.\s/, ''));
+          i++;
+        }
+        html += '<ol>' + olItems.map(function(t){return '<li>'+escapeHtml(t)+'</li>';}).join('') + '</ol>';
+        continue;
+      }
+
+      if(/^\*.*\*$/.test(trimmed)){
+        html += '<div class="note">' + escapeHtml(trimmed.replace(/^\*|\*$/g,'')) + '</div>';
+        i++; continue;
+      }
+
+      html += '<p style="font-size:13px;margin:4px 0;">' + escapeHtml(trimmed) + '</p>';
+      i++;
+    }
+    return '<div class="canvas-view">' + html + '</div>';
+  }
+
+  function renderDateTabs(activeFileId){
+    dateTabs.innerHTML = slackDays.map(function(d){
+      return '<button class="date-tab' + (d.fileId===activeFileId?' active':'') + '" data-file="' + escapeHtml(d.fileId) + '" type="button">' + escapeHtml(d.date) + '</button>';
+    }).join('');
+    dateTabs.querySelectorAll('.date-tab').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        loadDay(btn.dataset.file);
+      });
+    });
+  }
+
+  function loadDay(fileId){
+    var day = slackDays.filter(function(d){return d.fileId===fileId;})[0];
+    renderDateTabs(fileId);
+    dateHeadline.textContent = day ? day.headline : '';
+    slackBody.innerHTML = '<div class="slack-empty">Loading ' + (day?escapeHtml(day.date):'') + '…</div>';
+    slackServerRef.slack_read_canvas({canvas_id: fileId}).then(function(res){
+      var md = (res && res.markdown_content) || (res && res.payload && res.payload.markdown_content) || '';
+      slackBody.innerHTML = md ? renderCanvasMarkdown(md) : '<div class="slack-empty">This canvas came back empty.</div>';
+    }).catch(function(){
+      slackBody.innerHTML = '<div class="slack-empty">Could not read that day\'s canvas.</div>';
+    });
+  }
+
+  function loadSlackUpdate(){
+    setSlackLoading(true, 'Reading Slack…');
+    slackUpdated.textContent = '';
+    slackBody.innerHTML = '';
+    dateTabs.innerHTML = '';
+    dateHeadline.textContent = '';
+
+    if(!window.claude || !window.claude.use){
+      setSlackLoading(false);
+      slackBody.innerHTML = '<div class="slack-empty">This page needs to be opened on claude.ai for live Slack access.</div>';
+      return;
+    }
+
+    window.claude.use('mcp').then(function(mcp){
+      if(!mcp){
+        setSlackLoading(false);
+        slackBody.innerHTML = '<div class="slack-empty">Slack access isn\'t available in this view.</div>';
+        return;
+      }
+      mcp.server('Slack').then(function(slack){
+        slackServerRef = slack;
+        slack.slack_read_canvas({canvas_id: INDEX_CANVAS_ID}).then(function(res){
+          var md = (res && res.markdown_content) || (res && res.payload && res.payload.markdown_content) || '';
+          slackDays = parseIndexCanvas(md);
+          setSlackLoading(false);
+          if(!slackDays.length){
+            slackBody.innerHTML = '<div class="slack-empty">No dated updates found in the index yet.</div>';
+            return;
+          }
+          slackUpdated.textContent = slackDays.length + ' day' + (slackDays.length===1?'':'s') + ' available — newest first';
+          renderDateTabs(slackDays[0].fileId);
+          loadDay(slackDays[0].fileId);
+        }).catch(function(){
+          setSlackLoading(false);
+          slackBody.innerHTML = '<div class="slack-empty">Could not read the Portfolio Update index canvas.</div>';
+        });
+      }).catch(function(e){
+        setSlackLoading(false);
+        var code = (e && e.code) || 'unknown_error';
+        if(code === 'server_not_connected'){
+          slackBody.innerHTML = '<div class="slack-empty">Slack isn\'t connected for your account. Add it in claude.ai Settings → Connectors.</div>';
+        } else if(code === 'needs_reauth'){
+          slackBody.innerHTML = '<div class="slack-empty">Your Slack connection needs to be reauthorized in claude.ai Settings → Connectors.</div>';
+        } else {
+          slackBody.innerHTML = '<div class="slack-empty">Could not reach Slack (' + escapeHtml(code) + ').</div>';
+        }
+      });
+    }).catch(function(){
+      setSlackLoading(false);
+      slackBody.innerHTML = '<div class="slack-empty">Could not initialize Slack access.</div>';
+    });
+  }
+
+  slackBtn.addEventListener('click', loadSlackUpdate);
+
+  // ---------- Amazon Ads / PL Overview (manual entry, saved to db) ----------
+  var ADS_DOC_PATH = 'adsOverview/current';
+  var adsEditing = false;
+  var adsData = null;
+  var adsDb = null;
+
+  function defaultAdsData(){
+    return {
+      period: 'Last 30 Days',
+      kpis: [
+        {key:'revenue', label:'Revenue', value:'$187.5K', changeAbs:'↑ $12.3K', changePct:'↑ 7.0%', dir:'up'},
+        {key:'units', label:'Units Sold', value:'1,203', changeAbs:'↑ 203', changePct:'↑ 20.2%', dir:'up'},
+        {key:'orders', label:'Orders', value:'847', changeAbs:'↑ 127', changePct:'↑ 17.6%', dir:'up'},
+        {key:'sessions', label:'Sessions', value:'67.2K', changeAbs:'↑ 8.7K', changePct:'↑ 14.8%', dir:'up'},
+        {key:'cvr', label:'CVR', value:'12.6%', changeAbs:'↓ -1.4pp', changePct:'↓ -10.0%', dir:'down'},
+        {key:'ctr', label:'CTR', value:'0.62%', changeAbs:'↓ -0.08pp', changePct:'↓ -11.4%', dir:'down'},
+        {key:'adspend', label:'Ad Spend', value:'$4,320', changeAbs:'↑ $620', changePct:'↑ 16.8%', dir:'up'},
+        {key:'acos', label:'ACOS', value:'24.3%', changeAbs:'↓ -1.2pp', changePct:'↓ -4.7%', dir:'down'},
+        {key:'tacos', label:'TACOS', value:'15.2%', changeAbs:'↑ 0.8pp', changePct:'↑ 5.6%', dir:'up'},
+        {key:'roas', label:'ROAS', value:'3.1x', changeAbs:'↓ -0.3x', changePct:'↓ -8.8%', dir:'down'},
+        {key:'cpc', label:'CPC', value:'$1.51', changeAbs:'↓ -$0.04', changePct:'↓ -2.6%', dir:'down'},
+        {key:'profit', label:'Profit', value:'$42.8K', changeAbs:'↑ $8.2K', changePct:'↑ 23.7%', dir:'up'}
+      ],
+      attention: [
+        {brand:'Clear Focus', issue:'CVR down 34%', severity:'critical', meta:'3 days open'},
+        {brand:'Dream Blend', issue:'18 days inventory', severity:'high', meta:'Urgent reorder'},
+        {brand:'Sleep Stack', issue:'ACOS +22% vs target', severity:'medium', meta:'5 days investigating'},
+        {brand:'Focus +', issue:'No critical issues', severity:'low', meta:'All systems normal'}
+      ],
+      issues: [
+        {brand:'Clear Focus', asin:'B07XXXX', issue:'CVR decline', severity:'critical', status:'open', days:'3', owner:'Ahmad', next:'Analyze pricing + reviews'},
+        {brand:'Dream Blend', asin:'B08YYYY', issue:'ACOS above target', severity:'high', status:'investigating', days:'2', owner:'Sarah', next:'Review search terms'},
+        {brand:'Sleep Stack', asin:'B09ZZZZ', issue:'Inventory risk', severity:'high', status:'monitoring', days:'5', owner:'Operations', next:'Coordinate reorder'}
+      ],
+      priorities: [
+        {brand:'Clear Focus', issue:'Diagnose CVR decline (Critical)', owner:'Ahmad', due:'Today'},
+        {brand:'Dream Blend', issue:'Reorder inventory (12 days left)', owner:'Operations', due:'Urgent'}
+      ],
+      updatedAt: null,
+      isExample: true
+    };
+  }
+
+  function escAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+
+  function renderAdsView(data, editing){
+    var body = document.getElementById('adsBody');
+    document.getElementById('adsPeriodDisplay').textContent = editing ? '' : data.period;
+    document.getElementById('adsExampleFlag').style.display = data.isExample ? 'inline-block' : 'none';
+
+    var html = '';
+
+    if(editing){
+      html += '<div style="margin-bottom:14px;"><label style="font-size:11px;color:var(--text-dim);display:block;margin-bottom:4px;">Period label</label><input type="text" id="ads_period" value="'+escAttr(data.period)+'" style="max-width:220px;"></div>';
+    }
+
+    // KPI grid
+    html += '<div class="ads-kpi-grid">';
+    data.kpis.forEach(function(k, i){
+      if(editing){
+        html += '<div class="ads-kpi">' +
+          '<div class="lbl">'+escapeHtml(k.label)+'</div>' +
+          '<input type="text" data-kpi="'+i+'" data-field="value" value="'+escAttr(k.value)+'" placeholder="value">' +
+          '<div class="inp-row">' +
+            '<input type="text" data-kpi="'+i+'" data-field="changeAbs" value="'+escAttr(k.changeAbs)+'" placeholder="abs">' +
+            '<input type="text" data-kpi="'+i+'" data-field="changePct" value="'+escAttr(k.changePct)+'" placeholder="pct">' +
+            '<select data-kpi="'+i+'" data-field="dir"><option value="up"'+(k.dir==='up'?' selected':'')+'>up</option><option value="down"'+(k.dir==='down'?' selected':'')+'>down</option></select>' +
+          '</div>' +
+        '</div>';
+      } else {
+        html += '<div class="ads-kpi">' +
+          '<div class="lbl">'+escapeHtml(k.label)+'</div>' +
+          '<div class="val">'+escapeHtml(k.value)+'</div>' +
+          '<div class="chg '+k.dir+'">'+escapeHtml(k.changeAbs)+' · '+escapeHtml(k.changePct)+'</div>' +
+        '</div>';
+      }
+    });
+    html += '</div>';
+
+    // Needs attention
+    html += '<div class="ads-block"><h3>⚠️ Needs Attention</h3><div class="ads-cards">';
+    data.attention.forEach(function(a, i){
+      if(editing){
+        html += '<div class="ads-card '+a.severity+'">' +
+          '<input type="text" data-att="'+i+'" data-field="brand" value="'+escAttr(a.brand)+'" placeholder="brand">' +
+          '<input type="text" data-att="'+i+'" data-field="issue" value="'+escAttr(a.issue)+'" placeholder="issue">' +
+          '<select data-att="'+i+'" data-field="severity">' + ['critical','high','medium','low'].map(function(s){return '<option value="'+s+'"'+(a.severity===s?' selected':'')+'>'+s+'</option>';}).join('') + '</select>' +
+          '<input type="text" data-att="'+i+'" data-field="meta" value="'+escAttr(a.meta)+'" placeholder="meta">' +
+          '<button type="button" class="ads-mini" data-remove-att="'+i+'">Remove</button>' +
+        '</div>';
+      } else {
+        html += '<div class="ads-card '+a.severity+'">' +
+          '<div class="brand">'+escapeHtml(a.brand)+'</div>' +
+          '<div class="issue">'+escapeHtml(a.issue)+'</div>' +
+          '<div class="meta">'+escapeHtml(a.meta)+'</div>' +
+        '</div>';
+      }
+    });
+    if(editing) html += '<button type="button" class="ads-btn" id="adsAddAttention" style="align-self:flex-start;">+ Add card</button>';
+    html += '</div></div>';
+
+    // Open issues table
+    html += '<div class="ads-block"><h3>📋 Open Issues</h3><div class="ads-table-wrap"><table class="ads-table"><thead><tr>' +
+      '<th>Brand</th><th>ASIN</th><th>Issue</th><th>Severity</th><th>Status</th><th>Days</th><th>Owner</th><th>Next Action</th>' + (editing?'<th></th>':'') +
+      '</tr></thead><tbody>';
+    data.issues.forEach(function(row, i){
+      if(editing){
+        html += '<tr>' +
+          '<td><input data-iss="'+i+'" data-field="brand" value="'+escAttr(row.brand)+'"></td>' +
+          '<td><input data-iss="'+i+'" data-field="asin" value="'+escAttr(row.asin)+'"></td>' +
+          '<td><input data-iss="'+i+'" data-field="issue" value="'+escAttr(row.issue)+'"></td>' +
+          '<td><select data-iss="'+i+'" data-field="severity">' + ['critical','high','medium','low'].map(function(s){return '<option value="'+s+'"'+(row.severity===s?' selected':'')+'>'+s+'</option>';}).join('') + '</select></td>' +
+          '<td><select data-iss="'+i+'" data-field="status">' + ['open','investigating','monitoring','action','resolved'].map(function(s){return '<option value="'+s+'"'+(row.status===s?' selected':'')+'>'+s+'</option>';}).join('') + '</select></td>' +
+          '<td><input data-iss="'+i+'" data-field="days" value="'+escAttr(row.days)+'" style="width:50px;"></td>' +
+          '<td><input data-iss="'+i+'" data-field="owner" value="'+escAttr(row.owner)+'"></td>' +
+          '<td><input data-iss="'+i+'" data-field="next" value="'+escAttr(row.next)+'"></td>' +
+          '<td><button type="button" class="ads-mini" data-remove-iss="'+i+'">✕</button></td>' +
+        '</tr>';
+      } else {
+        html += '<tr>' +
+          '<td class="bold">'+escapeHtml(row.brand)+'</td>' +
+          '<td>'+escapeHtml(row.asin)+'</td>' +
+          '<td>'+escapeHtml(row.issue)+'</td>' +
+          '<td><span class="ads-badge '+row.severity+'">'+escapeHtml(row.severity)+'</span></td>' +
+          '<td><span class="ads-badge '+row.status+'">'+escapeHtml(row.status)+'</span></td>' +
+          '<td>'+escapeHtml(row.days)+'</td>' +
+          '<td>'+escapeHtml(row.owner)+'</td>' +
+          '<td>'+escapeHtml(row.next)+'</td>' +
+        '</tr>';
+      }
+    });
+    html += '</tbody></table></div>';
+    if(editing) html += '<button type="button" class="ads-btn" id="adsAddIssue" style="margin-top:8px;">+ Add row</button>';
+    html += '</div>';
+
+    // Priorities
+    html += '<div class="ads-block"><h3>🎯 Today\'s Top Priorities</h3><div class="ads-priorities">';
+    data.priorities.forEach(function(p, i){
+      if(editing){
+        html += '<div class="ads-priority">' +
+          '<div class="num">'+(i+1)+'</div>' +
+          '<input type="text" data-pri="'+i+'" data-field="brand" value="'+escAttr(p.brand)+'" placeholder="brand">' +
+          '<input type="text" data-pri="'+i+'" data-field="issue" value="'+escAttr(p.issue)+'" placeholder="what to do">' +
+          '<input type="text" data-pri="'+i+'" data-field="owner" value="'+escAttr(p.owner)+'" placeholder="owner">' +
+          '<input type="text" data-pri="'+i+'" data-field="due" value="'+escAttr(p.due)+'" placeholder="due">' +
+          '<button type="button" class="ads-mini" data-remove-pri="'+i+'">Remove</button>' +
+        '</div>';
+      } else {
+        html += '<div class="ads-priority">' +
+          '<div class="num">'+(i+1)+'</div>' +
+          '<div class="brand">'+escapeHtml(p.brand)+'</div>' +
+          '<div class="issue">'+escapeHtml(p.issue)+'</div>' +
+          '<div class="meta">Owner: '+escapeHtml(p.owner)+' · Due: '+escapeHtml(p.due)+'</div>' +
+        '</div>';
+      }
+    });
+    if(editing) html += '<button type="button" class="ads-btn" id="adsAddPriority" style="align-self:flex-start;">+ Add priority</button>';
+    html += '</div></div>';
+
+    body.innerHTML = html;
+
+    if(editing){
+      document.getElementById('adsAddAttention').addEventListener('click', function(){
+        adsData.attention.push({brand:'', issue:'', severity:'medium', meta:''});
+        renderAdsView(adsData, true);
+      });
+      document.getElementById('adsAddIssue').addEventListener('click', function(){
+        adsData.issues.push({brand:'', asin:'', issue:'', severity:'medium', status:'open', days:'', owner:'', next:''});
+        renderAdsView(adsData, true);
+      });
+      document.getElementById('adsAddPriority').addEventListener('click', function(){
+        adsData.priorities.push({brand:'', issue:'', owner:'', due:''});
+        renderAdsView(adsData, true);
+      });
+      body.querySelectorAll('[data-remove-att]').forEach(function(btn){
+        btn.addEventListener('click', function(){ adsData.attention.splice(+btn.dataset.removeAtt,1); syncAdsFormIntoData(); renderAdsView(adsData, true); });
+      });
+      body.querySelectorAll('[data-remove-iss]').forEach(function(btn){
+        btn.addEventListener('click', function(){ adsData.issues.splice(+btn.dataset.removeIss,1); syncAdsFormIntoData(); renderAdsView(adsData, true); });
+      });
+      body.querySelectorAll('[data-remove-pri]').forEach(function(btn){
+        btn.addEventListener('click', function(){ adsData.priorities.splice(+btn.dataset.removePri,1); syncAdsFormIntoData(); renderAdsView(adsData, true); });
+      });
+    }
+  }
+
+  function syncAdsFormIntoData(){
+    var body = document.getElementById('adsBody');
+    var periodEl = document.getElementById('ads_period');
+    if(periodEl) adsData.period = periodEl.value;
+    body.querySelectorAll('[data-kpi]').forEach(function(el){
+      adsData.kpis[+el.dataset.kpi][el.dataset.field] = el.value;
+    });
+    body.querySelectorAll('[data-att]').forEach(function(el){
+      if(adsData.attention[+el.dataset.att]) adsData.attention[+el.dataset.att][el.dataset.field] = el.value;
+    });
+    body.querySelectorAll('[data-iss]').forEach(function(el){
+      if(adsData.issues[+el.dataset.iss]) adsData.issues[+el.dataset.iss][el.dataset.field] = el.value;
+    });
+    body.querySelectorAll('[data-pri]').forEach(function(el){
+      if(adsData.priorities[+el.dataset.pri]) adsData.priorities[+el.dataset.pri][el.dataset.field] = el.value;
+    });
+  }
+
+  var adsEditBtn = document.getElementById('adsEditBtn');
+  var adsSaveBtn = document.getElementById('adsSaveBtn');
+  var adsCancelBtn = document.getElementById('adsCancelBtn');
+  var adsUpdatedEl = document.getElementById('adsUpdated');
+  var adsSnapshotBeforeEdit = null;
+
+  function enterAdsEdit(){
+    adsEditing = true;
+    adsSnapshotBeforeEdit = JSON.parse(JSON.stringify(adsData));
+    adsEditBtn.style.display = 'none';
+    adsSaveBtn.style.display = 'inline-block';
+    adsCancelBtn.style.display = 'inline-block';
+    renderAdsView(adsData, true);
+  }
+
+  function exitAdsEdit(){
+    adsEditing = false;
+    adsEditBtn.style.display = 'inline-block';
+    adsSaveBtn.style.display = 'none';
+    adsCancelBtn.style.display = 'none';
+  }
+
+  adsEditBtn.addEventListener('click', enterAdsEdit);
+  adsCancelBtn.addEventListener('click', function(){
+    adsData = adsSnapshotBeforeEdit;
+    exitAdsEdit();
+    renderAdsView(adsData, false);
+  });
+  adsSaveBtn.addEventListener('click', function(){
+    syncAdsFormIntoData();
+    adsData.isExample = false;
+    adsData.updatedAt = new Date().toISOString();
+    exitAdsEdit();
+    renderAdsView(adsData, false);
+    adsUpdatedEl.textContent = 'saving…';
+    if(adsDb){
+      adsDb.doc(ADS_DOC_PATH).set(adsData).then(function(){
+        adsUpdatedEl.textContent = 'saved ' + new Date().toLocaleTimeString();
+      }).catch(function(){
+        adsUpdatedEl.textContent = 'could not save — changes will be lost on refresh until db access works';
+      });
+    } else {
+      adsUpdatedEl.textContent = 'db not available in this view — changes will be lost on refresh';
+    }
+  });
+
+  function loadAdsData(){
+    if(!window.claude || !window.claude.use){
+      adsData = defaultAdsData();
+      renderAdsView(adsData, false);
+      return;
+    }
+    window.claude.use('db').then(function(db){
+      adsDb = db;
+      if(!db){ adsData = defaultAdsData(); renderAdsView(adsData, false); return; }
+      db.doc(ADS_DOC_PATH).get().then(function(snap){
+        var stored = snap && snap.exists ? snap.data() : null;
+        adsData = stored || defaultAdsData();
+        renderAdsView(adsData, false);
+        if(stored && stored.updatedAt) adsUpdatedEl.textContent = 'last saved ' + new Date(stored.updatedAt).toLocaleString();
+      }).catch(function(){
+        adsData = defaultAdsData();
+        renderAdsView(adsData, false);
+      });
+    }).catch(function(){
+      adsData = defaultAdsData();
+      renderAdsView(adsData, false);
+    });
+  }
+
+  loadAdsData();
+})();
+</script>
+
+<script>(function(){var b=document.getElementById('refreshBtn');if(b)b.style.display='none';
+document.querySelectorAll('.main-tab').forEach(function(t){if(t.dataset.tab==='slack')t.style.display='none'});
+var f=document.querySelector('footer.note');if(f)f.innerHTML='How it works: each brand\'s Asana project is scored on completion, duplicate tasks, POA timing (due by the 3rd of the month), stale tasks (7+ days without an update) and overdue tasks. The worst brands sort to the top, and every flagged item is tracked by how many days it stays unsolved. In real use it reads live from Asana and a daily Slack update; this copy runs on invented sample brands.';
+})();</script></body></html>

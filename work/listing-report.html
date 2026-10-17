@@ -1,0 +1,293 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Listing Content Report (sample) · Ahmad Haider</title><meta name="robots" content="noindex"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><style>
+  :root{
+    --bg:#f6f5f2;
+    --surface:#ffffff;
+    --surface-2:#f0eee8;
+    --border:#e2ded4;
+    --ink:#20241f;
+    --ink-soft:#54584f;
+    --ink-faint:#8b8d81;
+    --accent:#2c5f4a;
+    --accent-soft:#e6efe9;
+    --accent-ink:#1c4534;
+    --amber:#9a6b1f;
+    --amber-soft:#faf0dd;
+    --red:#a13a2f;
+    --red-soft:#fbe9e5;
+    --line:#d9d5c9;
+    --shadow: 0 1px 2px rgba(30,30,20,.04), 0 8px 24px -12px rgba(30,30,20,.10);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#151713;
+      --surface:#1c1e19;
+      --surface-2:#22241e;
+      --border:#33352c;
+      --ink:#eeeee6;
+      --ink-soft:#b7b8ac;
+      --ink-faint:#83857a;
+      --accent:#6cbe98;
+      --accent-soft:#1e2c25;
+      --accent-ink:#8fd4b1;
+      --amber:#d9a94e;
+      --amber-soft:#2c2618;
+      --red:#e18a7a;
+      --red-soft:#2e1f1c;
+      --line:#33352c;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#151713;
+    --surface:#1c1e19;
+    --surface-2:#22241e;
+    --border:#33352c;
+    --ink:#eeeee6;
+    --ink-soft:#b7b8ac;
+    --ink-faint:#83857a;
+    --accent:#6cbe98;
+    --accent-soft:#1e2c25;
+    --accent-ink:#8fd4b1;
+    --amber:#d9a94e;
+    --amber-soft:#2c2618;
+    --red:#e18a7a;
+    --red-soft:#2e1f1c;
+    --line:#33352c;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    padding-inline:20px;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding-block: 40px 80px;}
+
+  h1,h2,h3{font-family:"Fraunces", Georgia, serif; font-weight:600; letter-spacing:-0.01em; text-wrap:balance; color:var(--ink);}
+  .eyebrow{
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; font-weight:700;
+    color:var(--accent-ink);
+  }
+
+  header.top{
+    display:flex; flex-wrap:wrap; gap:18px 32px; justify-content:space-between; align-items:flex-end;
+    border-bottom:1px solid var(--line); padding-bottom:24px; margin-bottom:36px;
+  }
+  header.top .id{max-width:560px;}
+  header.top h1{font-size:clamp(1.7rem,3.6vw,2.35rem); margin:8px 0 6px;}
+  header.top p{color:var(--ink-soft); margin:0; font-size:.98rem;}
+  .meta-box{
+    display:grid; grid-template-columns:auto auto; gap:2px 18px; font-size:.85rem; color:var(--ink-soft);
+    text-align:right;
+  }
+  .meta-box dt{grid-column:1; font-weight:600; color:var(--ink-faint);}
+  .meta-box dd{grid-column:2; margin:0; color:var(--ink);}
+
+  section{margin-top:52px;}
+  section > .eyebrow{display:block; margin-bottom:6px;}
+  section > h2{font-size:1.5rem; margin:0 0 14px;}
+  section > .lede{color:var(--ink-soft); max-width:66ch; margin:0 0 22px; font-size:1rem;}
+
+  .scoregrid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px;
+    background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:var(--shadow);
+  }
+  .scorecell{background:var(--surface); padding:18px 16px;}
+  .scorecell .num{font-family:"Fraunces",serif; font-size:1.9rem; font-weight:600; line-height:1;}
+  .scorecell .lbl{font-size:.76rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin-top:6px;}
+  .num.good{color:var(--accent-ink);}
+  .num.bad{color:var(--red);}
+
+  .pair{
+    display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:22px;
+  }
+  @media (max-width:640px){ .pair{grid-template-columns:1fr;} }
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:18px 20px; box-shadow:var(--shadow);
+  }
+  .card.before{border-top:3px solid var(--red);}
+  .card.after{border-top:3px solid var(--accent);}
+  .card .tag{
+    font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700;
+  }
+  .card.before .tag{color:var(--red);}
+  .card.after .tag{color:var(--accent-ink);}
+  .card .body{margin-top:10px; font-size:.95rem; color:var(--ink); white-space:pre-wrap;}
+  .card .body b{background:var(--accent-soft); padding:0 2px; border-radius:3px;}
+  .bullets-block{margin-bottom:26px;}
+  .bullets-block > .bwrap{display:grid; grid-template-columns:1fr; gap:14px;}
+
+  .bnum{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; background:var(--accent-soft); color:var(--accent-ink);
+    font-size:.75rem; font-weight:700; margin-right:8px; flex:none;
+  }
+  .bullet-row{display:flex; align-items:flex-start; padding:12px 14px; border:1px solid var(--border); border-radius:10px; background:var(--surface);}
+  .bullet-row .txt{font-size:.93rem;}
+  .bullet-row .txt .lead{font-weight:700;}
+
+  .pill{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px;
+    font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+  }
+  .pill.new{background:var(--accent-soft); color:var(--accent-ink);}
+  .pill.missing{background:var(--red-soft); color:var(--red);}
+  .pill.partial{background:var(--amber-soft); color:var(--amber);}
+
+  table.qtable{width:100%; border-collapse:collapse; font-size:.92rem; background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:var(--shadow);}
+  table.qtable th{
+    text-align:left; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint);
+    padding:12px 16px; background:var(--surface-2); border-bottom:1px solid var(--border);
+  }
+  table.qtable td{padding:14px 16px; border-bottom:1px solid var(--border); vertical-align:top;}
+  table.qtable tr:last-child td{border-bottom:none;}
+  table.qtable td.q{font-weight:600; max-width:280px;}
+  table.qtable td.ans{color:var(--ink-soft); font-size:.88rem;}
+  .tblwrap{overflow-x:auto; border-radius:12px;}
+
+  .notecard{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 22px; box-shadow:var(--shadow);
+    margin-bottom:14px;
+  }
+  .notecard h3{font-size:1.02rem; margin:0 0 8px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-weight:700;}
+  .notecard p{margin:0 0 8px; color:var(--ink-soft); font-size:.92rem;}
+  .notecard .status{font-size:.78rem; font-weight:700;}
+  .status.done{color:var(--accent-ink);}
+  .status.open{color:var(--amber);}
+
+  .divider{height:1px; background:var(--line); margin:52px 0 0;}
+  footer{margin-top:48px; padding-top:22px; border-top:1px solid var(--line); font-size:.82rem; color:var(--ink-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  .flagnote{
+    background:var(--amber-soft); border:1px solid var(--amber); border-left:4px solid var(--amber);
+    border-radius:8px; padding:12px 16px; font-size:.88rem; color:var(--ink); margin-top:16px;
+  }
+  .flagnote b{color:var(--amber);}
+  .groupheading{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:.95rem; text-transform:uppercase;
+    letter-spacing:.05em; color:var(--ink-faint); margin:0 0 12px;
+  }
+</style></head><body><div style="position:sticky;top:0;z-index:9999;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-inline:-20px;padding:9px 18px;background:#123C69;color:#FBF6F3;font:600 13.5px/1.3 system-ui,-apple-system,Segoe UI,sans-serif"><a href="../work.html" style="color:#FBF6F3;text-decoration:none">&larr; All audits &amp; reports</a><span style="font-weight:500;opacity:.9">Listing optimization report · project I worked on · brand invented</span><a href="../contact.html" style="color:#EDC7B7;text-decoration:none">Hire me</a></div><div class="wrap">
+  <header class="top">
+    <div class="id">
+      <span class="eyebrow">Listing Content Report — Kestrel Clean (sample brand)</span>
+      <h1>Hard Water Stain Remover Listing Update</h1>
+      <p>ASIN B0DEMO8K01 — Title, item type, bullet points and description rewritten against the audit findings.</p>
+    </div>
+    <dl class="meta-box">
+      <dt>Prepared</dt><dd>Sample report</dd>
+      <dt>Role</dt><dd>Listing rewrite + question coverage</dd>
+      <dt>Status</dt><dd>Ready for review</dd>
+    </dl>
+  </header>
+
+  <section>
+    <span class="eyebrow">Where this started</span>
+    <h2>Results at a glance</h2>
+    <p class="lede">The audit found a listing answering only 54 of 450 real customer questions, with 3 of 5 bullet slots empty. The rewrite closes both gaps.</p>
+    <div class="scoregrid">
+      <div class="scorecell"><div class="num good">+92%</div><div class="lbl">Listing score improvement</div></div>
+      <div class="scorecell"><div class="num good">5.1x</div><div class="lbl">More customer questions answered</div></div>
+      <div class="scorecell"><div class="num good">6 / 6</div><div class="lbl">Primary purchase questions covered</div></div>
+      <div class="scorecell"><div class="num bad">2 / 5</div><div class="lbl">Bullets present, before</div></div>
+      <div class="scorecell"><div class="num good">5 / 5</div><div class="lbl">Bullets present, after</div></div>
+      <div class="scorecell"><div class="num good">276 / 450</div><div class="lbl">Questions answered, after</div></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Section 1 of 4</span>
+    <h2>Title &amp; Item Type</h2>
+    <p class="lede">The old title led with filler words, never named the brand first and never said which surfaces it is safe on, which is the number one question buyers ask. The new title leads with the brand, the job and the surface claim. The Item Type field was empty and is now filled from a different keyword angle.</p>
+    <div class="pair">
+      <div class="card before"><span class="tag">Before — Title</span><div class="body">Best hard water stain remover cleaner for shower glass doors tile faucet toilet bathroom kitchen- powerful formula- 16 oz</div></div>
+      <div class="card after"><span class="tag">After — Title</span><div class="body">Kestrel Clean <b>Hard Water Stain Remover</b> – <b>Safe on Coated Shower Glass</b>, Tile &amp; Chrome, 16 Oz</div></div>
+    </div>
+    <div class="pair">
+      <div class="card" style="border-top:3px solid var(--border);"><span class="tag" style="color:var(--ink-faint);">Before — Item Type</span><div class="body" style="color:var(--ink-faint);"><i>Not present in the live listing</i></div></div>
+      <div class="card after"><span class="tag">After — Item Type (new field)</span><div class="body">Limescale and Calcium Remover for Glass Shower Doors, Faucets, Tile and Fixtures</div></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <span class="eyebrow">Brand-defined positioning · highest priority</span>
+    <h2>The core differentiator to market</h2>
+    <p class="lede">The brand's instruction on how this listing should be written (condensed):</p>
+    <div class="card" style="border-top:3px solid var(--accent); background:var(--accent-soft);"><div class="body">Most hard water removers are acid-heavy and strip the protective coating on modern shower glass. Kestrel is pH-balanced, so it lifts limescale without damaging coated glass, chrome or natural-stone grout. Shoppers should never worry that cleaning will ruin a new shower door. <b>Safe on coated glass</b> vs. <b>strips it clean</b> is the main wedge against every other remover on the page.</div></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <span class="eyebrow">Section 2 of 4</span>
+    <h2>Bullet points</h2>
+    <p class="lede">Only 2 of 5 bullets were filled. All five are now written, each built around a specific customer question from the audit's question data.</p>
+    <div class="pair" style="margin-bottom:26px;"><div class="card before"><span class="tag">Before — 2 of 5 present</span><div class="body">POWERFUL FORMULA – removes tough stains fast from all bathroom surfaces.
+MULTI USE – great for kitchen, bathroom, car and more.
+<i style="color:var(--ink-faint); font-style:normal; font-size:.85rem;">Bullets 3–5: empty</i></div></div></div>
+    <div class="bullets-block"><div class="bwrap">
+      <div class="bullet-row"><div><span class="bnum">1</span></div><div class="txt"><span class="lead">Safe on Coated Shower Glass —</span> pH-balanced formula lifts limescale without stripping factory glass coatings. <span class="pill new" style="margin-left:6px;">Answers: will it damage my glass?</span></div></div>
+      <div class="bullet-row"><div><span class="bnum">2</span></div><div class="txt"><span class="lead">Works on Tile, Chrome &amp; Fixtures —</span> faucets, shower heads, tile, grout and sinks; not for marble or unsealed stone. <span class="pill new" style="margin-left:6px;">Answers: what surfaces is it safe for?</span></div></div>
+      <div class="bullet-row"><div><span class="bnum">3</span></div><div class="txt"><span class="lead">Spray, Wait 3 Minutes, Wipe —</span> no scrubbing for light film; 10 minutes and a soft sponge for heavy buildup. <span class="pill new" style="margin-left:6px;">Answers: how long do I leave it on?</span></div></div>
+      <div class="bullet-row"><div><span class="bnum">4</span></div><div class="txt"><span class="lead">One Bottle, About 40 Showers —</span> 16 oz covers roughly 40 full shower cleans at the suggested spray amount. <span class="pill new" style="margin-left:6px;">Answers: how long does a bottle last?</span></div></div>
+      <div class="bullet-row"><div><span class="bnum">5</span></div><div class="txt"><span class="lead">Low Odor, No Bleach —</span> safe to use in small bathrooms; rinse surfaces after use. <span class="pill new" style="margin-left:6px;">Answers: is the smell strong?</span></div></div>
+    </div></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <span class="eyebrow">Section 3 of 4</span>
+    <h2>Description</h2>
+    <p class="lede">The old description repeated the title and gave no directions. The rewrite adds use steps, surface limits and coverage.</p>
+    <div class="pair"><div class="card after" style="grid-column:1/-1;"><span class="tag">After — final copy</span><div class="body">Cloudy shower glass usually means hard water, not dirt. Kestrel Clean is a pH-balanced hard water stain remover that dissolves calcium and limescale while staying gentle on coated shower glass, chrome and sealed tile.
+
+Spray on a dry surface, wait 3 minutes and wipe with a soft cloth. For heavy buildup, leave it for up to 10 minutes and use a non-scratch sponge. Rinse with water when you are done.
+
+Use it on glass shower doors, faucets, shower heads, tile, grout and sinks. Do not use on marble, travertine or unsealed natural stone.
+
+One 16 oz bottle covers about 40 full shower cleans. Low odor and bleach-free, so it is comfortable to use in small bathrooms.</div></div></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <span class="eyebrow">Section 4 of 4</span>
+    <h2>Customer questions now answered</h2>
+    <p class="lede">The audit checked the listing against 450 real customer questions from search and shopping-assistant data. Every primary purchase question is now answered; overall coverage rose 5.1x.</p>
+    <div class="tblwrap" style="margin-top:8px;"><table class="qtable"><thead><tr><th>Customer question</th><th>Now answered where</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="q">Will it damage coated shower glass?</td><td class="ans">Title + Bullet 1 — pH-balanced, safe on coated glass</td><td><span class="pill new">Covered</span></td></tr>
+      <tr><td class="q">How long do I leave it on?</td><td class="ans">Bullet 3 + Description ¶2 — 3 minutes, up to 10 for heavy buildup</td><td><span class="pill new">Covered</span></td></tr>
+      <tr><td class="q">Do I need to scrub?</td><td class="ans">Bullet 3 — no scrubbing for light film; soft sponge for heavy</td><td><span class="pill new">Covered</span></td></tr>
+      <tr><td class="q">Which surfaces can I use it on?</td><td class="ans">Bullet 2 + Description ¶3 — glass, chrome, tile, grout, sinks</td><td><span class="pill new">Covered</span></td></tr>
+      <tr><td class="q">How long does one bottle last?</td><td class="ans">Bullet 4 — about 40 full shower cleans</td><td><span class="pill new">Covered</span></td></tr>
+      <tr><td class="q">Is the smell strong?</td><td class="ans">Bullet 5 — low odor, no bleach</td><td><span class="pill new">Covered</span></td></tr>
+      <tr><td class="q">Is it safe around pets and kids?</td><td class="ans">Not yet addressed — waiting on the brand's safety sheet</td><td><span class="pill missing">Open</span></td></tr>
+      <tr><td class="q">Can I use it on marble?</td><td class="ans">Excluded in Description ¶3 — reason not explained</td><td><span class="pill partial">Partial</span></td></tr>
+    </tbody></table></div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <span class="eyebrow">Next steps</span>
+    <h2>Open items on the listing content</h2>
+    <div class="notecard"><h3>Safety sheet</h3><p>Pet and child safety language goes in once the brand sends its safety data sheet.</p><span class="status open">Open — waiting on documentation</span></div>
+    <div class="notecard"><h3>Image 2: coated-glass proof</h3><p>Brief a side-by-side image showing coated glass after 30 cleans, to prove the main claim visually.</p><span class="status open">Open</span></div>
+    <div class="notecard"><h3>Backend search terms</h3><p>Filled to 249 bytes with no repeats of title words.</p><span class="status done">Done</span></div>
+  </section>
+
+  <footer><span>Kestrel Clean — B0DEMO8K01 — Listing Content Report (sample)</span><span>Brand, product, ASIN and numbers are invented</span></footer>
+</div></body></html>

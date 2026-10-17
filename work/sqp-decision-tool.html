@@ -1,0 +1,869 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><div id="pf-bar" style="position:sticky;top:0;z-index:9999;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+padding:9px 18px;background:#123C69;color:#FBF6F3;font:600 13.5px/1.3 system-ui,-apple-system,Segoe UI,sans-serif">
+<a href="../work.html" style="color:#FBF6F3;text-decoration:none">&larr; All audits &amp; reports</a>
+<span style="font-weight:500;opacity:.9">PPC + SQP Decision Audit, my own build · sample data, brands invented</span>
+<a href="../contact.html" style="color:#EDC7B7;text-decoration:none">Hire me</a></div>
+<title>PPC + SQP Decision Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+/* Layout: setup strip → verdict board → per-query decision table → supporting tabs. Built to be operated, not read. */
+/* Look J "Aurora": soft violet-to-sky wash, frosted white cards, violet accent, Figtree. */
+:root{
+  --bg:#e6ebff; --bg-grad:linear-gradient(135deg,#e9e4ff 0%,#dff1ff 55%,#e6fbf3 100%); --panel:rgba(255,255,255,.74); --solid:#ffffff; --ink:#221b44; --muted:#6c6790; --line:rgba(255,255,255,.95); --rule:rgba(34,27,68,.09); --soft:rgba(124,92,255,.07);
+  --shadow:0 10px 30px rgba(60,40,140,.08); --glow:0 6px 16px rgba(124,92,255,.35);
+  --accent:#7c5cff; --accent-soft:#ece7ff; --mast:transparent; --mast-2:rgba(255,255,255,.7); --mast-fg:#221b44; --mast-muted:#6c6790; --mast-kicker:#7c5cff;
+  --good:#12a89c; --good-soft:#dff6f3; --warn:#e8910a; --warn-soft:#fdefd6; --bad:#ec4877; --bad-soft:#fde4ec; --neutral:#9a96b8; --on:#ffffff;
+  --f-display:"Figtree",system-ui,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"Figtree",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141230; --bg-grad:linear-gradient(135deg,#1a1538 0%,#111d33 55%,#0f2628 100%); --panel:rgba(255,255,255,.07); --solid:#1d1a3a; --ink:#ece9ff; --muted:#a39fc4; --line:rgba(255,255,255,.12); --rule:rgba(255,255,255,.1); --soft:rgba(157,134,255,.12);
+  --shadow:0 10px 30px rgba(0,0,0,.3); --glow:0 6px 16px rgba(157,134,255,.4);
+  --accent:#9d86ff; --accent-soft:#2c2558; --mast:transparent; --mast-2:rgba(255,255,255,.08); --mast-fg:#ece9ff; --mast-muted:#a39fc4; --mast-kicker:#b3a2ff;
+  --good:#25b8ab; --good-soft:#143a38; --warn:#eba02a; --warn-soft:#43331a; --bad:#f06490; --bad-soft:#4a2132; --neutral:#6d6990; --on:#ffffff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141230; --bg-grad:linear-gradient(135deg,#1a1538 0%,#111d33 55%,#0f2628 100%); --panel:rgba(255,255,255,.07); --solid:#1d1a3a; --ink:#ece9ff; --muted:#a39fc4; --line:rgba(255,255,255,.12); --rule:rgba(255,255,255,.1); --soft:rgba(157,134,255,.12);
+  --shadow:0 10px 30px rgba(0,0,0,.3); --glow:0 6px 16px rgba(157,134,255,.4);
+  --accent:#9d86ff; --accent-soft:#2c2558; --mast:transparent; --mast-2:rgba(255,255,255,.08); --mast-fg:#ece9ff; --mast-muted:#a39fc4; --mast-kicker:#b3a2ff;
+  --good:#25b8ab; --good-soft:#143a38; --warn:#eba02a; --warn-soft:#43331a; --bad:#f06490; --bad-soft:#4a2132; --neutral:#6d6990; --on:#ffffff; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg) var(--bg-grad) fixed;min-height:100vh;color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5}
+.mast{background:var(--mast);color:var(--mast-fg)}
+.mast-in{max-width:1280px;margin:0 auto;padding-inline:20px;padding-block:22px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;justify-content:space-between}
+.mast .eyebrow{color:var(--mast-kicker)}
+.mast h1{color:var(--mast-fg)}
+.mast .client{display:flex;flex-direction:column;gap:2px;text-align:right}
+.mast .client b{font-size:15px;font-weight:600}
+.mast .client span{font-family:var(--f-mono);font-size:12px;color:var(--mast-muted)}
+.mast .btns{display:flex;gap:8px;flex-wrap:wrap}
+.mast .btns button{background:var(--mast-2);border-color:var(--line);color:var(--mast-fg)}
+.mast .btns button:hover{border-color:var(--mast-kicker)}
+.mast-in{padding-block:26px 6px}
+@media (max-width:700px){.mast .client{text-align:left}}
+.wrap{max-width:1280px;margin:0 auto;padding-inline:20px;padding-block:22px 60px;display:grid;gap:18px}
+@media (max-width:520px){.wrap{padding-inline:16px}.mast-in{padding-inline:16px}}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.02em}
+h1{font-size:36px;font-weight:800;line-height:1;letter-spacing:-.03em}
+h2{font-size:19px;font-weight:800}
+h3{font-size:15px;font-weight:800}
+.eyebrow{font-family:var(--f-body);font-size:12px;font-weight:800;color:var(--mast-kicker)}
+body{font-weight:500}
+b,strong{font-weight:800}
+.muted{color:var(--muted)}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header.top{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:end;justify-content:space-between}
+header.top p{margin:4px 0 0;max-width:70ch;color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:22px 24px;box-shadow:var(--shadow)}
+.setup{display:grid;grid-template-columns:1.1fr 1fr;gap:14px}
+@media (max-width:900px){.setup{grid-template-columns:1fr}}
+.drop{border:2px dashed var(--accent);border-radius:24px;padding:20px;display:grid;gap:10px;background:var(--panel);min-width:0;box-shadow:var(--shadow)}
+.drop.over{border-color:var(--accent)}
+.drop-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.src{display:grid;gap:5px}
+.chip{display:flex;align-items:center;gap:7px;font-size:12.5px;padding:5px 11px;border-radius:12px;border:2px solid var(--line);background:var(--soft);min-width:0;font-weight:600}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none}
+.chip.sample .dot{background:var(--warn)} .chip.loaded .dot{background:var(--good)}
+.chip b{font-weight:600;white-space:nowrap}
+.chip span.d{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+button,.btn{font:inherit;font-size:13px;font-weight:700;border-radius:999px;border:1px solid var(--line);background:var(--mast-2);color:var(--ink);padding:8px 15px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary,.btn{background:var(--accent);border-color:var(--accent);color:var(--on);box-shadow:var(--glow)}
+button.sm{font-size:12px;padding:4px 9px}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fields label{display:grid;gap:3px;font-size:11.5px;color:var(--muted)}
+.fields label.wide{grid-column:1/-1}
+.fields input,.fields select,.fields textarea{font:inherit;font-family:var(--f-mono);font-weight:700;font-size:13px;padding:7px 10px;border:2px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);width:100%}
+.fields input[type=text],.fields textarea{font-family:var(--f-body)}
+.fields textarea{min-height:38px;resize:vertical}
+.derived{font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px}
+.derived b{color:var(--ink);font-family:var(--f-mono);font-weight:500}
+.banner{font-size:13px;padding:10px 14px;border-radius:14px;background:var(--warn-soft);border:2px solid var(--warn-soft);font-weight:600}
+.banner b{color:var(--warn)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;padding-block:4px}
+.tab{font-family:var(--f-display);font-weight:700;font-size:14px;padding:9px 17px;border:0;border-radius:999px;background:var(--mast-2);color:var(--muted)}
+.tab[aria-selected="true"]{color:var(--on);background:var(--accent);box-shadow:var(--glow)}
+.tab .count{font-size:12px;font-weight:700;margin-left:6px;color:var(--muted)}
+.tab[aria-selected="true"] .count{color:var(--on);opacity:.8}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:14px 16px}
+.kpi .v{font-weight:800;font-size:24px;letter-spacing:-.02em}
+.kpi .l{font-weight:600}
+.vcard{background:var(--solid);border:0;border-radius:16px;box-shadow:var(--shadow)}
+.vcard .v{font-size:36px;font-weight:800;letter-spacing:-.02em}
+.vcard .s{color:var(--muted)}
+.vcard .pill{background:transparent;padding:0;font-size:12.5px}
+.vcard.p-good .v,.vcard.p-good .pill{color:var(--good)} .vcard.p-warn .v,.vcard.p-warn .pill{color:var(--warn)} .vcard.p-bad .v,.vcard.p-bad .pill{color:var(--bad)} .vcard.p-acc .v,.vcard.p-acc .pill{color:var(--accent)} .vcard.p-mut .v,.vcard.p-mut .pill{color:var(--muted)}
+.act{border-top-color:var(--rule)}
+.act .impact{color:var(--accent);font-weight:800;font-size:15px}
+.act .what b{font-weight:700}
+.section{display:grid;gap:12px}
+.sec-head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between}
+.sec-head p{margin:2px 0 0;color:var(--muted);font-size:13px;max-width:85ch}
+.sec-head .tools{display:flex;flex-wrap:wrap;gap:6px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:20px;background:var(--panel);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+td{border-bottom-color:var(--rule)!important}
+th{font-family:var(--f-body);font-weight:700;font-size:11.5px;color:var(--muted);text-align:left;padding:11px 10px;border-bottom:1px solid var(--rule);background:var(--soft);white-space:nowrap;cursor:pointer;user-select:none}
+th.sorted{color:var(--accent)}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.term{font-weight:500;min-width:180px}
+td .sub{display:block;font-size:11.5px;color:var(--muted);font-weight:400}
+.empty{padding:16px;color:var(--muted);font-size:13px}
+.pill{font-family:var(--f-body);font-size:11.5px;padding:4px 10px;border-radius:999px;white-space:nowrap;font-weight:800;display:inline-block;color:var(--on)}
+.p-bad{background:var(--bad)} .p-warn{background:var(--warn)}
+.p-good{background:var(--good)} .p-acc{background:var(--accent)} .p-mut{background:var(--neutral)}
+.idx{display:inline-grid;grid-template-columns:auto auto;gap:0 6px;font-family:var(--f-mono);font-size:11.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.idx span:nth-child(odd){color:var(--muted)}
+.up{color:var(--good)} .down{color:var(--bad)}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.vcard{padding:12px 14px;border-radius:8px;background:var(--soft);display:grid;gap:2px;cursor:pointer;border:1px solid transparent}
+.vcard:hover{border-color:var(--accent)}
+.vcard .v{font-family:var(--f-display);font-size:30px;font-weight:800;font-stretch:80%;line-height:1}
+.vcard .l{font-size:12px;font-weight:600}
+.vcard .s{font-size:11.5px;color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px}
+.kpi{padding:10px 12px;border-radius:8px;background:var(--soft)}
+.kpi .v{font-family:var(--f-mono);font-size:18px;font-weight:500;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:11.5px;color:var(--muted)}
+.actions{display:grid}
+.act{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
+.act .what b{font-weight:600}
+.act .why{font-size:12.5px;color:var(--muted)}
+.act .impact{font-family:var(--f-mono);font-size:12.5px;text-align:right;white-space:nowrap}
+.summary{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.summary{grid-template-columns:1fr}}
+.prose{font-size:14px;line-height:1.6;max-width:72ch}
+.prose p{margin:0 0 10px}
+.prose ul{margin:0 0 10px;padding-left:20px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters input,.filters select{font:inherit;font-size:13px;padding:6px 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
+.detail{background:var(--soft)}
+.detail td{padding:12px 14px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;font-size:12.5px}
+.dgrid h4{margin:0 0 6px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.dgrid .line{display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid var(--line)}
+.dgrid .line:last-child{border-bottom:0}
+.dgrid .line span:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.verdict-box{margin-top:8px;padding:10px 14px;border-radius:14px;background:var(--accent-soft);font-size:13px;font-weight:600}
+.fields input,.fields select,.fields textarea,.filters input,.filters select{border:1px solid var(--rule)!important;background:var(--solid)!important}
+.chip{border:1px solid var(--rule)!important;background:var(--solid)!important}
+.dgrid .line{border-bottom-color:var(--rule)}
+.pill{font-weight:700}
+b,strong{font-weight:700}
+.detail{background:var(--soft)}
+.dgrid h4{font-family:var(--f-body);font-weight:800;font-size:11.5px;text-transform:none;letter-spacing:0}
+.legend div{border-radius:14px}
+.guide code{border-radius:8px}
+.filters input,.filters select{border-width:2px;border-radius:10px;font-weight:700}
+.spark{display:inline-flex;gap:2px;align-items:flex-end;height:18px;vertical-align:middle}
+.spark i{display:block;width:6px;background:var(--accent);border-radius:1px;min-height:1px}
+.spark i.last{background:var(--ink)}
+.guide ol{margin:6px 0 0;padding-left:20px;display:grid;gap:4px}
+.guide code{font-family:var(--f-mono);font-size:12px;background:var(--soft);padding:1px 5px;border-radius:4px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.docs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-block:14px}
+@media (max-width:860px){.docs{grid-template-columns:1fr}}
+.doc{display:grid;gap:12px;align-content:start;font-size:13px}
+.doc-h{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
+.doc-n{width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on);display:grid;place-items:center;font-weight:800;font-size:15px}
+.doc-p{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.doc-l{font-size:11.5px;font-weight:700;color:var(--accent);margin-bottom:3px}
+.doc ul,.doc-ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.doc-ul{margin-top:8px;font-size:13px;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="mast"><div class="mast-in">
+  <div>
+    <div class="eyebrow">Sponsored Products × Search Query Performance</div>
+    <h1>PPC + SQP Decision Audit</h1>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center">
+    <div class="client"><b id="mastClient">Load reports to start</b><span id="mastMeta">One verdict per query: scale, fix listing, fix bid, launch, negate, or wait</span></div>
+    <div class="btns"><button id="resetSample" type="button">Reload sample</button><button id="clearAll" type="button">Clear data</button></div>
+  </div>
+</div></header>
+<div class="wrap">
+
+  <section class="setup">
+    <div class="drop" id="drop">
+      <div class="drop-row">
+        <label class="btn" for="file" style="display:inline-block">Choose files</label>
+        <input id="file" type="file" accept=".csv,.xlsx,.xls,.txt" multiple hidden>
+        <span class="muted" style="font-size:12.5px">Drop any of the four report types. Type is detected from the headers. Load several SQP weeks at once.</span>
+      </div>
+      <div class="src" id="sources"></div>
+      <div id="msg" class="muted" style="font-size:12.5px"></div>
+    </div>
+    <div class="panel">
+      <div class="eyebrow" style="margin-bottom:8px">Audit requirements</div>
+      <div class="fields">
+        <label class="wide" for="sClient">Client / product<input id="sClient" type="text" value="Sample Bottle Co · B0SAMPLE01"></label>
+        <label for="sMode">Goal<select id="sMode"><option value="growth">Growth (spend up to break-even)</option><option value="profit" selected>Profit (hold target ACoS)</option></select></label>
+        <label for="sMargin">Margin before ads %<input id="sMargin" type="number" min="1" max="95" value="38"></label>
+        <label for="sTarget">Target ACoS %<input id="sTarget" type="number" min="1" max="200" value="30"></label>
+        <label for="sDays">Days in ad reports<input id="sDays" type="number" min="1" max="365" value="30"></label>
+        <label for="sVis">Low visibility below impr. share %<input id="sVis" type="number" min="1" max="100" value="15"></label>
+        <label for="sPrice">Price premium tolerance %<input id="sPrice" type="number" min="0" max="100" value="10"></label>
+        <label for="sClicks">Min own clicks to judge CVR<input id="sClicks" type="number" min="1" value="10"></label>
+        <label for="sImpr">Min own impressions to judge CTR<input id="sImpr" type="number" min="1" value="300"></label>
+        <label for="sVol">Min search volume<input id="sVol" type="number" min="0" step="100" value="500"></label>
+        <label class="wide" for="sBrand">Your brand terms (comma separated)<input id="sBrand" type="text" value="sample bottle"></label>
+        <label class="wide" for="sComp">Competitor brand terms (comma separated)<input id="sComp" type="text" value="aquaflo, peakline, summit, brisk"></label>
+      </div>
+      <div class="derived" id="derived"></div>
+    </div>
+  </section>
+
+  <div id="sampleBanner" class="banner" hidden><b>Sample data.</b> An invented insulated water bottle brand, so you can see the decisions working. Load your own reports to replace it.</div>
+
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <main id="view"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+/* ============ helpers ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const normH = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g,'');
+const num = v => { if (typeof v === 'number') return v; const s = String(v ?? '').replace(/[$,%\s€£]/g,''); const n = parseFloat(s); return isFinite(n) ? n : 0; };
+const money = v => !isFinite(v) ? '—' : (v < 0 ? '-$' : '$') + Math.abs(v).toLocaleString('en-US',{minimumFractionDigits: Math.abs(v) < 100 ? 2 : 0, maximumFractionDigits: Math.abs(v) < 100 ? 2 : 0});
+const pct = (v,d=1) => isFinite(v) ? (v*100).toFixed(d)+'%' : '—';
+const sp = v => isFinite(v) ? v.toFixed(v < 10 ? 1 : 0)+'%' : '—';
+const int = v => isFinite(v) ? Math.round(v).toLocaleString('en-US') : '—';
+const x = v => isFinite(v) ? v.toFixed(2)+'×' : '—';
+const low = s => String(s ?? '').trim().toLowerCase().replace(/\s+/g,' ');
+const isAsin = t => /^b0[a-z0-9]{8}$/i.test(String(t).trim());
+const sum = (arr, f) => arr.reduce((a,r)=>a+(f(r)||0),0);
+const list = s => String(s||'').split(',').map(low).filter(Boolean);
+
+/* ============ sample data (fictional) ============ */
+const S_PRICE = 27.99, S_ASIN = 'B0SAMPLE01';
+function sampleSQP(week){
+  // q, vol, iT, iB, cT, cB, price, bprice, aT, aB, pT, pB  (week 2 shifts a few numbers so the trend tab has movement)
+  const base = [
+    ['water bottle',412000,3900000,58500,190000,2280,22.99,27.99,41000,390,18500,150],
+    ['kids water bottle',95000,900000,4500,43000,90,16.99,27.99,10000,8,4800,2],
+    ['insulated water bottle',86000,810000,72900,41000,3690,26.99,27.99,9200,920,4100,451],
+    ['water bottle with straw',61000,590000,11800,30000,540,21.99,27.99,7000,126,3100,53],
+    ['stainless steel water bottle',54000,520000,31200,26000,910,24.99,27.99,6100,220,2700,95],
+    ['water bottle 40 oz with handle',47000,450000,13500,22000,330,31.99,27.99,5200,60,2400,22],
+    ['32 oz water bottle',38000,360000,25200,17500,1190,24.99,27.99,4100,180,1800,76],
+    ['aquaflo bottle',33000,310000,3100,16000,90,44.99,27.99,3800,14,1700,5],
+    ['gym water bottle',26000,250000,2500,12000,60,19.99,27.99,2800,12,1200,5],
+    ['leak proof water bottle',21000,200000,16000,9800,880,25.99,27.99,2300,230,1000,120],
+    ['metal water bottle',18000,170000,6800,8200,330,23.99,27.99,1900,80,820,20],
+    ['hot and cold water bottle',15000,140000,2800,6700,120,25.99,27.99,1600,30,700,14],
+    ['insulated water bottle 32 oz',14000,130000,9100,6500,520,27.99,27.99,1500,135,690,66],
+    ['sample bottle',6000,55000,41000,4100,3300,27.99,27.99,1400,1150,900,760],
+    ['water bottle with straw lid',11000,105000,4200,5000,190,22.99,27.99,1150,44,500,19],
+    ['insulated bottle for hot and cold',9000,85000,5100,4000,260,26.99,27.99,950,70,420,33],
+    ['glass water bottle',24000,230000,1800,11000,40,18.99,27.99,2600,4,1150,1],
+  ];
+  const H = ['Search Query','Search Query Score','Search Query Volume','Impressions: Total Count','Impressions: ASIN Count','Impressions: ASIN Share %','Clicks: Total Count','Clicks: Click Rate %','Clicks: ASIN Count','Clicks: ASIN Share %','Clicks: Price (Median)','Clicks: ASIN Price (Median)','Cart Adds: Total Count','Cart Adds: Cart Add Rate %','Cart Adds: ASIN Count','Cart Adds: ASIN Share %','Purchases: Total Count','Purchases: Purchase Rate %','Purchases: ASIN Count','Purchases: ASIN Share %'];
+  const meta = [`ASIN=["${S_ASIN}"]`,'Reporting Range=["Weekly"]',`Select week=["Week ${week} | 2026"]`];
+  const f = week===38 ? 1.06 : 1;
+  return [meta, H, ...base.map(([q,v,iT,iB,cT,cB,pr,bp,aT,aB,pT,pB],i)=>{
+    const g = week===38 && i%3===0 ? 1.18 : week===38 ? 0.97 : 1;
+    iB=Math.round(iB*g); cB=Math.round(cB*g); aB=Math.round(aB*g); pB=Math.round(pB*g); v=Math.round(v*f);
+    return [q,i+1,v,iT,iB,(iB/iT*100).toFixed(2),cT,(cT/iT*100).toFixed(2),cB,(cB/cT*100).toFixed(2),pr,bp,aT,(aT/cT*100).toFixed(2),aB,(aB/aT*100).toFixed(2),pT,(pT/cT*100).toFixed(2),pB,(pB/pT*100).toFixed(2)];
+  })];
+}
+function sampleSTR(){
+  const H = ['Date','Campaign Name','Ad Group Name','Targeting','Match Type','Customer Search Term','Impressions','Clicks','Spend','7 Day Total Sales','7 Day Total Orders (#)'];
+  const R = [
+    ['SP - Auto','Auto','close-match','-','insulated water bottle',18400,212,244.10,32],
+    ['SP - Auto','Auto','loose-match','-','water bottle with straw',9200,88,97.30,4],
+    ['SP - Auto','Auto','close-match','-','kids water bottle',7600,41,38.95,0],
+    ['SP - Auto','Auto','substitutes','-','b0bxyz1234',3100,27,29.70,5],
+    ['SP - Auto','Auto','loose-match','-','tumbler with lid',2700,14,15.40,0],
+    ['SP - Broad','Stainless','stainless steel water bottle','BROAD','stainless steel water bottle',8800,110,143.00,24],
+    ['SP - Broad','Stainless','stainless steel water bottle','BROAD','water bottle 40 oz with handle',5100,63,81.90,2],
+    ['SP - Broad','Stainless','stainless steel water bottle','BROAD','aquaflo bottle',4800,52,70.80,1],
+    ['SP - Broad','Metal','metal water bottle','BROAD','glass water bottle',3900,34,40.80,0],
+    ['SP - Broad','Metal','metal water bottle','BROAD','metal water bottle',2600,29,31.61,6],
+    ['SP - Exact','Core','insulated water bottle','EXACT','insulated water bottle',22100,305,408.70,51],
+    ['SP - Exact','Core','32 oz water bottle','EXACT','32 oz water bottle',12900,150,187.50,14],
+    ['SP - Exact','Core','water bottle','EXACT','water bottle',48000,390,663.00,35],
+    ['SP - Exact','Core','leak proof water bottle','EXACT','leak proof water bottle',5300,72,64.80,15],
+    ['SP - Exact','Core','sample bottle','EXACT','sample bottle',3000,140,42.00,60],
+    ['SP - Phrase','Insulated','insulated bottle','PHRASE','insulated bottle for hot and cold',3300,44,48.40,8],
+    ['SP - Phrase','Insulated','insulated water bottle','PHRASE','insulated water bottle',4100,52,70.20,8],
+  ];
+  return [H, ...R.map(([c,a,t,m,q,i,cl,s,o])=>['Sep 2026',c,a,t,m,q,i,cl,s,+(o*S_PRICE).toFixed(2),o])];
+}
+function sampleBulk(){
+  const H = ['Product','Entity','Operation','Campaign ID','Ad Group ID','Keyword ID','Campaign Name','Ad Group Name','State','Daily Budget','Bid','Keyword Text','Match Type','Placement','Percentage','Impressions','Clicks','Spend','Sales','Orders'];
+  const R = [
+    ['Sponsored Products','Campaign','','C1','','','SP - Exact','','enabled',45,'','','','','',88300,1057,1366,4899,175],
+    ['Sponsored Products','Bidding Adjustment','','C1','','','SP - Exact','','','','','','','Placement Top',0,'','','','',''],
+    ['Sponsored Products','Keyword','','C1','AG1','K1','SP - Exact','Core','enabled','',1.34,'insulated water bottle','exact','','',22100,305,408.70,1427.49,51],
+    ['Sponsored Products','Keyword','','C1','AG1','K2','SP - Exact','Core','enabled','',1.25,'32 oz water bottle','exact','','',12900,150,187.50,391.86,14],
+    ['Sponsored Products','Keyword','','C1','AG1','K3','SP - Exact','Core','enabled','',1.70,'water bottle','exact','','',48000,390,663.00,979.65,35],
+    ['Sponsored Products','Keyword','','C1','AG1','K4','SP - Exact','Core','enabled','',0.90,'leak proof water bottle','exact','','',5300,72,64.80,419.85,15],
+    ['Sponsored Products','Keyword','','C1','AG1','K5','SP - Exact','Core','enabled','',0.30,'sample bottle','exact','','',3000,140,42.00,1679.40,60],
+    ['Sponsored Products','Campaign','','C2','','','SP - Broad','','enabled',15,'','','','','',25200,288,368.11,924,33],
+    ['Sponsored Products','Bidding Adjustment','','C2','','','SP - Broad','','','','','','','Placement Top',0,'','','','',''],
+    ['Sponsored Products','Keyword','','C2','AG2','K6','SP - Broad','Stainless','enabled','',1.30,'stainless steel water bottle','broad','','',18700,225,295.70,755.73,27],
+    ['Sponsored Products','Keyword','','C2','AG3','K7','SP - Broad','Metal','enabled','',1.10,'metal water bottle','broad','','',6500,63,72.41,167.94,6],
+    ['Sponsored Products','Negative Keyword','','C2','AG3','N1','SP - Broad','Metal','enabled','','','glass water bottle','negativeExact','','','','','','',''],
+    ['Sponsored Products','Campaign','','C3','','','SP - Auto','','enabled',20,'','','','','',41000,382,425.45,1147,41],
+    ['Sponsored Products','Campaign','','C4','','','SP - Phrase','','enabled',10,'','','','','',7400,96,118.60,447.84,16],
+    ['Sponsored Products','Keyword','','C4','AG4','K8','SP - Phrase','Insulated','enabled','',1.20,'insulated water bottle','phrase','','',4100,52,70.20,223.92,8],
+    ['Sponsored Products','Keyword','','C4','AG4','K9','SP - Phrase','Insulated','enabled','',1.05,'insulated bottle','phrase','','',3300,44,48.40,223.92,8],
+  ];
+  return [H, ...R];
+}
+function sampleIS(){
+  const H = ['Customer Search Term','Search Term Impression Rank','Search Term Impression Share','Impressions','Clicks','Spend','7 Day Total Sales','7 Day Total Orders (#)'];
+  return [H,
+    ['insulated water bottle',4,'8.21%',44600,569,723.00,1875.33,91],
+    ['water bottle',9,'2.10%',48000,390,663.00,979.65,35],
+    ['32 oz water bottle',6,'6.80%',12900,150,187.50,391.86,14],
+    ['leak proof water bottle',2,'21.40%',5300,72,64.80,419.85,15],
+    ['stainless steel water bottle',7,'3.90%',8800,110,143.00,671.76,24],
+    ['sample bottle',1,'76.00%',3000,140,42.00,1679.40,60],
+    ['metal water bottle',5,'5.20%',2600,29,31.61,167.94,6],
+  ];
+}
+
+/* ============ parsing ============ */
+function pick(H, preds){ for (const p of preds){ const i = H.findIndex(p); if (i >= 0) return i; } return -1; }
+function findHeaderRow(aoa, test){ for (let r = 0; r < Math.min(aoa.length, 25); r++){ if ((aoa[r]||[]).some(c => test(normH(c)))) return r; } return -1; }
+const hSTR = h => h==='customersearchterm'||h==='searchterm'||h==='customersearchterms';
+const hSQP = h => h==='searchquery';
+const hIS  = h => h.includes('impressionshare') && h.includes('searchterm');
+const hBulk = (aoa) => { const r = findHeaderRow(aoa, h=>h==='entity'); return r>=0 && aoa[r].map(normH).includes('campaignname'); };
+
+function detect(aoa){
+  if (findHeaderRow(aoa, hIS) >= 0) return 'is';
+  if (hBulk(aoa)) return 'bulk';
+  if (findHeaderRow(aoa, hSTR) >= 0) return 'str';
+  if (findHeaderRow(aoa, hSQP) >= 0) return 'sqp';
+  return null;
+}
+
+function parseSTR(aoa){
+  const hr = findHeaderRow(aoa, hSTR); const H = aoa[hr].map(normH);
+  const c = { term: pick(H,[hSTR]), campaign: pick(H,[h=>h==='campaignname',h=>h==='campaign']), adgroup: pick(H,[h=>h==='adgroupname',h=>h==='adgroup']),
+    targeting: pick(H,[h=>h==='targeting',h=>h==='keywordtext',h=>h==='keyword']), match: pick(H,[h=>h==='matchtype']),
+    impr: pick(H,[h=>h==='impressions']), clicks: pick(H,[h=>h==='clicks']), spend: pick(H,[h=>h==='spend',h=>h==='cost']),
+    sales: pick(H,[h=>/totalsales/.test(h),h=>h==='sales',h=>/sales/.test(h)&&!/acos|roas|sku|other/.test(h)]),
+    orders: pick(H,[h=>/totalorders/.test(h),h=>h==='orders',h=>/orders/.test(h)&&!/sku|rate|other/.test(h)]) };
+  const missing = ['term','clicks','spend','sales','orders'].filter(k => c[k] < 0);
+  if (missing.length) throw new Error('search term report is missing '+missing.join(', '));
+  const map = new Map();
+  for (const row of aoa.slice(hr+1)){
+    const term = low(row[c.term]); if (!term) continue;
+    const r = { term, campaign: String(row[c.campaign] ?? '').trim(), adgroup: String(row[c.adgroup] ?? '').trim(), targeting: String(row[c.targeting] ?? '').trim(), match: String(row[c.match] ?? '').trim().toUpperCase() };
+    const k = [r.campaign,r.adgroup,r.targeting,r.match,term].join('\u0001');
+    const a = map.get(k) || map.set(k, {...r, impr:0, clicks:0, spend:0, sales:0, orders:0}).get(k);
+    a.impr += num(row[c.impr]); a.clicks += num(row[c.clicks]); a.spend += num(row[c.spend]); a.sales += num(row[c.sales]); a.orders += num(row[c.orders]);
+  }
+  return [...map.values()];
+}
+
+function parseSQP(aoa, fname){
+  const hr = findHeaderRow(aoa, hSQP); const H = aoa[hr].map(normH);
+  // metadata lines above the header carry ASIN / brand and the period
+  let asin = '', period = '';
+  const metaText = aoa.slice(0, hr).flat().map(String).join(' ');
+  const am = metaText.match(/B0[A-Z0-9]{8}/i); if (am) asin = am[0].toUpperCase();
+  const bm = metaText.match(/Brand\s*=?\s*\[?"?([^"\]]+)/i); if (!asin && bm) asin = 'Brand: '+bm[1].trim();
+  const pm = metaText.match(/Select\s*(?:week|month|quarter)\s*=?\s*\[?"?([^"\]]+)/i); if (pm) period = pm[1].trim();
+  if (!period) period = fname.replace(/\.[^.]+$/,'');
+  // Monthly exports name the year separately; weekly/monthly/quarterly files can be mixed, so record how many weeks each one spans.
+  const ym = metaText.match(/Select\s*year\s*=?\s*\[?"?(\d{4})/i); if (ym && pm && !/\d{4}/.test(period)) period += ' '+ym[1];
+  const rm = metaText.match(/Reporting\s*Range\s*=?\s*\[?"?([A-Za-z]+)/i); const range = rm ? rm[1].toLowerCase() : 'weekly';
+  const weeks = range.startsWith('month') ? 4.35 : range.startsWith('quarter') ? 13 : 1;
+  const dcol = pick(H,[h=>h==='reportingdate']); const date = dcol >= 0 && aoa[hr+1] ? aoa[hr+1][dcol] : '';
+  const stage = pre => ({ T: pick(H,[h=>h.startsWith(pre)&&h.includes('totalcount')]), B: pick(H,[h=>h.startsWith(pre)&&(h.includes('brandcount')||h.includes('asincount'))]), S: pick(H,[h=>h.startsWith(pre)&&(h.includes('brandshare')||h.includes('asinshare'))]) });
+  const c = { q: pick(H,[hSQP]), vol: pick(H,[h=>h==='searchqueryvolume']), i: stage('impressions'), c: stage('clicks'), a: stage('cartadds'), p: stage('purchases'),
+    price: pick(H,[h=>h.startsWith('clicks')&&h.includes('pricemedian')&&!h.includes('brand')&&!h.includes('asin')]),
+    bprice: pick(H,[h=>h.startsWith('clicks')&&(h.includes('brandprice')||h.includes('asinprice'))]) };
+  if (c.q < 0 || c.i.T < 0 || c.p.T < 0) throw new Error('SQP export is missing Search Query, Impressions or Purchases columns');
+  const g = (row,i) => i >= 0 ? num(row[i]) : NaN;
+  const rows = [];
+  for (const row of aoa.slice(hr+1)){
+    const q = low(row[c.q]); if (!q) continue;
+    const r = { q, asin, period, vol: g(row,c.vol)||0, price: g(row,c.price)||0, bprice: g(row,c.bprice)||0 };
+    for (const s of ['i','c','a','p']){
+      r[s+'T'] = g(row,c[s].T)||0;
+      let b = g(row,c[s].B);
+      if (!isFinite(b)) { const shv = g(row,c[s].S); b = isFinite(shv) ? r[s+'T']*shv/100 : 0; }
+      r[s+'B'] = b;
+    }
+    rows.push(r);
+  }
+  return { asin, period, range, weeks, date, rows };
+}
+
+function parseBulk(aoa){
+  const hr = findHeaderRow(aoa, h=>h==='entity'); const H = aoa[hr].map(normH);
+  const c = { entity: pick(H,[h=>h==='entity']), cid: pick(H,[h=>h==='campaignid']), agid: pick(H,[h=>h==='adgroupid']), kid: pick(H,[h=>h==='keywordid']), ptid: pick(H,[h=>h==='producttargetingid']),
+    campaign: pick(H,[h=>h==='campaignname']), adgroup: pick(H,[h=>h==='adgroupname']), state: pick(H,[h=>h==='state']), budget: pick(H,[h=>h==='dailybudget']), bid: pick(H,[h=>h==='bid']),
+    kw: pick(H,[h=>h==='keywordtext']), match: pick(H,[h=>h==='matchtype']), placement: pick(H,[h=>h==='placement']), pctc: pick(H,[h=>h==='percentage']), expr: pick(H,[h=>h==='producttargetingexpression']),
+    impr: pick(H,[h=>h==='impressions']), clicks: pick(H,[h=>h==='clicks']), spend: pick(H,[h=>h==='spend']), sales: pick(H,[h=>h==='sales']), orders: pick(H,[h=>h==='orders']), cstate: pick(H,[h=>h==='campaignstateinformationalonly']) };
+  const s = (row,i) => i>=0 ? String(row[i] ?? '').trim() : '';
+  const out = { campaigns:[], keywords:[], negatives:[], placements:[] };
+  for (const row of aoa.slice(hr+1)){
+    const ent = s(row,c.entity).toLowerCase(); if (!ent) continue;
+    const base = { cid:s(row,c.cid), agid:s(row,c.agid), campaign:s(row,c.campaign), adgroup:s(row,c.adgroup), state:s(row,c.state).toLowerCase(), impr:num(row[c.impr]), clicks:num(row[c.clicks]), spend:num(row[c.spend]), sales:num(row[c.sales]), orders:num(row[c.orders]) };
+    if (ent==='campaign') out.campaigns.push({...base, budget:num(row[c.budget])});
+    else if (ent==='keyword' || ent==='product targeting') out.keywords.push({...base, id:s(row,c.kid)||s(row,c.ptid), text: low(s(row,c.kw)||s(row,c.expr)), match:s(row,c.match).toLowerCase(), bid:num(row[c.bid]), kind: ent});
+    else if (ent.startsWith('negative') || ent.includes('negative')) out.negatives.push({...base, text: low(s(row,c.kw)||s(row,c.expr)), match:s(row,c.match).toLowerCase()});
+    else if (ent==='bidding adjustment') out.placements.push({...base, placement:s(row,c.placement), pct:num(row[c.pctc])});
+  }
+  if (!out.campaigns.length && !out.keywords.length) throw new Error('bulk file has no Campaign or Keyword rows');
+  return out;
+}
+
+function parseIS(aoa){
+  const hr = findHeaderRow(aoa, hIS); const H = aoa[hr].map(normH);
+  const c = { term: pick(H,[hSTR,h=>h==='searchterm']), share: pick(H,[hIS]), rank: pick(H,[h=>h.includes('impressionrank'),h=>h.includes('searchtermrank')]), impr: pick(H,[h=>h==='impressions']), clicks: pick(H,[h=>h==='clicks']), spend: pick(H,[h=>h==='spend']) };
+  if (c.term < 0) throw new Error('impression share report has no Customer Search Term column');
+  const map = new Map();
+  for (const row of aoa.slice(hr+1)){
+    const t = low(row[c.term]); if (!t) continue;
+    const a = map.get(t) || map.set(t, {term:t, share:0, rank:Infinity, impr:0, n:0}).get(t);
+    const shv = num(row[c.share]); const rk = num(row[c.rank]) || Infinity;
+    a.share += shv; a.n++; a.rank = Math.min(a.rank, rk); a.impr += num(row[c.impr]);
+  }
+  return [...map.values()].map(a => ({...a, share: a.share/a.n}));
+}
+
+/* ============ state ============ */
+const state = { str:null, sqp:[], bulk:null, is:null, names:{str:'',bulk:'',is:''}, sample:false, tab:'decisions', sort:{key:'score',asc:false}, filter:{v:'',seg:'',q:''}, open:null };
+function loadSample(){
+  state.str = parseSTR(sampleSTR()); state.sqp = [parseSQP(sampleSQP(37),'w37'), parseSQP(sampleSQP(38),'w38')]; state.bulk = parseBulk(sampleBulk()); state.is = parseIS(sampleIS());
+  state.names = {str:'sample search term report', bulk:'sample bulk file', is:'sample impression share report'}; state.sample = true;
+  $('#sClient').value = 'Sample Bottle Co · '+S_ASIN; $('#sBrand').value='sample bottle'; $('#sComp').value='aquaflo, peakline, summit, brisk';
+  $('#msg').textContent=''; run();
+}
+function clearAll(){ state.str=null; state.sqp=[]; state.bulk=null; state.is=null; state.names={str:'',bulk:'',is:''}; state.sample=false; $('#msg').textContent=''; run(); }
+function settings(){
+  const margin = Math.min(95, Math.max(1, num($('#sMargin').value)))/100;
+  const target = Math.max(0.01, num($('#sTarget').value)/100);
+  const mode = $('#sMode').value;
+  return { client: $('#sClient').value.trim(), mode, margin, target, breakeven: margin, ceiling: mode==='growth' ? margin : Math.min(target, margin),
+    days: Math.max(1, num($('#sDays').value)), vis: Math.max(0.5, num($('#sVis').value)), priceTol: Math.max(0, num($('#sPrice').value))/100,
+    minClicks: Math.max(1, num($('#sClicks').value)), minImpr: Math.max(1, num($('#sImpr').value)), minVol: Math.max(0, num($('#sVol').value)),
+    brand: list($('#sBrand').value), comp: list($('#sComp').value) };
+}
+
+/* ============ model ============ */
+function segmentOf(q, st){
+  if (st.brand.some(b => b && q.includes(b))) return 'Brand';
+  if (st.comp.some(b => b && q.includes(b))) return 'Competitor';
+  return 'Generic';
+}
+function aggregateSQP(files){
+  // Sum every period per query; keep per-period series for the trend tab.
+  const map = new Map();
+  files = files.slice().sort((a,b) => String(a.date ?? '').localeCompare(String(b.date ?? ''), undefined, {numeric:true}));
+  const periods = [...new Set(files.map(f=>f.period))];
+  const meta = Object.fromEntries(files.map(f => [f.period, {range: f.range || 'weekly', weeks: f.weeks || 1}]));
+  const weekly = periods.filter(p => meta[p].weeks === 1);
+  for (const f of files) for (const r of f.rows){
+    const a = map.get(r.q) || map.set(r.q, {q:r.q, asins:new Set(), n:0, vol:0, iT:0,iB:0,cT:0,cB:0,aT:0,aB:0,pT:0,pB:0, price:0, bprice:0, series:{}}).get(r.q);
+    a.asins.add(r.asin); a.n++; a.vol += r.vol;
+    for (const k of ['iT','iB','cT','cB','aT','aB','pT','pB']) a[k] += r[k];
+    if (r.price) a.price = r.price; if (r.bprice) a.bprice = r.bprice;
+    const s = a.series[r.period] || (a.series[r.period] = {vol:0,iB:0,cB:0,pB:0,iT:0,pT:0});
+    s.vol += r.vol; s.iB += r.iB; s.cB += r.cB; s.pB += r.pB; s.iT += r.iT; s.pT += r.pT;
+  }
+  const out = [...map.values()].map(a => {
+    a.vol = a.vol / Object.keys(a.series).reduce((w,p) => w + meta[p].weeks, 0);   // searches per week, whatever mix of weekly and monthly files is loaded
+    a.I = a.iT ? a.iB/a.iT*100 : NaN; a.C = a.cT ? a.cB/a.cT*100 : NaN; a.A = a.aT ? a.aB/a.aT*100 : NaN; a.P = a.pT ? a.pB/a.pT*100 : NaN;
+    a.mCTR = a.iT ? a.cT/a.iT : NaN; a.oCTR = a.iB ? a.cB/a.iB : NaN;
+    a.mCart = a.cT ? a.aT/a.cT : NaN; a.oCart = a.cB ? a.aB/a.cB : NaN;
+    a.mCVR = a.cT ? a.pT/a.cT : NaN; a.oCVR = a.cB ? a.pB/a.cB : NaN;
+    a.mBuyFromCart = a.aT ? a.pT/a.aT : NaN; a.oBuyFromCart = a.aB ? a.pB/a.aB : NaN;
+    a.ctrIdx = a.oCTR/a.mCTR; a.cartIdx = a.oCart/a.mCart; a.cvrIdx = a.oCVR/a.mCVR; a.buyIdx = a.oBuyFromCart/a.mBuyFromCart;
+    a.pricePrem = a.price && a.bprice ? a.bprice/a.price - 1 : NaN;
+    return a;
+  });
+  // Trend compares like with like: weekly files when there are two or more, otherwise every period.
+  return { rows: out, periods, meta, trendPeriods: weekly.length >= 2 ? weekly : periods, totalWeeks: periods.reduce((w,p)=>w+meta[p].weeks,0) };
+}
+function adsByTerm(str){
+  const m = new Map();
+  for (const r of str||[]){ const t = m.get(r.term) || m.set(r.term, {term:r.term, rows:[], impr:0, clicks:0, spend:0, sales:0, orders:0, exact:false, phrase:false, broad:false, auto:false}).get(r.term);
+    t.rows.push(r); t.impr+=r.impr; t.clicks+=r.clicks; t.spend+=r.spend; t.sales+=r.sales; t.orders+=r.orders;
+    const mt = r.match; const auto = !mt || mt==='-' || /close-match|loose-match|substitutes|complements/i.test(r.targeting);
+    if (auto) t.auto = true; else if (mt==='EXACT') t.exact = true; else if (mt==='PHRASE') t.phrase = true; else if (mt==='BROAD') t.broad = true; }
+  return m;
+}
+function liveTargets(bulk){
+  const m = new Map();
+  for (const k of bulk?.keywords||[]) if (k.state!=='paused' && k.state!=='archived'){ const l = m.get(k.text) || m.set(k.text, []).get(k.text); l.push(k); }
+  return m;
+}
+function negSet(bulk){ const s = new Set(); for (const n of bulk?.negatives||[]) s.add(n.text); return s; }
+
+function decide(q, ctx){
+  const { st, ads, live, negs, isMap, adsLoaded } = ctx;
+  const ad = ads.get(q.q) || null;
+  const lv = live.get(q.q) || [];
+  const isr = isMap.get(q.q) || null;
+  const price = q.bprice || q.price || ctx.aov || 0;
+  const acos = ad && ad.sales ? ad.spend/ad.sales : (ad && ad.spend ? Infinity : NaN);
+  const cpc = ad && ad.clicks ? ad.spend/ad.clicks : NaN;
+  const curBid = lv.length ? Math.max(...lv.map(k=>k.bid||0)) : NaN;
+  // A zero or low purchase count is only trusted once clicks reach 3 ÷ market CVR (rule of three), and never below the user's minimum.
+  const need = Math.max(st.minClicks, isFinite(q.mCVR) && q.mCVR > 0 ? Math.ceil(3/q.mCVR) : st.minClicks);
+  const enoughClicks = q.cB >= need, enoughImpr = q.iB >= st.minImpr;
+  const tier = isFinite(q.pricePrem) && q.pricePrem >= 1;   // shoppers on this query click items at half your price or less
+  const ctrOK = q.ctrIdx >= 0.9, cvrOK = q.cvrIdx >= 0.9, ctrBad = q.ctrIdx < 0.8, cvrBad = q.cvrIdx < 0.8;
+  const lowVis = (isFinite(q.I) && q.I < st.vis) || (isFinite(q.I) && isFinite(q.P) && q.I < q.P*0.8) || (isr && isr.share < 30);
+  const pricey = isFinite(q.pricePrem) && q.pricePrem > st.priceTol;
+  const valuePerClick = price * (isFinite(q.oCVR) ? q.oCVR : (isFinite(q.mCVR)?q.mCVR:0)) * st.ceiling;   // the CPC at which this query hits the ACoS ceiling
+  const adsOver = isFinite(acos) && acos > st.ceiling;
+  const evidence = [];
+  const e = (l,v,cls) => evidence.push({l,v,cls});
+  e('Searches per week', int(q.vol));
+  e('Your clicks / purchases', `${int(q.cB)} / ${int(q.pB)} (need ${need} clicks to judge CVR)`);
+  e('Your CTR vs market', `${pct(q.oCTR)} vs ${pct(q.mCTR)} (${x(q.ctrIdx)})`, ctrBad?'down':ctrOK?'up':'');
+  e('Your CVR vs market', `${pct(q.oCVR)} vs ${pct(q.mCVR)} (${x(q.cvrIdx)})`, cvrBad?'down':cvrOK?'up':'');
+  if (isFinite(q.cartIdx)) e('Cart-add rate index', x(q.cartIdx), q.cartIdx<0.8?'down':'');
+  e('Impression share (SQP)', sp(q.I), lowVis?'down':'');
+  e('Purchase share (SQP)', sp(q.P));
+  if (isr) e('Paid impression share / rank', `${sp(isr.share)} · #${isr.rank===Infinity?'—':isr.rank}`, isr.share<30?'down':'');
+  if (isFinite(q.pricePrem)) e('Your price vs median', `${money(q.bprice)} vs ${money(q.price)} (${(q.pricePrem*100).toFixed(0)}%)`, pricey?'down':'');
+  if (ad) e('Ads this period', `${int(ad.clicks)} clicks · ${money(ad.spend)} · ${ad.orders} orders · ACoS ${pct(acos)}`, adsOver?'down':ad.orders?'up':'');
+  else e('Ads this period', adsLoaded ? 'no ad clicks' : 'ad reports not loaded');
+  if (lv.length) e('Live targets', lv.map(k=>`${k.match} $${(k.bid||0).toFixed(2)}`).join(', ')); else if (ad) e('Live targets', ad.exact?'exact (bulk not loaded)':'none, arrives via '+[ad.auto&&'auto',ad.broad&&'broad',ad.phrase&&'phrase'].filter(Boolean).join('/'));
+  e('Value per click at ceiling', money(valuePerClick));
+
+  let v; // {key,label,cls,action,why,score,bid}
+  const seg = q.seg;
+  const spendNoOrders = ad && ad.orders===0 && ad.spend > 0;
+  if (!enoughClicks && !enoughImpr){
+    if (!adsLoaded) v = {key:'wait', label:'Gather data', cls:'p-mut', action:'Too few of your own clicks to judge. Load the search term report to see whether ads already reach this query.', why:`Only ${int(q.cB)} own clicks and ${int(q.iB)} impressions: rates would be noise.`};
+    else if (!ad && q.vol >= st.minVol && seg!=='Competitor') v = {key:'launch', label:'Launch test', cls:'p-acc', action:`Add as exact match at ${money(valuePerClick*0.8||0.5)}. Give it ${st.minClicks}+ clicks, then re-run.`, why:'Not enough of your own data to judge the funnel and no ads running. Volume is worth a test.'};
+    else v = {key:'wait', label:'Gather data', cls:'p-mut', action: ad ? 'Keep the current bid. Re-run once this query has '+st.minClicks+'+ of your clicks.' : 'No action. Too little data and too little volume.', why:`Only ${int(q.cB)} own clicks and ${int(q.iB)} impressions: rates would be noise.`};
+  } else if (enoughClicks && cvrBad && tier){
+    v = {key:'tier', label:'Wrong price tier', cls:'p-mut', action:`Shoppers here click items around ${money(q.price)}; yours is ${money(q.bprice)}. The listing cannot close that gap, so do not chase this query. `+(ad ? (adsOver ? `Ads run at ${pct(acos)} ACoS: negate it or cap the bid at ${money(valuePerClick)}.` : `Ads are inside the ceiling: keep the bid at or under ${money(valuePerClick)}.`) : `If ads reach it, cap the bid at ${money(valuePerClick)} or negate.`), why:`CVR is ${x(q.cvrIdx)} market, but the median clicked price is ${(100/(1+q.pricePrem)).toFixed(0)}% of yours. This is a different product class, not a weak page.`};
+  } else if (enoughClicks && cvrBad && ctrBad){
+    v = {key:'mismatch', label: spendNoOrders||adsOver ? 'Negate' : 'Deprioritise', cls:'p-bad', action: ad ? `Shoppers who search this rarely click or buy you. Add as negative exact${ad.rows.length?' in '+[...new Set(ad.rows.map(r=>r.campaign))].join(', '):''}; stop bidding.` : adsLoaded ? 'Do not launch. Below market on both click and conversion.' : 'Below market on both click and conversion. If ads reach this query, negate it; do not target it.', why:'Both indices below 0.8×: the product does not fit this intent, or the query is a different product.'};
+  } else if (enoughClicks && cvrBad){
+    const stage = isFinite(q.cartIdx) && q.cartIdx < 0.85 ? 'cart' : 'buy';
+    const fix = stage==='cart' ? 'Clicks arrive but do not become cart adds: bullets, images 2–7, A+ content, review count/rating, variations.' : 'Cart adds happen but purchases do not: '+(pricey?`price is ${(q.pricePrem*100).toFixed(0)}% above median, `:'')+'check coupon, delivery speed, stock and the offer.';
+    v = {key:'listing', label:'Fix listing first', cls:'p-bad', action: (adsOver ? `Cut the bid to ${money(valuePerClick*0.9)} now. ` : 'Hold the bid. ')+'Do not scale until CVR reaches market. '+fix, why:`CVR is ${x(q.cvrIdx)} market. More traffic amplifies a page that under-converts.`};
+  } else if (enoughImpr && ctrBad){
+    if (seg==='Competitor') v = {key:'mismatch', label:'Deprioritise', cls:'p-bad', action:'Shoppers searching a competitor brand rarely click you. Do not bid here'+(ad && (adsOver || spendNoOrders) ? '; add it as a negative.' : ' unless a product-targeting test on that brand\'s ASINs proves profitable.'), why:`Competitor-brand query with CTR ${x(q.ctrIdx)} market.`};
+    else if (tier) v = {key:'ctr', label:'Fix click-through', cls:'p-warn', action:`The click gap is mostly price: shoppers here click items around ${money(q.price)} and yours shows ${money(q.bprice)}. Make the size and per-unit value obvious in the main image and title, and test a coupon badge. `+(enoughClicks && cvrOK ? `Clicks you do get convert at ${x(q.cvrIdx)} market, so ads are still worth up to ${money(valuePerClick)} a click.` : ''), why:`CTR is ${x(q.ctrIdx)} market with your price ${(q.pricePrem*100).toFixed(0)}% above the median click.`};
+    else v = {key:'ctr', label:'Fix click-through', cls:'p-warn', action:'Main image, title opening, price shown and badge/coupon. '+(pricey?`Price is ${(q.pricePrem*100).toFixed(0)}% above the median shoppers click; test a coupon. `:'')+(cvrOK?'Conversion is fine, so once CTR moves this becomes a scale query.':''), why:`CTR is ${x(q.ctrIdx)} market while CVR is ${x(q.cvrIdx)}. You are seen but not chosen.`};
+  } else if (enoughClicks && cvrOK && lowVis){
+    if (adsOver){
+      v = {key:'fixbid', label:'Fix bid, then scale', cls:'p-warn', action:`You convert at ${x(q.cvrIdx)} market but pay ACoS ${pct(acos)}. Bring the CPC down to ${money(valuePerClick)} (${lv.length?'bid now '+money(curBid):'CPC now '+money(cpc)}), move spend to exact, add top-of-search only once ACoS is under ${pct(st.ceiling,0)}.`, why:'Visibility is low, the page converts, but the auction price is above what this query is worth to you.'};
+    } else {
+      const newBid = isFinite(curBid) && curBid>0 ? Math.min(curBid*1.25, valuePerClick) : isFinite(cpc) ? Math.min(cpc*1.3, valuePerClick) : valuePerClick*0.85;
+      const has = ad?.exact || lv.some(k=>k.match==='exact');
+      v = {key:'scale', label:'Scale', cls:'p-good', action: !adsLoaded ? `Buy more impressions here. A click is worth up to ${money(valuePerClick)} at your ceiling: bid exact match up to that and add top-of-search. Load the search term report and bulk file for the exact bid change.` : (has ? `Raise the exact bid to ${money(newBid)}` : `Launch an exact target at ${money(newBid)}`)+` (ceiling ${money(valuePerClick)}), add +25–50% top-of-search, and check the campaign budget is not capping. Re-check impression share in 14 days.`, why:`CVR ${x(q.cvrIdx)} market, impression share only ${sp(q.I)}${isr?' (paid '+sp(isr.share)+', rank #'+isr.rank+')':''}, ads ${ad?'at ACoS '+pct(acos):adsLoaded?'not running':'not loaded'}. More impressions convert at the same rate.`, bid:newBid};
+    }
+  } else if (enoughClicks && cvrOK){
+    if (adsOver && isFinite(q.P) && q.P >= 25) v = {key:'defend', label:'Trim, rely on organic', cls:'p-warn', action:`You already take ${sp(q.P)} of purchases. Lower the bid toward ${money(valuePerClick)} and watch purchase share for 14 days; restore if it drops more than 10%.`, why:'Visibility is already high; paid clicks over the ceiling are buying sales you likely get anyway.'};
+    else v = {key:'defend', label:'Defend', cls:'p-good', action:`Hold bids${lv.length?' ('+money(curBid)+')':''}. Protect rank; do not raise unless share slips.`, why:`Converts at ${x(q.cvrIdx)} market and impression share ${sp(q.I)} is already above your ${st.vis}% line.`};
+  } else {
+    if (enoughClicks && lowVis) v = {key:'defend', label:'Hold', cls:'p-mut', action:`CVR is ${x(q.cvrIdx)} market, just under the line. Hold bids. A small listing or price improvement turns this into a scale query`+(pricey?` (price is ${(q.pricePrem*100).toFixed(0)}% above the median click).`:'.'), why:'Close to market on conversion but not yet above it, so extra impressions are not clearly worth buying.'};
+    else v = {key:'defend', label:'Hold', cls:'p-mut', action: enoughClicks ? 'No change. Rates are near market and visibility is adequate.' : `No change yet. CVR needs ${need} of your clicks to judge; this query has ${int(q.cB)}.`, why:'Nothing stands out on this query.'};
+  }
+  // opportunity sizing in $/period for ranking
+  const lostPurch = isFinite(q.mCVR) && isFinite(q.oCVR) && q.oCVR < q.mCVR ? (q.mCVR - q.oCVR) * q.cB : 0;
+  const lostClicks = isFinite(q.mCTR) && isFinite(q.oCTR) && q.oCTR < q.mCTR ? (q.mCTR - q.oCTR) * q.iB : 0;
+  const gainIfSeen = isFinite(q.P) && isFinite(q.I) && q.P > q.I ? q.pT * (q.P - q.I)/100 * 0.5 : 0;   // half the gap, conservative
+  const opp = { scale: gainIfSeen*price, fixbid: (ad? ad.spend - ad.sales*st.ceiling : 0) + gainIfSeen*price*0.5, listing: lostPurch*price + (adsOver&&ad? ad.spend - ad.sales*st.ceiling:0), ctr: lostClicks*(isFinite(q.oCVR)?q.oCVR:0)*price, mismatch: ad? ad.spend:0, launch: q.vol*0.02*(isFinite(q.mCVR)?q.mCVR:0)*price, defend: 0, wait: 0 }[v.key] || 0;
+  return {...q, ad, lv, isr, acos, cpc, curBid, valuePerClick, lowVis, pricey, evidence, v, score: opp, opp};
+}
+
+function ppcChecks(st, ads, bulk, str){
+  const out = { negatives:[], overBE:[], overlap:[], budget:[], placements:[], concentration:null, existingNegs: negSet(bulk) };
+  const rows = str||[];
+  const T = { spend: sum(rows,r=>r.spend), sales: sum(rows,r=>r.sales), orders: sum(rows,r=>r.orders), clicks: sum(rows,r=>r.clicks) };
+  const aov = T.orders ? T.sales/T.orders : 0; const cvr = T.clicks ? T.orders/T.clicks : 0;
+  const cps = cvr ? Math.ceil(1/cvr) : st.minClicks;     // clicks per sale at account CVR
+  for (const r of rows) if (r.orders===0 && (r.clicks >= Math.max(cps, st.minClicks) || (aov && r.spend >= st.ceiling*aov*1.5)) && !out.existingNegs.has(r.term))
+    out.negatives.push({...r, kind: isAsin(r.term)?'Negative product target':'Negative exact', cps});
+  out.negatives.sort((a,b)=>b.spend-a.spend);
+  const byC = new Map();
+  for (const r of rows){ const c = byC.get(r.campaign) || byC.set(r.campaign, {campaign:r.campaign, spend:0, sales:0, orders:0, clicks:0}).get(r.campaign); c.spend+=r.spend; c.sales+=r.sales; c.orders+=r.orders; c.clicks+=r.clicks; }
+  for (const c of byC.values()){ const a = c.sales? c.spend/c.sales : Infinity; if (a > st.breakeven && c.spend > 0) out.overBE.push({...c, acos:a, excess: c.spend - c.sales*st.breakeven}); }
+  out.overBE.sort((a,b)=>b.excess-a.excess);
+  // overlap: same keyword+match live in several campaigns (bulk) or same term getting clicks in several ad groups (STR)
+  if (bulk){ const m = new Map(); for (const k of bulk.keywords) if (k.state==='enabled'){ const key = k.text+'|'+k.match; (m.get(key)||m.set(key,[]).get(key)).push(k); }
+    for (const [key, ks] of m) if (new Set(ks.map(k=>k.cid)).size > 1) out.overlap.push({term:key.split('|')[0], match:key.split('|')[1], rows:ks.sort((a,b)=>b.sales-a.sales), spend:sum(ks,k=>k.spend)}); }
+  else { for (const [term, t] of ads) if (new Set(t.rows.map(r=>r.campaign+'|'+r.adgroup)).size > 1 && t.clicks >= 10) out.overlap.push({term, match:'search term', rows:t.rows.sort((a,b)=>b.sales-a.sales), spend:t.spend}); }
+  out.overlap.sort((a,b)=>b.spend-a.spend);
+  if (bulk){ for (const c of bulk.campaigns){ if (!c.budget || c.state!=='enabled') continue; const perDay = c.spend/st.days; const a = c.sales? c.spend/c.sales : Infinity; const util = perDay/c.budget;
+      if (util >= 0.85 && a <= st.ceiling) out.budget.push({...c, perDay, util, acos:a, verdict:'Raise budget', cls:'p-good', note:`Spends ${pct(util,0)} of ${money(c.budget)}/day at ACoS ${pct(a)}. Capped profitable campaign: raise to ${money(c.budget*1.3)}.`});
+      else if (util >= 0.85 && a > st.breakeven) out.budget.push({...c, perDay, util, acos:a, verdict:'Capped and unprofitable', cls:'p-bad', note:`Hits its ${money(c.budget)} budget at ACoS ${pct(a)}. Fix bids before adding budget.`}); }
+    out.budget.sort((a,b)=>b.spend-a.spend);
+    const camp = new Map(bulk.campaigns.map(c=>[c.cid,c]));
+    for (const p of bulk.placements) if (/top/i.test(p.placement)){ const c = camp.get(p.cid); if (!c) continue; const a = c.sales? c.spend/c.sales:Infinity; out.placements.push({campaign:p.campaign, pct:p.pct, acos:a, spend:c.spend, note: p.pct===0 && a <= st.ceiling*0.8 ? 'Profitable with 0% top-of-search: test +25%.' : p.pct >= 50 && a > st.ceiling ? 'High modifier while over ceiling: cut it.' : ''}); }
+  }
+  const sorted = [...ads.values()].sort((a,b)=>b.spend-a.spend); const top10 = sum(sorted.slice(0,10), t=>t.spend);
+  out.concentration = T.spend ? {share: top10/T.spend, terms: sorted.slice(0,10)} : null;
+  out.T = {...T, aov, cvr, acos: T.sales? T.spend/T.sales : NaN, roas: T.spend? T.sales/T.spend : NaN, cps};
+  return out;
+}
+
+/* ============ run ============ */
+let R = {};
+function run(){
+  const st = settings();
+  const ads = adsByTerm(state.str);
+  const live = liveTargets(state.bulk);
+  const negs = negSet(state.bulk);
+  const isMap = new Map((state.is||[]).map(r=>[r.term,r]));
+  const ppc = state.str || state.bulk ? ppcChecks(st, ads, state.bulk, state.str) : null;
+  const sq = state.sqp.length ? aggregateSQP(state.sqp) : null;
+  let decisions = [];
+  if (sq){
+    const ctx = { st, ads, live, negs, isMap, aov: ppc?.T.aov || 0, adsLoaded: !!state.str };
+    decisions = sq.rows.filter(q => q.vol >= st.minVol || !q.vol).map(q => decide({...q, seg: segmentOf(q.q, st)}, ctx));
+  }
+  R = { st, ads, ppc, sq, decisions, live };
+  renderSources(); renderDerived(); renderTabs(); renderView();
+}
+
+/* ============ render ============ */
+const VERDICTS = [['scale','Scale','p-good','Converts above market, under-seen, ads within ceiling'],['fixbid','Fix bid, then scale','p-warn','Converts, under-seen, but paying above the ceiling'],['listing','Fix listing first','p-bad','CVR below market: do not buy more traffic'],['ctr','Fix click-through','p-warn','Seen but not clicked'],['mismatch','Negate / deprioritise','p-bad','Below market on click and conversion'],['tier','Wrong price tier','p-mut','Shoppers on this query buy far cheaper items'],['launch','Launch test','p-acc','Volume, no data, no ads'],['defend','Defend / hold','p-mut','Already visible and converting'],['wait','Gather data','p-mut','Too few own clicks to judge']];
+const VL = Object.fromEntries(VERDICTS.map(v=>[v[0],v]));
+const TABS = [['docs','Documents'],['summary','Summary'],['decisions','Decisions'],['ppc','PPC hygiene'],['trend','Trend'],['setup','Method & exports']];
+
+function renderSources(){
+  const n = state.names; const sq = state.sqp;
+  const chip = (has, label, desc) => `<div class="chip ${has ? (state.sample?'sample':'loaded') : ''}"><span class="dot"></span><b>${label}</b><span class="d">${has ? esc(desc) : 'not loaded'}</span></div>`;
+  $('#sources').innerHTML =
+    chip(sq.length, 'SQP', sq.length ? `${sq.length} file${sq.length>1?'s':''} · ${[...new Set(sq.map(f=>f.asin))].filter(Boolean).join(', ')||'ASIN unknown'} · ${[...new Set(sq.map(f=>f.period))].join(', ')}` : '') +
+    chip(!!state.str, 'Search terms', n.str) + chip(!!state.bulk, 'Bulk file', state.bulk ? `${n.bulk} · ${state.bulk.campaigns.length} campaigns, ${state.bulk.keywords.length} targets, ${state.bulk.negatives.length} negatives` : '') + chip(!!state.is, 'Impression share', state.is ? `${n.is} · ${state.is.length} terms` : '');
+  $('#sampleBanner').hidden = !state.sample;
+}
+function renderDerived(){
+  const {st, ppc} = R;
+  $('#mastClient').textContent = st.client || 'Load reports to start';
+  $('#mastMeta').textContent = (ppc ? `${st.days} days · ` : '') + `${st.mode} mode · ceiling ${pct(st.ceiling,0)} ACoS` + (R.sq ? ` · ${R.sq.periods.length} SQP period${R.sq.periods.length>1?'s':''}` : '');
+  $('#derived').innerHTML = `<span>Break-even ACoS <b>${pct(st.breakeven,0)}</b></span><span>ACoS ceiling used <b>${pct(st.ceiling,0)}</b> (${st.mode})</span>${ppc?`<span>Account AOV <b>${money(ppc.T.aov)}</b></span><span>Account CVR <b>${pct(ppc.T.cvr)}</b></span><span>Clicks per sale <b>${ppc.T.cps}</b></span>`:''}`;
+}
+function renderTabs(){
+  const {decisions, ppc, sq} = R;
+  const n = { decisions: decisions.length, ppc: ppc ? ppc.negatives.length + ppc.overBE.length + ppc.overlap.length + ppc.budget.length : undefined, trend: sq && sq.periods.length > 1 ? sq.periods.length+' periods' : undefined };
+  $('#tabs').innerHTML = TABS.map(([id,l])=>`<button class="tab" role="tab" aria-selected="${state.tab===id}" data-tab="${id}">${l}${n[id]!==undefined?`<span class="count">${n[id]}</span>`:''}</button>`).join('');
+}
+function table(head, rows, empty, sortable){
+  if (!rows.length) return `<div class="tbl-wrap"><div class="empty">${empty}</div></div>`;
+  return `<div class="tbl-wrap"><table><thead><tr>${head.map(h=>`<th class="${h[1]||''} ${sortable&&state.sort.key===h[2]?'sorted':''}" ${h[2]?`data-sort="${h[2]}"`:''}>${h[0]}${sortable&&state.sort.key===h[2]?(state.sort.asc?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+}
+function sec(title, desc, tools, body){ return `<section class="section"><div class="sec-head"><div><h2>${title}</h2><p>${desc}</p></div><div class="tools">${tools||''}</div></div>${body}</section>`; }
+const idx = (a,b,i) => `<span class="idx"><span>you</span><span class="${i<0.8?'down':i>=1.1?'up':''}">${pct(a)}</span><span>mkt</span><span>${pct(b)}</span></span>`;
+
+function renderView(){
+  const {st, ppc, sq, decisions} = R; const v = $('#view');
+  const noSQP = '<div class="panel empty">Load one or more SQP exports to see this.</div>';
+  const noPPC = '<div class="panel empty">Load a search term report or a bulk file to see this.</div>';
+  let h = '';
+  if (state.tab==='summary'){
+    if (!sq && !ppc) h = '<div class="panel empty">Load reports to start.</div>';
+    else {
+      const cnt = k => decisions.filter(d=>d.v.key===k);
+      const oppScale = sum(cnt('scale'), d=>d.opp) + sum(cnt('fixbid'), d=>d.opp);
+      const oppList = sum(cnt('listing'), d=>d.opp) + sum(cnt('ctr'), d=>d.opp);
+      const waste = ppc ? sum(ppc.negatives, r=>r.spend) : 0;
+      const top = [...decisions].filter(d=>d.opp>0 || d.v.key==='mismatch').sort((a,b)=>b.opp-a.opp).slice(0,8);
+      const kp = [];
+      if (ppc){ kp.push(['Ad spend',money(ppc.T.spend)],['Ad sales',money(ppc.T.sales)],['ACoS',pct(ppc.T.acos)],['Ceiling',pct(st.ceiling,0)],['Wasted spend',money(waste)]); }
+      if (sq){ const iT = sum(decisions,d=>d.iT), iB = sum(decisions,d=>d.iB), pT = sum(decisions,d=>d.pT), pB = sum(decisions,d=>d.pB); kp.push(['Impr. share',sp(iB/iT*100)],['Purchase share',sp(pB/pT*100)],['Queries judged',int(decisions.filter(d=>d.v.key!=='wait').length)]); }
+      const prose = [];
+      prose.push(`<p><b>${esc(st.client||'This account')}</b>${ppc?` spent ${money(ppc.T.spend)} on Sponsored Products over ${st.days} days at ${pct(ppc.T.acos)} ACoS against a ${pct(st.ceiling,0)} ceiling.`:'.'}${sq?` Across ${decisions.length} search queries it holds ${sp(sum(decisions,d=>d.pB)/sum(decisions,d=>d.pT)*100)} of purchases but only ${sp(sum(decisions,d=>d.iB)/sum(decisions,d=>d.iT)*100)} of impressions.`:''}</p>`);
+      if (cnt('scale').length) prose.push(`<p><b>${cnt('scale').length} queries are ready to scale.</b> They convert at or above the market rate and you are under-seen on them. Raising exact bids and top-of-search on ${cnt('scale').slice(0,3).map(d=>'“'+esc(d.q)+'”').join(', ')} is the fastest sales lever: roughly ${money(oppScale)} per period at current conversion.</p>`);
+      if (cnt('fixbid').length) prose.push(`<p><b>${cnt('fixbid').length} queries convert well but cost too much.</b> ${cnt('fixbid').slice(0,3).map(d=>'“'+esc(d.q)+'”').join(', ')}: the page is not the problem, the auction price is. Bring CPCs to the value-per-click line before adding visibility.</p>`);
+      if (cnt('listing').length||cnt('ctr').length) prose.push(`<p><b>${cnt('listing').length+cnt('ctr').length} queries need the listing fixed before any spend increase.</b> ${[...cnt('listing'),...cnt('ctr')].slice(0,3).map(d=>'“'+esc(d.q)+'” ('+d.v.label.toLowerCase()+')').join(', ')}. Buying traffic there would amplify an under-converting page; the recoverable gap is about ${money(oppList)} per period.</p>`);
+      if (cnt('mismatch').length||waste) prose.push(`<p><b>Stop the leaks.</b> ${cnt('mismatch').length?cnt('mismatch').length+' queries are below market on both click and conversion and should be negated. ':''}${waste?money(waste)+' went to search terms with clicks and no orders; the negatives list is on the PPC hygiene tab.':''}</p>`);
+      if (cnt('launch').length) prose.push(`<p><b>${cnt('launch').length} queries have volume and no coverage.</b> Launch exact-match tests on ${cnt('launch').slice(0,3).map(d=>'“'+esc(d.q)+'”').join(', ')} and judge them once they have ${st.minClicks} clicks.</p>`);
+      h = `<div class="panel summary"><div><div class="eyebrow" style="margin-bottom:6px">Executive summary · ${esc(st.client)}</div><div class="prose">${prose.join('')}</div></div>
+        <div style="min-width:0"><div class="kpis">${kp.map(([l,v])=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('')}</div>
+        <h3 style="margin-top:16px">Verdict board</h3><div class="board" style="margin-top:8px">${VERDICTS.map(([k,l,cls])=>{const g=cnt(k); if(!g.length) return ''; return `<div class="vcard ${cls}" data-goto="${k}"><div class="v">${g.length}</div><div class="l"><span class="pill ${cls}">${l}</span></div><div class="s">${g.slice(0,2).map(d=>esc(d.q)).join(' · ')}</div></div>`;}).join('')}</div></div></div>
+        <div class="panel" style="margin-top:14px"><h2>Do these first</h2><div class="actions" style="margin-top:8px">${top.map(d=>`<div class="act"><span class="pill ${d.v.cls}">${d.v.label}</span><div class="what"><b>${esc(d.q)}</b> <span class="muted">· ${d.seg}</span><div class="why">${esc(d.v.action)}</div></div><div class="impact">${d.opp?'~'+money(d.opp)+'/period':''}</div></div>`).join('')||'<div class="empty">No ranked actions.</div>'}</div></div>`;
+    }
+  }
+  if (state.tab==='decisions'){
+    if (!sq) h = noSQP; else {
+      const f = state.filter;
+      let rows = decisions.filter(d => (!f.v || d.v.key===f.v) && (!f.seg || d.seg===f.seg) && (!f.q || d.q.includes(f.q)));
+      const k = state.sort.key; const get = d => k==='q'?d.q : k==='verdict'?d.v.label : k==='vol'?d.vol : k==='ctr'?d.ctrIdx : k==='cvr'?d.cvrIdx : k==='I'?d.I : k==='P'?d.P : k==='spend'?(d.ad?d.ad.spend:0) : k==='acos'?(isFinite(d.acos)?d.acos:-1) : d.score;
+      rows.sort((a,b)=>{ const A=get(a),B=get(b); const r = typeof A==='string' ? A.localeCompare(B) : ((isFinite(A)?A:-1e9)-(isFinite(B)?B:-1e9)); return state.sort.asc? r : -r; });
+      const body = rows.map(d => `<tr data-q="${esc(d.q)}" style="cursor:pointer"><td class="term">${esc(d.q)}<span class="sub">${d.seg}${d.pricey?' · price +'+(d.pricePrem*100).toFixed(0)+'%':''}${d.isr?' · paid IS '+sp(d.isr.share)+' #'+d.isr.rank:''}</span></td><td class="n">${int(d.vol)}</td><td>${idx(d.oCTR,d.mCTR,d.ctrIdx)}</td><td>${idx(d.oCVR,d.mCVR,d.cvrIdx)}</td><td class="n ${d.lowVis?'down':''}">${sp(d.I)}</td><td class="n">${sp(d.P)}</td><td class="n">${d.ad?money(d.ad.spend):'—'}<span class="sub">${d.ad?(d.ad.orders+' ord'):''}</span></td><td class="n ${isFinite(d.acos)&&d.acos>st.ceiling?'down':''}">${pct(d.acos)}</td><td><span class="pill ${d.v.cls}">${d.v.label}</span><div class="muted" style="font-size:12px;margin-top:3px;max-width:34ch">${esc(d.v.action)}</div></td><td class="n">${d.opp?money(d.opp):'—'}</td></tr>` +
+        (state.open===d.q ? `<tr class="detail"><td colspan="10"><div class="dgrid"><div><h4>Evidence</h4>${d.evidence.map(e=>`<div class="line"><span>${esc(e.l)}</span><span class="${e.cls||''}">${esc(e.v)}</span></div>`).join('')}</div><div><h4>Why this verdict</h4><div>${esc(d.v.why)}</div><div class="verdict-box"><b>${d.v.label}.</b> ${esc(d.v.action)}</div>${d.ad&&d.ad.rows.length?`<h4 style="margin-top:10px">Where the ad clicks came from</h4>${d.ad.rows.sort((a,b)=>b.spend-a.spend).slice(0,6).map(r=>`<div class="line"><span>${esc(r.campaign)} › ${esc(r.adgroup)} <span class="muted">${esc((r.match&&r.match!=='-'?r.match:'auto').toLowerCase())}</span></span><span>${int(r.clicks)} clk · ${money(r.spend)} · ${r.orders} ord</span></div>`).join('')}`:''}</div></div></td></tr>` : '')).join('');
+      h = sec('Decision per query', `Your funnel rates against the market's for every query with ${int(st.minVol)}+ searches. Verdict rule: judge CVR first (enough clicks?), then CTR, then visibility, then the ad price. Click a row for the evidence.`,
+        `<button type="button" data-copy="decisions">Copy table</button>${state.bulk?'<button type="button" data-copy="bulkbids">Copy bulk-sheet bid rows</button>':''}`,
+        `<div class="filters"><select id="fV"><option value="">All verdicts</option>${VERDICTS.map(v=>`<option value="${v[0]}" ${f.v===v[0]?'selected':''}>${v[1]}</option>`).join('')}</select><select id="fS"><option value="">All segments</option>${['Generic','Brand','Competitor'].map(s=>`<option ${f.seg===s?'selected':''}>${s}</option>`).join('')}</select><input id="fQ" type="search" placeholder="Search query" value="${esc(f.q)}"><span class="muted" style="font-size:12.5px">${rows.length} of ${decisions.length}</span></div>` +
+        table([['Query','','q'],['Searches / week','n','vol'],['CTR you vs mkt','','ctr'],['CVR you vs mkt','','cvr'],['Impr. share','n','I'],['Purch. share','n','P'],['Ad spend','n','spend'],['ACoS','n','acos'],['Verdict & action','','verdict'],['Opportunity','n','score']], rows.length?[body]:[], 'No queries match.', true));
+    }
+  }
+  if (state.tab==='ppc'){
+    if (!ppc) h = noPPC; else {
+      const parts = [];
+      parts.push(sec('Negatives', `Search terms with zero orders after ${Math.max(ppc.T.cps, st.minClicks)}+ clicks (clicks-per-sale at your ${pct(ppc.T.cvr)} account CVR) or spend over 1.5× the value of one order at the ceiling.${state.bulk?' Terms already negated in the bulk file are excluded.':''}`, `<button type="button" data-copy="neg">Copy table</button>${state.bulk?'<button type="button" data-copy="bulkneg">Copy bulk-sheet negative rows</button>':''}`,
+        table([['Search term'],['Add as'],['Clicks','n'],['Spend','n'],['Impr.','n']], ppc.negatives.map(r=>`<tr><td class="term">${esc(r.term)}<span class="sub">${esc(r.campaign)} › ${esc(r.adgroup)}</span></td><td><span class="pill p-bad">${r.kind}</span></td><td class="n">${int(r.clicks)}</td><td class="n">${money(r.spend)}</td><td class="n">${int(r.impr)}</td></tr>`), 'Nothing reaches the negation threshold.')));
+      parts.push(sec('Campaigns above break-even', `Campaign ACoS over ${pct(st.breakeven,0)} (margin before ads). Lower bids 15–20% or pause if it has been over break-even for 60+ days.`, '',
+        table([['Campaign'],['Spend','n'],['Sales','n'],['ACoS','n'],['Excess spend','n']], ppc.overBE.map(c=>`<tr><td class="term">${esc(c.campaign)}</td><td class="n">${money(c.spend)}</td><td class="n">${money(c.sales)}</td><td class="n down">${pct(c.acos)}</td><td class="n">${money(c.excess)}</td></tr>`), 'Every campaign is under break-even.')));
+      parts.push(sec('Overlap', state.bulk ? 'The same keyword at the same match type is enabled in more than one campaign. Keep the best seller, pause or negate the rest.' : 'The same search term gets clicks in more than one ad group. Load the bulk file for exact keyword duplicates.', '',
+        table([['Keyword'],['Where'],['Spend','n']], ppc.overlap.map(o=>`<tr><td class="term">${esc(o.term)}<span class="sub">${esc(o.match)}</span></td><td>${o.rows.map(r=>`<div style="font-size:12.5px">${esc(r.campaign)}${r.adgroup?' › '+esc(r.adgroup):''} <span class="muted">${r.bid?'$'+r.bid.toFixed(2)+' · ':''}${int(r.clicks)} clk · ${money(r.sales)} sales</span></div>`).join('')}</td><td class="n">${money(o.spend)}</td></tr>`), 'No duplicates.')));
+      if (state.bulk){
+        parts.push(sec('Budget caps', `Daily spend against daily budget over ${st.days} days. Raise only where ACoS is inside the ceiling.`, '',
+          table([['Campaign'],['Budget/day','n'],['Spend/day','n'],['Used','n'],['ACoS','n'],['Verdict']], ppc.budget.map(c=>`<tr><td class="term">${esc(c.campaign)}</td><td class="n">${money(c.budget)}</td><td class="n">${money(c.perDay)}</td><td class="n">${pct(c.util,0)}</td><td class="n">${pct(c.acos)}</td><td><span class="pill ${c.cls}">${c.verdict}</span><div class="muted" style="font-size:12px">${esc(c.note)}</div></td></tr>`), 'No campaign is close to its budget.')));
+        parts.push(sec('Top-of-search modifiers', 'Placement modifier per campaign next to its ACoS. Without the placement report this only flags obvious mismatches.', '',
+          table([['Campaign'],['Top-of-search','n'],['ACoS','n'],['Note']], ppc.placements.map(p=>`<tr><td class="term">${esc(p.campaign)}</td><td class="n">+${p.pct}%</td><td class="n">${pct(p.acos)}</td><td class="muted" style="font-size:12.5px">${esc(p.note)}</td></tr>`), 'No placement rows in the bulk file.')));
+      }
+      if (ppc.concentration) parts.push(sec('Spend concentration', `Top 10 search terms take ${pct(ppc.concentration.share,0)} of spend${ppc.concentration.share>0.4?' (over the 40% line: the account leans on few terms)':''}.`, '',
+        table([['Search term'],['Spend','n'],['Sales','n'],['ACoS','n']], ppc.concentration.terms.map(t=>{ return `<tr><td class="term">${esc(t.term)}</td><td class="n">${money(t.spend)}</td><td class="n">${money(t.sales)}</td><td class="n">${pct(t.sales?t.spend/t.sales:Infinity)}</td></tr>`;}), '')));
+      h = parts.join('<div style="height:18px"></div>');
+    }
+  }
+  if (state.tab==='trend'){
+    if (!sq || sq.trendPeriods.length < 2) h = '<div class="panel empty">Load two or more SQP periods (weekly or monthly exports) to see movement per query.</div>';
+    else {
+      const P = sq.trendPeriods; const last = P[P.length-1], prev = P[P.length-2];
+      const rows = decisions.map(d => { const s = d.series; const a = s[prev], b = s[last]; let status = !a ? 'new' : !b ? 'dropped' : b.pB > a.pB*1.1 ? 'up' : b.pB < a.pB*0.9 ? 'down' : 'flat';
+        // driver: split purchase change into impressions, CTR, CVR effects (log-style attribution)
+        let driver = '—'; if (a && b && a.pB && b.pB){ const ri = Math.log((b.iB||1)/(a.iB||1)), rc = Math.log((b.cB/b.iB||1e-6)/(a.cB/a.iB||1e-6)), rv = Math.log((b.pB/b.cB||1e-6)/(a.pB/a.cB||1e-6)); const m = Math.max(Math.abs(ri),Math.abs(rc),Math.abs(rv)); driver = m===Math.abs(ri)?'reach':m===Math.abs(rc)?'click-through':'conversion'; }
+        return {...d, status, driver, a, b}; }).sort((x,y)=>(y.b?.pB||0)-(x.b?.pB||0));
+      const mx = Math.max(1, ...rows.flatMap(r=>P.map(p=>r.series[p]?.pB||0)));
+      h = sec('Movement by query', `Your purchases per period across ${P.length} periods (${P.join(' → ')}). Status compares the last two; driver names the funnel stage that moved most.`, '',
+        table([['Query'],['Purchases by period'],[esc(prev),'n'],[esc(last),'n'],['Δ','n'],['Impr. share now','n'],['Driver'],['Status'],['Verdict']], rows.map(r=>`<tr><td class="term">${esc(r.q)}</td><td><span class="spark">${P.map((p,i)=>`<i class="${i===P.length-1?'last':''}" style="height:${Math.max(1,(r.series[p]?.pB||0)/mx*18)}px" title="${p}: ${r.series[p]?.pB||0}"></i>`).join('')}</span></td><td class="n">${r.a?int(r.a.pB):'—'}</td><td class="n">${r.b?int(r.b.pB):'—'}</td><td class="n ${r.a&&r.b?(r.b.pB-r.a.pB>0?'up':r.b.pB-r.a.pB<0?'down':''):''}">${r.a&&r.b?(r.b.pB-r.a.pB>0?'+':'')+int(r.b.pB-r.a.pB):'—'}</td><td class="n">${r.b&&r.b.iT?sp(r.b.iB/r.b.iT*100):'—'}</td><td>${r.driver}</td><td><span class="pill ${r.status==='up'?'p-good':r.status==='down'?'p-bad':r.status==='new'?'p-acc':'p-mut'}">${r.status}</span></td><td><span class="pill ${r.v.cls}">${r.v.label}</span></td></tr>`), ''));
+    }
+  }
+  if (state.tab==='docs'){
+    const real = !state.sample;
+    const sqN = state.sqp.length, periods = [...new Set(state.sqp.map(f=>f.period.replace(/\s*\|.*$/,'')))];
+    const DOCS = [
+      { n:1, name:'Search Query Performance (SQP)', need:'Required', nc:'p-bad', ok: real && sqN>0, got: sqN ? `${sqN} file${sqN>1?'s':''}: ${periods.join(', ')}` : '',
+        where:'Seller Central → Brands → Brand Analytics → Search Query Performance',
+        set:['View: ASIN view, enter the one ASIN you are auditing','Reporting range: Weekly','Download the last 4 weeks, one CSV per week','Do not open and re-save the file; the first line carries the ASIN and week'],
+        file:'CSV · 4 files', unlock:'The verdict for every query: your CTR and CVR against the market, impression share, purchase share, price gap, trend.' },
+      { n:2, name:'Sponsored Products search term report', need:'Required', nc:'p-bad', ok: real && !!state.str, got: state.str ? `${state.names.str} · ${state.str.length} rows` : '',
+        where:'Ads console → Measurement & reporting → Sponsored ads reports → Create report',
+        set:['Campaign type: Sponsored Products','Report type: Search term','Time unit: Summary','Date range: the same days the SQP weeks cover (first day of week 1 to last day of week 4)'],
+        file:'XLSX or CSV · 1 file', unlock:'Spend, sales and ACoS per query, negatives, wasted spend, campaigns over break-even.' },
+      { n:3, name:'Bulk Operations file', need:'Recommended', nc:'p-warn', ok: real && !!state.bulk, got: state.bulk ? `${state.names.bulk} · ${state.bulk.campaigns.length} campaigns, ${state.bulk.keywords.length} targets` : '',
+        where:'Ads console → Bulk operations → Create & download a custom spreadsheet',
+        set:['Date range: same as the search term report','Tick: Sponsored Products data','Tick: Campaign items with zero impressions','Tick: Placement data for campaigns','Tick: Negative keywords and negative product targeting'],
+        file:'XLSX · 1 file', unlock:'Live bids and budgets, budget caps, duplicate keywords, existing negatives, and bid changes ready to paste into the bulk sheet.' },
+      { n:4, name:'Search Term Impression Share report', need:'Optional', nc:'p-mut', ok: real && !!state.is, got: state.is ? `${state.names.is} · ${state.is.length} terms` : '',
+        where:'Ads console → Measurement & reporting → Sponsored ads reports → Create report',
+        set:['Campaign type: Sponsored Products','Report type: Search term impression share','Time unit: Summary','Date range: same as the search term report'],
+        file:'XLSX or CSV · 1 file', unlock:'Your paid impression share and rank per query, the direct signal for "raise the bid".' },
+    ];
+    const filled = { client: !!$('#sClient').value.trim(), brand: !!$('#sBrand').value.trim(), comp: !!$('#sComp').value.trim() };
+    const NUMS = [['Client / product name', filled.client, 'So the summary names the account.'],['Margin before ads %', true, `Now ${pct(st.margin,0)}. Price minus Amazon fees and product cost, as a share of price. Sets break-even ACoS.`],['Target ACoS %', true, `Now ${pct(st.target,0)}. The ceiling in profit mode.`],['Goal', true, `Now ${st.mode}. Growth spends up to break-even; profit holds the target.`],['Days in ad reports', true, `Now ${st.days}. Use 28 for four SQP weeks. Needed for budget-cap checks.`],['Your brand terms', filled.brand, 'Words that mark a branded search, comma separated.'],['Competitor brand terms', filled.comp, 'So competitor-brand searches are not treated as listing problems.']];
+    const done = DOCS.filter(d=>d.ok).length;
+    h = `<div class="panel" style="display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between"><div><h2>Documents to upload</h2><p class="muted" style="margin:2px 0 0;font-size:13px;max-width:80ch">Pull these four reports for one ASIN and the same date range, then select them all with <b>Choose files</b>. The type is detected from the headers, so file names do not matter.</p></div><div class="kpi" style="min-width:150px"><div class="v">${done} / 4</div><div class="l">${state.sample?'sample data showing':'reports loaded'}</div></div></div>
+      <div class="docs">${DOCS.map(d=>`<div class="panel doc"><div class="doc-h"><div class="doc-n">${d.n}</div><div style="min-width:0"><h3>${d.name}</h3><div class="muted" style="font-size:12px">${d.file}</div></div><div class="doc-p"><span class="pill ${d.nc}">${d.need}</span><span class="pill ${d.ok?'p-good':'p-mut'}">${d.ok?'Loaded':'Missing'}</span></div></div>
+        ${d.ok?`<div class="verdict-box" style="margin:0">${esc(d.got)}</div>`:''}
+        <div><div class="doc-l">Where</div><div>${d.where}</div></div>
+        <div><div class="doc-l">Exact settings</div><ul>${d.set.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+        <div><div class="doc-l">What it unlocks</div><div class="muted">${d.unlock}</div></div></div>`).join('')}</div>
+      <div class="grid2"><div class="panel"><h3>Numbers to enter in Audit requirements</h3><div style="margin-top:8px">${NUMS.map(([l,ok,t])=>`<div class="act" style="grid-template-columns:auto minmax(0,1fr)"><span class="pill ${ok?'p-good':'p-warn'}">${ok?'Set':'Empty'}</span><div class="what"><b>${l}</b><div class="why">${t}</div></div></div>`).join('')}</div></div>
+      <div class="panel"><h3>Before you upload</h3><ul class="doc-ul"><li><b>One ASIN.</b> If the ad reports cover the whole account, the ad numbers will include other products. Filter the reports to this ASIN's campaigns or portfolio first.</li><li><b>Same dates everywhere.</b> Ad reports must cover the same days as the SQP weeks, or spend and funnel will not line up.</li><li><b>Unedited files.</b> Upload exactly what Amazon gave you. Re-saving from Excel can drop the SQP metadata line.</li><li><b>Not read by this tool:</b> Business Report, ASIN Explorer, All / Active / Category Listings. Selecting them does no harm; they are reported as not recognised.</li><li><b>Nothing leaves your browser.</b> Files are read locally and never uploaded.</li></ul></div></div>`;
+  }
+  if (state.tab==='setup'){
+    h = `<div class="grid2">
+      <div class="panel guide"><h3>Decision rule, in order</h3><ol>
+        <li><b>Enough data?</b> CVR is judged only with ≥ ${st.minClicks} of your clicks; CTR only with ≥ ${st.minImpr} impressions. Below both: <i>Gather data</i>, or <i>Launch test</i> if there is volume and no ads.</li>
+        <li><b>Rule of three</b>: a low or zero purchase count is trusted only once your clicks reach 3 ÷ market CVR. <b>Price tier</b>: when the median clicked price is half yours or less and CVR is below market → <i>Wrong price tier</i> (a different product class; the listing cannot fix it).</li>
+        <li><b>CVR index</b> = your purchases÷clicks over the market's. Below 0.8× with CTR also below 0.8× → <i>Negate</i>. Below 0.8× alone → <i>Fix listing first</i> (cart-add index says whether the page or the offer leaks).</li>
+        <li><b>CTR index</b> below 0.8× with CVR fine → <i>Fix click-through</i>: image, title, price, badge.</li>
+        <li><b>Visibility</b>: low when SQP impression share is under ${st.vis}%, or under 80% of your purchase share, or paid impression share is under 30%.</li>
+        <li><b>Ad price</b>: value per click = your price × your CVR × ceiling (${pct(st.ceiling,0)}). Converts + under-seen + ACoS inside ceiling → <i>Scale</i> to that CPC. ACoS above ceiling → <i>Fix bid, then scale</i>.</li>
+        <li>Converts and already visible → <i>Defend</i>; if paid ACoS is over the ceiling and you own 25%+ of purchases → trim and rely on organic.</li></ol>
+        <p class="muted" style="font-size:12.5px">Ceiling = target ACoS in profit mode, break-even ACoS (your margin) in growth mode. Opportunity $ = half the purchase-share gap you are not shown for, at your price; for listing fixes, the purchases lost to the market-rate gap.</p></div>
+      <div class="panel guide"><h3>Reports to load</h3><ol>
+        <li><b>SQP</b>: Brand Analytics → Search Query Performance → ASIN view, weekly or monthly, download CSV. Load several periods at once; the metadata line names the ASIN and period.</li>
+        <li><b>Search term report</b>: Ads console → Sponsored ads reports → Sponsored Products → Search term, summary, same date range.</li>
+        <li><b>Bulk file</b>: Ads console → Bulk operations → download with performance data. Gives live bids, budgets, negatives, placement modifiers and IDs for the copy-to-bulk-sheet buttons.</li>
+        <li><b>Search Term Impression Share</b>: Sponsored ads reports → Sponsored Products → Search Term Impression Share. Adds paid share and rank per query.</li></ol>
+        <p class="muted" style="font-size:12.5px">Files are read in your browser and never uploaded. Set "Days in ad reports" to the date range you pulled, so budget use is per day.</p></div>
+      <div class="panel guide" style="grid-column:1/-1"><h3>Exports</h3><p class="muted" style="font-size:12.5px;margin:0 0 8px">Every table has a Copy button that puts tab-separated rows on the clipboard for a spreadsheet. With the bulk file loaded, the Decisions and Negatives tabs also copy rows in Amazon bulk-sheet layout (Product, Entity, Operation, Campaign ID, Ad Group ID, Keyword ID, Keyword Text, Match Type, Bid, State) ready to paste into the bulk template.</p></div></div>`;
+  }
+  v.innerHTML = h;
+}
+
+/* ============ copy ============ */
+function copyRows(id){
+  const {ppc, decisions, st, live} = R; let rows = [];
+  if (id==='decisions') rows = [['Query','Segment','Volume','Your CTR','Market CTR','CTR index','Your CVR','Market CVR','CVR index','Impr share %','Purchase share %','Paid IS %','Ad clicks','Ad spend','Ad orders','ACoS','Value per click','Verdict','Action','Opportunity $'], ...decisions.map(d=>[d.q,d.seg,Math.round(d.vol),pct(d.oCTR,2),pct(d.mCTR,2),d.ctrIdx.toFixed(2),pct(d.oCVR,2),pct(d.mCVR,2),d.cvrIdx.toFixed(2),isFinite(d.I)?d.I.toFixed(2):'',isFinite(d.P)?d.P.toFixed(2):'',d.isr?d.isr.share.toFixed(1):'',d.ad?d.ad.clicks:0,d.ad?d.ad.spend.toFixed(2):0,d.ad?d.ad.orders:0,pct(d.acos),d.valuePerClick.toFixed(2),d.v.label,d.v.action,Math.round(d.opp)])];
+  if (id==='neg') rows = [['Campaign','Ad group','Search term','Add as','Clicks','Spend'], ...ppc.negatives.map(r=>[r.campaign,r.adgroup,r.term,r.kind,r.clicks,r.spend.toFixed(2)])];
+  if (id==='bulkneg'){ const camp = new Map(state.bulk.campaigns.map(c=>[c.campaign,c])); const ags = new Map(); for (const k of state.bulk.keywords) ags.set(k.campaign+'|'+k.adgroup, k.agid);
+    rows = [['Product','Entity','Operation','Campaign ID','Ad Group ID','Keyword Text','Match Type','State'], ...ppc.negatives.filter(r=>!isAsin(r.term)).map(r=>['Sponsored Products','Negative Keyword','Create',camp.get(r.campaign)?.cid||r.campaign,ags.get(r.campaign+'|'+r.adgroup)||'',r.term,'negativeExact','enabled'])]; }
+  if (id==='bulkbids'){ rows = [['Product','Entity','Operation','Campaign ID','Ad Group ID','Keyword ID','Keyword Text','Match Type','Bid','State','Verdict']];
+    for (const d of decisions){ if (!['scale','fixbid','listing','defend'].includes(d.v.key)) continue; const ks = live.get(d.q)||[]; for (const k of ks){ let bid = null;
+      if (d.v.key==='scale' && d.bid) bid = d.bid; else if (d.v.key==='fixbid') bid = d.valuePerClick; else if (d.v.key==='listing' && isFinite(d.acos) && d.acos > st.ceiling) bid = d.valuePerClick*0.9; if (!bid || !isFinite(bid)) continue;
+      rows.push(['Sponsored Products', k.kind==='keyword'?'Keyword':'Product Targeting','Update',k.cid,k.agid,k.id,d.q,k.match,Math.max(0.02,bid).toFixed(2),'enabled',d.v.label]); }
+      if (d.v.key==='scale' && !ks.length && d.bid) rows.push(['Sponsored Products','Keyword','Create','<campaign id>','<ad group id>','',d.q,'exact',d.bid.toFixed(2),'enabled','Scale (new exact)']); } }
+  if (rows.length < 2) return toast('Nothing to copy.');
+  const text = rows.map(r=>r.map(c=>String(c??'').replace(/[\t\n]/g,' ')).join('\t')).join('\n');
+  const done = () => toast(`Copied ${rows.length-1} rows. Paste into a spreadsheet.`);
+  const fallback = () => { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); done(); } catch(e){ toast('Copy was blocked. Select the table and copy by hand.'); } t.remove(); };
+  try { navigator.clipboard.writeText(text).then(done, fallback); } catch(e){ fallback(); }
+}
+let tt; function toast(m){ const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(()=>t.classList.remove('show'), 2400); }
+
+/* ============ files ============ */
+async function handleFiles(files){
+  const msgs = []; let any = false;
+  for (const f of files){
+    try {
+      const buf = await f.arrayBuffer(); const wb = XLSX.read(buf, {type:'array'}); let done = false;
+      for (const name of wb.SheetNames){
+        const aoa = XLSX.utils.sheet_to_json(wb.Sheets[name], {header:1, defval:'', raw:true});
+        const t = detect(aoa); if (!t) continue;
+        if (state.sample){ clearAll(); $('#sClient').value = ''; $('#sBrand').value = ''; $('#sComp').value = ''; }
+        if (t==='str'){ state.str = parseSTR(aoa); state.names.str = f.name; msgs.push(`${f.name}: search terms, ${state.str.length} rows.`); }
+        else if (t==='sqp'){ const p = parseSQP(aoa, f.name); state.sqp = state.sqp.filter(s => !(s.asin===p.asin && s.period===p.period)); state.sqp.push(p); msgs.push(`${f.name}: SQP ${p.asin||''} ${p.period}, ${p.rows.length} queries.`); if (p.asin && !$('#sClient').value.includes(p.asin)) $('#sClient').value = ($('#sClient').value ? $('#sClient').value+' · ' : '')+p.asin; }
+        else if (t==='bulk'){ state.bulk = parseBulk(aoa); state.names.bulk = f.name; msgs.push(`${f.name}: bulk, ${state.bulk.campaigns.length} campaigns, ${state.bulk.keywords.length} targets.`); }
+        else if (t==='is'){ state.is = parseIS(aoa); state.names.is = f.name; msgs.push(`${f.name}: impression share, ${state.is.length} terms.`); }
+        done = true; any = true; break;
+      }
+      if (!done) msgs.push(`${f.name}: not recognised. Expected a Search Query, Customer Search Term, Entity (bulk) or Impression Share column.`);
+    } catch(e){ msgs.push(`${f.name}: ${e.message}.`); }
+  }
+  $('#msg').textContent = msgs.join(' ');
+  if (any) run();
+}
+
+/* ============ events ============ */
+$('#file').addEventListener('change', e => { if (e.target.files.length) handleFiles([...e.target.files]); e.target.value=''; });
+const drop = $('#drop');
+['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { const f = [...(e.dataTransfer?.files||[])]; if (f.length) handleFiles(f); });
+['#sClient','#sMode','#sMargin','#sTarget','#sDays','#sVis','#sPrice','#sClicks','#sImpr','#sVol','#sBrand','#sComp'].forEach(s => { $(s).addEventListener('input', run); $(s).addEventListener('change', run); });
+$('#resetSample').addEventListener('click', loadSample);
+$('#clearAll').addEventListener('click', clearAll);
+$('#tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (!b) return; state.tab = b.dataset.tab; try{localStorage.setItem('ppcsqp2.tab', state.tab);}catch(_){} renderTabs(); renderView(); });
+$('#view').addEventListener('click', e => {
+  const c = e.target.closest('[data-copy]'); if (c) return copyRows(c.dataset.copy);
+  const g = e.target.closest('[data-goto]'); if (g){ state.tab='decisions'; state.filter.v = g.dataset.goto; renderTabs(); renderView(); return; }
+  const th = e.target.closest('th[data-sort]'); if (th){ const k = th.dataset.sort; if (state.sort.key===k) state.sort.asc = !state.sort.asc; else state.sort = {key:k, asc: k==='q'}; renderView(); return; }
+  const tr = e.target.closest('tr[data-q]'); if (tr){ state.open = state.open===tr.dataset.q ? null : tr.dataset.q; renderView(); }
+});
+$('#view').addEventListener('input', e => { if (e.target.id==='fQ'){ state.filter.q = low(e.target.value); renderView(); const i=$('#fQ'); i.focus(); i.setSelectionRange(i.value.length,i.value.length); } });
+$('#view').addEventListener('change', e => { if (e.target.id==='fV'){ state.filter.v = e.target.value; renderView(); } if (e.target.id==='fS'){ state.filter.seg = e.target.value; renderView(); } });
+try { const t = localStorage.getItem('ppcsqp2.tab'); if (t && TABS.some(x=>x[0]===t)) state.tab = t; } catch(_){}
+if (window.XLSX) loadSample(); else { $('#view').innerHTML = '<div class="panel empty">The spreadsheet reader did not load. Reload the page.</div>'; }
+})();
+</script>
+
+</body></html>
