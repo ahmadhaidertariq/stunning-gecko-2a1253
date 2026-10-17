@@ -4,14 +4,6 @@
   var desktop = window.matchMedia('(min-width: 1081px)');
   if (G && ST) G.registerPlugin(ST);
 
-  // ---------- smooth scroll ----------
-  var lenis = null;
-  if (!reduce && window.Lenis){
-    lenis = new Lenis({lerp: .1, smoothWheel: true});
-    if (G && ST){ lenis.on('scroll', ST.update); G.ticker.add(function(t){ lenis.raf(t * 1000); }); G.ticker.lagSmoothing(0); }
-    else { (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0); }
-  }
-
   // ---------- page transition curtain ----------
   var cur = document.createElement('div'); cur.className = 'curtain'; document.body.appendChild(cur);
   try { if (sessionStorage.getItem('curtain') && G && !reduce){ sessionStorage.removeItem('curtain'); G.set(cur,{scaleY:1,transformOrigin:'top'}); G.to(cur,{scaleY:0,duration:.6,ease:'power3.inOut',delay:.05}); } } catch(e){}
@@ -89,7 +81,6 @@
         depth.forEach(function(d){ G.to(d[0], {x: x * d[1], y: y * d[1], duration: .9, ease: 'power3.out', overwrite: 'auto'}); });
       });
       if (ST){
-        G.to('.stage .me', {yPercent:-6, ease:'none', scrollTrigger:{trigger:hero, start:'top top', end:'bottom top', scrub:true}});
         G.to('.hero4 .copy', {yPercent:-10, opacity:.3, ease:'none', scrollTrigger:{trigger:hero, start:'top top', end:'bottom top', scrub:true}});
       }
     } else { if (sl) sl.style.strokeDashoffset = 0; hero.querySelectorAll('.hl path').forEach(function(p){ p.style.strokeDashoffset = 0; }); runAcos(); }
@@ -116,25 +107,17 @@
     }
     setStep(0);
     steps.forEach(function(s,k){ s.addEventListener('click', function(){ setStep(k); }); });
-    if (G && ST && !reduce && desktop.matches){
-      ST.create({trigger:story, start:'top top', end:'+=' + (steps.length * 70) + '%', pin:story.querySelector('.inner'), scrub:true,
-        onUpdate:function(self){ var p = self.progress; if (bar) bar.style.width = (p * 100) + '%'; setStep(Math.min(steps.length - 1, Math.floor(p * steps.length))); }});
-      G.from('.screen', {rotateY:-20, y:60, opacity:0, duration:1.2, ease:'power3.out', scrollTrigger:{trigger:story, start:'top 70%'}});
-    } else {
-      var auto = setInterval(function(){ setStep((cur + 1) % steps.length); if (bar) bar.style.width = ((cur + 1) / steps.length * 100) + '%'; }, 3600);
-      if (reduce) clearInterval(auto);
-    }
+    var auto = null;
+    function startAuto(){ if (reduce || auto) return; auto = setInterval(function(){ setStep((cur + 1) % steps.length); if (bar) bar.style.width = ((cur + 1) / steps.length * 100) + '%'; }, 3600); }
+    function stopAuto(){ clearInterval(auto); auto = null; }
+    if (bar) bar.style.width = (1 / steps.length * 100) + '%';
+    steps.forEach(function(s,k){ s.addEventListener('click', function(){ stopAuto(); if (bar) bar.style.width = ((k + 1) / steps.length * 100) + '%'; startAuto(); }); });
+    if ('IntersectionObserver' in window){ new IntersectionObserver(function(es){ es.forEach(function(en){ en.isIntersecting ? startAuto() : stopAuto(); }); }, {threshold:.35}).observe(story); } else startAuto();
+    if (G && ST && !reduce && desktop.matches) G.from('.screen', {rotateY:-20, y:60, opacity:0, duration:1.2, ease:'power3.out', scrollTrigger:{trigger:story, start:'top 70%'}});
   }
 
-  // ---------- horizontal work rail ----------
-  var rail = document.querySelector('.rail');
-  if (rail){
-    var row = rail.querySelector('.row');
-    if (G && ST && !reduce && desktop.matches){
-      var dist = function(){ return Math.max(0, row.scrollWidth - window.innerWidth + 64); };
-      G.to(row, {x:function(){ return -dist(); }, ease:'none', scrollTrigger:{trigger:rail, start:'top top', end:function(){ return '+=' + dist(); }, pin:true, scrub:1, invalidateOnRefresh:true}});
-    } else { row.style.overflowX = 'auto'; row.style.width = 'auto'; row.style.scrollSnapType = 'x mandatory'; [].forEach.call(row.children, function(c){ c.style.scrollSnapAlign = 'start'; }); }
-  }
+  // ---------- samples row (normal scrolling, no pin) ----------
+  if (G && ST && !reduce) G.utils.toArray('.rail .wcard').forEach(function(c,i){ G.from(c, {y:50, opacity:0, duration:.8, ease:'power3.out', delay:(i % 3) * .08, scrollTrigger:{trigger:c, start:'top 90%'}}); });
 
   // ---------- generic scroll reveals with gsap ----------
   if (G && ST && !reduce){
@@ -207,9 +190,8 @@
   if (lb){
     var img = lb.querySelector('img'), cap = lb.querySelector('p');
     document.querySelectorAll('[data-full]').forEach(function(b){
-      b.addEventListener('click', function(){ var src = b.querySelector('img'); img.src = b.dataset.full; img.alt = src ? src.alt : ''; cap.textContent = src ? src.alt : ''; lb.showModal(); if (lenis) lenis.stop(); });
+      b.addEventListener('click', function(){ var src = b.querySelector('img'); img.src = b.dataset.full; img.alt = src ? src.alt : ''; cap.textContent = src ? src.alt : ''; lb.showModal(); });
     });
-    lb.addEventListener('close', function(){ if (lenis) lenis.start(); });
     lb.addEventListener('click', function(e){ if (e.target === lb || e.target.classList.contains('close')) lb.close(); });
   }
 
