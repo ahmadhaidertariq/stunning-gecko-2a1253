@@ -637,3 +637,4 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.8,.2,1)}
 @media (max-width:1080px){.lst{grid-template-columns:1fr}.lst .arrow{transform:rotate(90deg);height:40px}}
 @media (max-width:620px){.hero4 h1{font-size:clamp(38px,10.6vw,56px)}.hero4 h1 .ln>span{white-space:normal}.hero4 .copy{min-width:0}.hero4 .trust{gap:16px}.hero4 .trust b{font-size:22px}}
 .hero4 .copy{min-width:0}
+.tabpanel{align-items:start}
