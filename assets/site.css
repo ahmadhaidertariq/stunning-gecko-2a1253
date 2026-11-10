@@ -650,3 +650,14 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.8,.2,1)}
 .site-header .nav a,.site-header .btn,.brand{white-space:nowrap}
 @media (min-width:1081px) and (max-width:1560px){.site-header .nav ul{gap:0;font-size:14.5px}.site-header .nav a{padding:8px 10px}}
 @media (min-width:1081px) and (max-width:1380px){.site-header .btn.hide-md{display:none}}
+
+.cards.cards-2{grid-template-columns:repeat(2,1fr)}
+.hero4 .ws-link{display:inline-block;margin-top:14px;font-size:15px;font-weight:700;color:var(--rasp);text-decoration:none;border-bottom:1.5px solid currentColor;padding-bottom:1px}
+.hero4 .ws-link:hover{color:var(--ink)}
+@media (max-width:760px){.cards.cards-2{grid-template-columns:1fr}}
+.ph-trust{display:flex;gap:26px;flex-wrap:wrap;margin-top:30px;font-size:14px;color:#EAD9D2}
+.ph-trust b{display:block;font-family:var(--display);font-size:28px;color:#fff;line-height:1.05}
+.art.has4{height:470px}.art .pane.p4{left:4%;top:350px;width:310px}.art .pane.p3{width:300px}.art .pane.p4 b{font-size:30px;white-space:nowrap}.art .pane.p3 b{white-space:nowrap;font-size:34px}.js .art .p4{animation-delay:.9s}
+@media (max-width:620px){.ph-trust{gap:16px}.ph-trust b{font-size:22px}.art .pane.p4{display:none}}
+@media (max-width:620px){.hero4 .kc.k3{bottom:3%}.lst{grid-template-columns:minmax(0,1fr)}.lcard{min-width:0;overflow-wrap:anywhere}.kc.k3{max-width:min(230px,62vw)}.kc.k3 .msg{min-width:0}.kc.k3 span{white-space:normal}}
+main#main{overflow-x:clip}

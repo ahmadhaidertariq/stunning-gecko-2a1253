@@ -85,7 +85,7 @@
       }
     } else { if (sl) sl.style.strokeDashoffset = 0; hero.querySelectorAll('.hl path').forEach(function(p){ p.style.strokeDashoffset = 0; }); runAcos(); }
     // notification toast cycle
-    var msgs = [['✓','Brand approved','Home &amp; kitchen brand · Store A'],['$','Price list received','Items matched to Amazon ASINs'],['%','ACOS under target','Exact campaign this week'],['✓','PO ready for your OK','Invoice requested from supplier']];
+    var msgs = [['$','&minus;$8.3K ad spend','Saved in one month'],['%','ACOS under target','Exact campaign this week'],['✓','Listing updated','Title and bullets live'],['✓','Weekly report sent','KPIs, actions and owners']];
     var box = hero.querySelector('.kc.k3'), mi = 0;
     if (box && !reduce) setInterval(function(){
       var m = box.querySelector('.msg'); m.classList.add('out');
