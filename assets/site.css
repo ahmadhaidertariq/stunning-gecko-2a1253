@@ -661,3 +661,4 @@ dialog[open]{animation:pop .3s cubic-bezier(.2,.8,.2,1)}
 @media (max-width:620px){.ph-trust{gap:16px}.ph-trust b{font-size:22px}.art .pane.p4{display:none}}
 @media (max-width:620px){.hero4 .kc.k3{bottom:3%}.lst{grid-template-columns:minmax(0,1fr)}.lcard{min-width:0;overflow-wrap:anywhere}.kc.k3{max-width:min(230px,62vw)}.kc.k3 .msg{min-width:0}.kc.k3 span{white-space:normal}}
 main#main{overflow-x:clip}
+.kc .down{white-space:nowrap}
